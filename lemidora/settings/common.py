@@ -78,9 +78,10 @@ TEMPLATE_LOADERS = (
     )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
+    'django.contrib.auth.context_processors.auth',
     'social_auth.context_processors.social_auth_backends',
     'social_auth.context_processors.social_auth_login_redirect',
-)
+    )
 
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
