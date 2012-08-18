@@ -1,7 +1,7 @@
 PIL
 django==1.4.1
-psycopg2
-dj-database-url
+psycopg2==2.4.5
+dj-database-url==0.2.0
 south
 sorl-thumbnail
 
