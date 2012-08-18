@@ -112,6 +112,9 @@ INSTALLED_APPS = (
 
     # Custom
     'main',
+
+    # Web Server
+    'gunicorn',
 )
 
 # A sample logging configuration. The only tangible logging

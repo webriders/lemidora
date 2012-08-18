@@ -3,3 +3,4 @@ django==1.4.1
 psycopg2
 dj-database-url
 south
+gunicorn==0.14.6
