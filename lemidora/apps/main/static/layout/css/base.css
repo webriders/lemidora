@@ -1,0 +1,10 @@
+html, body {
+    height: 100%;
+}
+
+body {
+    min-width: 1000px;
+    background-color: #222;
+    font: 14px/1.2 Arial, Liberation Sans, sans-serif;
+    color: #fff;
+}
