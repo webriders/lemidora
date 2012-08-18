@@ -118,6 +118,7 @@ INSTALLED_APPS = (
 
     # Custom
     'main',
+    'walls',
 
     # Web Server
     'gunicorn',

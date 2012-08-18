@@ -11,4 +11,5 @@ urlpatterns = patterns('',
 
     # Custom
     url(r'^', include('main.urls')),
+    url(r'^', include('walls.urls')),
 )
