@@ -16,6 +16,7 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
+dj_database_url.DEFAULT_ENV = 'LEMIDORA_DATABASE_URL'
 
 DATABASES = {
     'default': dj_database_url.config(default='postgres://localhost')
