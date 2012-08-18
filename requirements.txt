@@ -7,3 +7,13 @@ sorl-thumbnail
 
 # Web-server
 gunicorn==0.14.6
+
+# Static files
+django-storages
+boto
+
+# web assets
+webassets==0.7.1
+argparse==1.2.1
+cssmin==0.1.4
+jsmin==2.0.2
