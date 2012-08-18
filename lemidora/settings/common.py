@@ -44,13 +44,8 @@ USE_TZ = True
 # Examples: "http://media.lawrence.com/media/", "http://example.com/media/"
 
 # S3 STORAGE CONFIG
-from storages.backends.s3boto import S3BotoStorage
-
-StaticRootS3BotoStorage = lambda: S3BotoStorage(location='static')
-MediaRootS3BotoStorage  = lambda: S3BotoStorage(location='media')
-
-DEFAULT_FILE_STORAGE = 'MediaRootS3BotoStorage'
-STATICFILES_STORAGE = 'StaticRootS3BotoStorage'
+DEFAULT_FILE_STORAGE = 'lemidora.s3utils.MediaRootS3BotoStorage'
+STATICFILES_STORAGE = 'lemidora.s3utils.StaticRootS3BotoStorage'
 AWS_ACCESS_KEY_ID = os.environ.get('LEMIDORA_AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = os.environ.get('LEMIDORA_AWS_SECRET_ACCESS_KEY')
 AWS_STORAGE_BUCKET_NAME = 'lemidora'
@@ -58,8 +53,8 @@ S3_URL = 'http://s3-website-eu-west-1.amazonaws.com/lemidora/'
 STATIC_URL = S3_URL + 'static/'
 MEDIA_URL = S3_URL + 'media/'
 
-#MEDIA_ROOT = ''
-#STATIC_ROOT = ''
+MEDIA_ROOT = ''
+STATIC_ROOT = ''
 
 # Additional locations of static files
 STATICFILES_DIRS = (
