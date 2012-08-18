@@ -1,5 +1,11 @@
 # Django settings for lemidora project.
 
+import os
+import sys
+
+PROJECT_ROOT = os.path.abspath('.')
+sys.path.append(os.path.join(PROJECT_ROOT, 'lemidora', 'apps'))
+
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
