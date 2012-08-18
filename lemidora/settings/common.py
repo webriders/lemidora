@@ -109,6 +109,7 @@ INSTALLED_APPS = (
 
     # 3rd party
     'south',
+    'sorl.thumbnail',    
 
     # Custom
     'main',
@@ -145,9 +146,3 @@ LOGGING = {
             },
         }
 }
-
-import sys
-import os
-
-PROJECT_ROOT = os.path.abspath('lemidora')
-sys.path.append(os.path.join(PROJECT_ROOT, 'apps'))
