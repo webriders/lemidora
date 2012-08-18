@@ -1,5 +1,16 @@
 {% extends 'layout/base.html' %}
 
+{% load assets %}
+
+{% block static %}
+    {% assets "home_css" %}
+        <link rel="stylesheet" type="text/css" href="{{ ASSET_URL }}" />
+    {% endassets %}
+    {% assets "home_js" %}
+        <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+    {% endassets %}
+{% endblock %}
+
 {% block content %}
     {% include 'walls/main_wall.html' %}
 {% endblock %}

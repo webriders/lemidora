@@ -57,19 +57,15 @@ MEDIA_ROOT = ''
 STATIC_ROOT = ''
 
 # Additional locations of static files
-STATICFILES_DIRS = (
-# Put strings here, like "/home/html/static" or "C:/www/django/static".
-# Always use forward slashes, even on Windows.
-# Don't forget to use absolute paths, not relative paths.
-)
+STATICFILES_DIRS = ()
 
 # List of finder classes that know how to find static files in
 # various locations.
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    #    'django.contrib.staticfiles.finders.DefaultStorageFinder',
-    )
+#    'django.contrib.staticfiles.finders.DefaultStorageFinder',
+)
 
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = 'u9-dvh*a1584cge8f)_9m%!7!k&amp;^^ma%p(6p%q^h#deehgu!^u'
@@ -115,14 +111,13 @@ INSTALLED_APPS = (
     # 3rd party
     'south',
     'sorl.thumbnail',
+    'django_assets',
+    'gunicorn', # Web Server
 
     # Custom
     'main',
     'walls',
-
-    # Web Server
-    'gunicorn',
-    )
+)
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
@@ -149,6 +144,13 @@ LOGGING = {
             'handlers': ['mail_admins'],
             'level': 'ERROR',
             'propagate': True,
-            },
-        }
+        },
+    }
 }
+
+ASSETS_CSS_FILTERS = 'cssrewrite, cssmin'
+ASSETS_JS_FILTERS = 'jsmin'
+ASSETS_DEBUG = False
+ASSETS_ROOT = os.path.join(PROJECT_ROOT, 'webassets')
+
+STATICFILES_DIRS += (ASSETS_ROOT,)
