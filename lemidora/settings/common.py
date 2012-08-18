@@ -77,12 +77,18 @@ TEMPLATE_LOADERS = (
     #     'django.template.loaders.eggs.Loader',
     )
 
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'social_auth.context_processors.social_auth_backends',
+    'social_auth.context_processors.social_auth_login_redirect',
+)
+
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'social_auth.middleware.SocialAuthExceptionMiddleware'
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
     )
@@ -112,7 +118,8 @@ INSTALLED_APPS = (
     'south',
     'sorl.thumbnail',
     'django_assets',
-    'gunicorn', # Web Server
+    'gunicorn',  # Web Server
+    'social_auth',
 
     # Custom
     'main',
@@ -157,3 +164,31 @@ STATICFILES_DIRS += (ASSETS_ROOT,)
 
 SOUTH_TESTS_MIGRATE = False
 
+### Social settings block
+
+## General
+SOCIAL_AUTH_PROTECTED_USER_FIELDS = ['email',]  # We want to persist e-mail, that we obtained from 1st user social account
+SOCIAL_AUTH_SESSION_EXPIRATION = False
+
+AUTHENTICATION_BACKENDS = (
+    'social_auth.backends.facebook.FacebookBackend',
+    'social_auth.backends.contrib.vkontakte.VKontakteOAuth2Backend',
+    'social_auth.backends.google.GoogleOAuth2Backend'
+    'django.contrib.auth.backends.ModelBackend',  # We need this backend since we using default django.auth user model
+)
+
+# Facebook
+FACEBOOK_APP_ID = os.environ.get('LEMIDORA_FACEBOOK_APP_ID')
+FACEBOOK_API_SECRET = os.environ.get('LEMIDORA_FACEBOOK_API_SECRET')
+
+FACEBOOK_EXTENDED_PERMISSIONS = ['email']
+
+
+# Github
+GITHUB_APP_ID = os.environ.get('LEMIDORA_GITHUB_APP_ID')
+GITHUB_API_SECRET = os.environ.get('LEMIDORA_GITHUB_API_SECRET')
+
+
+# Google OAuth2
+GOOGLE_OAUTH2_CLIENT_ID = os.environ.get('LEMIDORA_GOOGLE_OAUTH2_CLIENT_ID')
+GOOGLE_OAUTH2_CLIENT_SECRET = os.environ.get('LEMIDORA_GOOGLE_OAUTH2_CLIENT_SECRET')
