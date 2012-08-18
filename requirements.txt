@@ -1,19 +1,22 @@
-PIL
+PIL==1.1.7
 django==1.4.1
 psycopg2==2.4.5
 dj-database-url==0.2.0
-south
-sorl-thumbnail
+south==0.7.6
+sorl-thumbnail=11.12
 
 # Web-server
 gunicorn==0.14.6
 
 # Static files
-django-storages
-boto
+django-storages==1.1.5
+boto==2.5.2
 
 # web assets
 webassets==0.7.1
 argparse==1.2.1
 cssmin==0.1.4
 jsmin==2.0.2
+
+# Social
+django-social-auth==0.7.4
