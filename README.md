@@ -8,7 +8,7 @@ Installation
 
 ### Add database url environment variables
 
-* LEMIDORA_DATABASE_URL='postgres://<user>:<pass>@<host>:<port>/<dbname>'
+* LEMIDORA_DATABASE_URL='postgres://user:pass@host:port/dbname'
 
 ### Add S3 access keys to environment variables (for static/media support)
 
