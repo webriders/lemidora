@@ -16,10 +16,9 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
-dj_database_url.DEFAULT_ENV = 'LEMIDORA_DATABASE_URL'
 
 DATABASES = {
-    'default': dj_database_url.config(default='postgres://localhost')
+    'default': dj_database_url.config(env='LEMIDORA_DATABASE_URL', default='postgres://localhost')
 }
 
 # Local time zone for this installation. Choices can be found here:
