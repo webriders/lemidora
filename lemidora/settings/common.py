@@ -49,7 +49,7 @@ STATICFILES_STORAGE = 'lemidora.s3utils.StaticRootS3BotoStorage'
 AWS_ACCESS_KEY_ID = os.environ.get('LEMIDORA_AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = os.environ.get('LEMIDORA_AWS_SECRET_ACCESS_KEY')
 AWS_STORAGE_BUCKET_NAME = 'lemidora'
-S3_URL = 'http://s3-website-eu-west-1.amazonaws.com/lemidora/'
+S3_URL = 'http://lemidora.s3-website-eu-west-1.amazonaws.com/'
 STATIC_URL = S3_URL + 'static/'
 MEDIA_URL = S3_URL + 'media/'
 
