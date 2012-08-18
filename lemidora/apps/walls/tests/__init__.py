@@ -1,1 +1,2 @@
 from test_wall_service import TestWallService
+from test_wall_image_service import TestWallImageService
