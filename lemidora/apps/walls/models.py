@@ -32,7 +32,7 @@ class Wall(models.Model, ModifyControlModelMixin):
         return self.title + ': %s' % self.owner or 'anonymous'
 
 class WallImage(models.Model, ModifyControlModelMixin):
-    title = models.CharField(max_length=256)
+    title = models.CharField(max_length=256, blank=True, null=True)
     wall = models.ForeignKey(Wall)
 
     # Image position
