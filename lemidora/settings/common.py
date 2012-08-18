@@ -108,6 +108,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
 
     # 3rd party
+    'south',
 
     # Custom
     'main',
