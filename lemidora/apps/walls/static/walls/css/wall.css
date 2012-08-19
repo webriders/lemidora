@@ -6,3 +6,56 @@
     margin: 100px auto 0;
     position: relative;
 }
+
+.wall .greeting-message {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    display: none;
+}
+
+.wall.greeting .greeting-message {
+    display: block;
+}
+
+.wall .greeting-message .message-content {
+    width: 400px;
+    text-align: center;
+    margin-top: -80px;
+    margin-left: -200px;
+}
+
+.wall .greeting-message .message-content .title {
+    color: #ff2a75;
+    font-size: 16px;
+}
+
+.wall .greeting-message .message-content strong {
+    font-family: Yesteryear,Arial,Liberation Sans,sans-serif;
+    font-size: 2.5em;
+    margin-bottom: 20px;
+    text-shadow: 3px 3px 0 #222222;
+    color: #fff;
+}
+
+.wall .greeting-message .message-content ol {
+    padding-left: 80px;
+    list-style: decimal;
+}
+
+.wall .greeting-message .message-content ol li {
+    text-align: left;
+    margin-top: 6px;
+}
+
+.wall .greeting-message .message-content ol li.mi {
+    color: #17b2ff;
+}
+
+.wall .greeting-message .message-content ol li.re {
+    color: #8dff5c;
+}
+
+.wall .greeting-message .message-content ol li.do {
+    color: #ffb100;
+}
