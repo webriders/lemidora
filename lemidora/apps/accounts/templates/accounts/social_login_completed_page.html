@@ -1,0 +1,22 @@
+{% extends 'layout/base.html' %}
+
+{% load assets %}
+
+{% block static %}
+    {% assets "social_login_page_css" %}
+    <link rel="stylesheet" type="text/css" href="{{ ASSET_URL }}" />
+    {% endassets %}
+
+    {% assets "social_login_page_js" %}
+    <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+    {% endassets %}
+{% endblock %}
+
+{% block content %}
+<div style="margin-top: 100px">
+    <script type="text/javascript">
+        opener.Lemidora.auth.socialAuthComplete("{{ social_auth_status }}");
+        close();
+    </script>
+</div>
+{% endblock %}
