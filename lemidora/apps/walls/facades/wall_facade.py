@@ -1,5 +1,7 @@
 import json
 import datetime
+from main.utils.messages_utils import MessagesContextManager
+from walls.forms import UpdateImageForm
 from walls.services.wall_image_service import WallImageService
 from walls.services.wall_service import WallService
 
@@ -21,18 +23,30 @@ class WallFacade(object):
             images=images
         )
 
-    def get_wall_json(self, user, hash, messages_context_manager=None):
-        wall, images = self.get_wall(user, hash)
+    def get_wall_json(self, user, wall_key, messages_context_manager):
+        json_data = {}
+        if not messages_context_manager.is_critical_failure:
+            json_data = self._get_wall_json(user, wall_key, messages_context_manager)
 
-        json_data = {
-            'wall': dict(
-                title=wall.title,
-                id=wall.id,
-                key=wall.hash,
-                owner=wall.owner.get_full_name() if wall.owner else None,
-                created_date=wall.created_date,
-            ),
-            'images': [
+        json_data['messages'] = messages_context_manager.get_messages()
+
+        date_handler = lambda obj: obj.isoformat() if isinstance(obj, datetime.datetime) else None
+        return json.dumps(json_data, indent=4, default=date_handler)
+
+    def _get_wall_json(self, user, wall_key, messages_context_manager):
+        json_data = {}
+
+        with messages_context_manager:
+            wall, images = self.get_wall(user, wall_key)
+            json_data = {
+                'wall': dict(
+                    title=wall.title,
+                    id=wall.id,
+                    key=wall.hash,
+                    owner=wall.owner.get_full_name() if wall.owner else None,
+                    created_date=wall.created_date,
+                ),
+                'images': [
                 dict(
                     id=image.id,
                     title=image.title,
@@ -48,10 +62,32 @@ class WallFacade(object):
                     updated_by=image.updated_by.get_full_name() if image.updated_by else None,
                     updated_date=image.updated_date or None,
                 ) for image in images
-            ]
-        }
-        if messages_context_manager:
-            json_data['messages'] = messages_context_manager.get_messages()
+                ]
+            }
+        return json_data
 
-        date_handler = lambda obj: obj.isoformat() if isinstance(obj, datetime.datetime) else None
-        return json.dumps(json_data, indent=4, default=date_handler)
+    def delete_image(self, user, wall_key, image_id):
+        messages_manager = MessagesContextManager()
+        with messages_manager(critical=True):
+            self.image_service.delete_image(user, image_id)
+        return self.get_wall_json(user, wall_key, messages_manager)
+
+    def update_image(self, user, wall_key, image_id, request):
+        messages_manager = MessagesContextManager()
+
+        with messages_manager(critical=True, error="Wall not found by key: %s" % str(wall_key)):
+            wall = self.wall_service.get_wall_by_hash(request.user, wall_key)
+
+        if not messages_manager.is_critical_failure:
+            with messages_manager():
+                form = UpdateImageForm(request.REQUEST)
+                if form.is_valid():
+                    image_data = form.save(commit=False)
+                    image_data.wall_id = wall.id
+                    image_data.id = image_id
+                    self.image_service.update_image(request.user, image_data)
+                else:
+                    for form_error in form.errors:
+                        messages_manager.error(str(form_error))
+        return self.get_wall_json(user, wall_key, messages_manager)
+
