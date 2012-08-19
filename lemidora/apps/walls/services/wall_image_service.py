@@ -33,7 +33,7 @@ class WallImageService(object):
             image = WallImage()
             image.wall = wall
             image.image_file = image_data
-            if user.is_authenticated():
+            if user and user.is_authenticated():
                 image.created_by = user
                 image.updated_by = user
 
@@ -94,7 +94,7 @@ class WallImageService(object):
         image = self.get_image(user, image_data.id)
 
         self.__update_image_data(image, image_data)
-        if user.is_authenticated():
+        if user and user.is_authenticated():
             image.updated_by = user
 
         image.save()
