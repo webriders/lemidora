@@ -6,7 +6,6 @@ from walls.models import WallImage
 from walls.services.wall_image_service import WallImageService
 from walls.services.wall_service import WallService
 from walls.tests.utils import get_django_file
-from django.utils.timezone import utc
 
 class TestWallImageService(TestCase):
     image_service = WallImageService()
@@ -71,3 +70,25 @@ class TestWallImageService(TestCase):
         self.assertTrue(hasattr(image, 'thumbnail'))
         self.assertEqual(image.thumbnail.width, 500)
         self.assertEqual(image.thumbnail.height, 700)
+
+    def test_create_images(self):
+        user = create_user('dojo')
+        wall = self.wall_service.create_wall(user)
+
+        image_file_list = [
+            get_django_file('ubuntu_grunge_800x600.jpg'),
+            get_django_file('ubuntu_black_1440x900.jpg'),
+            get_django_file('ubuntu_grunge_800x600.jpg'),
+        ]
+
+        images = self.image_service.create_images(user, wall.id, image_file_list, 10, 20)
+        self.assertEqual(len(images), 3)
+
+        self.assertEqual(images[0].x, 10)
+        self.assertEqual(images[0].y, 20)
+
+        self.assertEqual(images[1].x, 10 + WallImageService.DEFAULT_X_OFFSET)
+        self.assertEqual(images[1].y, 20 + WallImageService.DEFAULT_Y_OFFSET)
+
+        self.assertEqual(images[2].x, 10 + WallImageService.DEFAULT_X_OFFSET*2)
+        self.assertEqual(images[2].y, 20 + WallImageService.DEFAULT_Y_OFFSET*2)
