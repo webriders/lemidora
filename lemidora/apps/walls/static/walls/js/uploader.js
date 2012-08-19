@@ -111,12 +111,12 @@ Lemidora.WallUploader.prototype = {
 
         $.each(files, function(i, file) {
             if (!file.type.match(mime)) {
-                Lemidora.messages.error("\"" + file.name + "\" is not an image");
+                Lemidora.messages.warning("\"" + file.name + "\" is not an image");
                 return true;
             }
 
             if (file.size > maxSize) {
-                Lemidora.messages.error("Image \"" + file.name + "\" is larger than " + maxSize + " bytes");
+                Lemidora.messages.warning("Image \"" + file.name + "\" is larger than " + maxSize + " bytes");
                 return true;
             }
 

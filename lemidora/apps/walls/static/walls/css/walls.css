@@ -126,4 +126,5 @@
 .wall .uploader .ui-progressbar-value {
     background: #17b2ff;
     border: none;
+    margin: 0;
 }
