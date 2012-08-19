@@ -43,7 +43,7 @@ class WallFacade(object):
                     width=image.width,
                     height=image.height,
                     url=image.thumbnail.url,
-                    created_by=image.created_by.get_full_name(),
+                    created_by=image.created_by.get_full_name() if image.created_by else None,
                     created_date=image.created_date or None,
                     updated_by=image.updated_by.get_full_name() if image.updated_by else None,
                     updated_date=image.updated_date or None,
