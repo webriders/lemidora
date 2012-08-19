@@ -20,7 +20,7 @@ And please note, when you resize photo, we always create it from originally uplo
 Planned features
 ----------------
 
-* Home page to view public walls
+* List of public walls (most popular)
 * Private walls
 * Collaboratos management for private walls
 * Collaboratos permission management
