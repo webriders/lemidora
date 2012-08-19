@@ -22,27 +22,23 @@ class WallImageService(object):
         :param y: Y coordinate
         """
 
-        image_data = WallImage(x=x, y=y, image_file=image, wall=wall)
-        self._create_image(user, image_data)
-
-    def _create_image(self, user, image_data):
         # TODO: check permission
 
-        image = WallImage()
-        image.wall_id = image_data.wall_id
-        image.image_file = image_data.image_file
-        image.created_by = user
-        image.updated_by = user
+        wall_image = WallImage()
+        wall_image.wall_id = wall.id
+        wall_image.image_file = image
+        wall_image.created_by = user
+        wall_image.updated_by = user
+        wall_image.x = x
+        wall_image.y = y
 
-        self.__update_image_data(image, image_data)
+        wall_image.width = self.DEFAULT_WIDTH
+        wall_image.height = self.DEFAULT_HEIGHT
+        wall_image.save()
 
-        image.width = self.DEFAULT_WIDTH
-        image.height = self.DEFAULT_HEIGHT
-        image.save()
+        self.add_thumbnail(wall_image)
 
-        self.add_thumbnail(image)
-
-        return image
+        return wall_image
 
     def __update_image_data(self, image, image_data):
         image.title = image_data.title
