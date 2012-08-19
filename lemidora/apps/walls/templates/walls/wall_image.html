@@ -1,10 +1,13 @@
-<div class="wall-image" id="image-{{ image.id }}"
-    data-id="{{ image.id }}"
-    data-width="{{ image.width }}" data-height="{{ image.height }}"
-    data-x="{{ image.x }}"
-    data-y="{{ image.y }}"
-    data-z="{{ image.z }}"
-    data-ratate="{{ image.rotate }}"
+<div class="wall-image"
+    {% if image %}
+        data-id="{{ image.id }}"
+        data-width="{{ image.width }}" data-height="{{ image.height }}"
+        data-x="{{ image.x }}"
+        data-y="{{ image.y }}"
+        data-z="{{ image.z }}"
+        data-ratate="{{ image.rotate }}"
+        data-url="{{ image.thumbnail.url }}"
+    {% endif %}
 >
     <div class="image-container">
         <img class="image" src="{{ image.thumbnail.url }}" width="{{ image.width }}" height="{{ image.height }}" />
