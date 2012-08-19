@@ -18,7 +18,7 @@ class TestWallImageService(TestCase):
         image_data = WallImage(image_file=get_django_file('ubuntu_grunge_800x600.jpg'))
         image_data.wall_id = wall.id
 
-        image = self.image_service.create_image(user, image_data)
+        image = self.image_service._create_image(user, image_data)
         image = self.image_service.get_image(user, image.id)
 
         self.assertIsInstance(image, WallImage)
@@ -38,7 +38,7 @@ class TestWallImageService(TestCase):
 
         image_data = WallImage(image_file=get_django_file('ubuntu_grunge_800x600.jpg'))
         image_data.wall_id = wall.id
-        old_image = self.image_service.create_image(user, image_data)
+        old_image = self.image_service._create_image(user, image_data)
 
         image_data = WallImage(
             id=old_image.id,
