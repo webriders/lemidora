@@ -116,3 +116,8 @@ class WallFacade(object):
 
             x += self.image_service.DEFAULT_X_OFFSET
             y += self.image_service.DEFAULT_Y_OFFSET
+
+    def fork_wall(self, user, wall_key):
+        wall = self.wall_service.get_wall_by_hash(user, wall_key)
+        forked_wall = self.wall_service.fork_wall(user, wall.id)
+        return forked_wall
