@@ -1,4 +1,3 @@
-import json
 from django.http import HttpResponse
 from django.views.generic import View, TemplateView
 from walls.facades.wall_facade import WallFacade
@@ -20,7 +19,6 @@ wall_page = WallPageView.as_view()
 
 
 class WallStatusView(View):
-    template_name = 'walls/main_wall.html'
     facade = WallFacade()
 
     def get(self, request, *args, **kwargs):
