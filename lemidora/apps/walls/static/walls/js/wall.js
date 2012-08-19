@@ -55,16 +55,24 @@ Lemidora.Wall.prototype = {
      * Init images that are already on the wall (initially)
      */
     initExistingImages: function() {
-        var wall = this,
+        var self = this,
             images = this.images = {};
 
-        this.container.find('.wall-image').each(function(i, image) {
-            var wallImage = new Lemidora.WallImage({
-                wall:  wall,
-                container: image
-            });
-            images[wallImage.attrs.id] = wallImage;
+        this.container.find('.wall-image').each(function(i, imageEl) {
+            self.initImage(imageEl);
         });
+    },
+
+    initImage: function(imageEl) {
+        var wallImage = new Lemidora.WallImage({
+            wall:  this,
+            container: imageEl
+        });
+
+        this.images[wallImage.attrs.id] = wallImage;
+
+        wallImage.on('image-move');
+        wallImage.on('image-resize');
     },
 
     /**
