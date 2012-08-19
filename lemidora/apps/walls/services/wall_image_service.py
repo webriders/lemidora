@@ -9,7 +9,7 @@ class WallImageService(object):
     DEFAULT_WIDTH = 300
     DEFAULT_HEIGHT = 300
 
-    CROP_MODE = 'noop'
+    CROP_MODE = 'center'
 
     THUMBNAIL_QUALITY = 95
 
