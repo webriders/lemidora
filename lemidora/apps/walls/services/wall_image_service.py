@@ -1,3 +1,4 @@
+from django.db.models import Max
 from sorl.thumbnail.images import ImageFile
 from sorl.thumbnail.shortcuts import get_thumbnail
 from walls.models import WallImage
@@ -30,8 +31,12 @@ class WallImageService(object):
         image.created_by = user
         image.updated_by = user
 
+        base_z = WallImage.objects.filter(wall=wall).aggregate(Max('z')).values().pop() or 0
+
+        image.z = base_z + 1
         image.x = x
         image.y = y
+
         image.width = self.DEFAULT_WIDTH
         image.height = self.DEFAULT_HEIGHT
 
