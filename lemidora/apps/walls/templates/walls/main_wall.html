@@ -1,8 +1,18 @@
 <div class="wall" id="main-wall">
     <div class="area">
-        Lemidora.messages.success('ERROR!!')
-        Lemidora.messages.information('ERROR!!')
-        Lemidora.messages.alert('ERROR!!')
+        <h2>
+            {{ wall.hash }} : {{ wall.created_date }} : ownby: {{ wall.owner }}
+        </h2>
+
+        {% for image in images %}
+            <div>
+                <img src='{{ image.thumbnail.url }}'/>
+                <span>{{ image.title }}</span>
+                <span>{{ image.x }}</span>
+                <span>{{ image.y }}</span>
+                <span>{{ image.width }}x{{ image.height }}</span>
+            </div>
+        {% endfor %}
     </div>
 
     <div class="uploader">
@@ -23,20 +33,4 @@
             </li>
         </script>
     </div>
-    <div class="area">
-        <h2>
-            {{ wall.hash }} : {{ wall.created_date }} : ownby: {{ wall.owner }}
-        </h2>
-
-        {% for image in images %}
-            <div>
-                <img src='{{ image.thumbnail.url }}'/>
-                <span>{{ image.title }}</span>
-                <span>{{ image.x }}</span>
-                <span>{{ image.y }}</span>
-                <span>{{ image.width }}x{{ image.height }}</span>
-            </div>
-        {% endfor %}
-    </div>
-    <div class="uploader"></div>
 </div>
