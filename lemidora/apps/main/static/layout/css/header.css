@@ -66,3 +66,52 @@
 .page-header .decor .ra {
     background-color: #ffb100;
 }
+
+/* Auth */
+.page-header .auth {
+    float: right;
+    height: 60px;
+    line-height: 60px;
+}
+
+.page-header .auth a {
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 14px;
+    height: 32px;
+    line-height: 32px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+    color: #fff;
+    padding: 0 16px;
+    background: #3b3b3b no-repeat 4px center;
+    border-radius: 5px;
+    border: 1px solid #454545;
+    box-shadow: 0 1px 3px rgba(000,000,000,0.5), inset 0 1px 1px rgba(255,255,255,0.5);
+    text-shadow: 0 1px 0 rgba(000,000,000,0.4);
+    text-decoration: none;
+}
+
+.page-header .auth a.login {
+    background: #c9de96;
+    background: -moz-linear-gradient(top,  #c9de96 0%, #8ab66b 44%, #398235 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#c9de96), color-stop(44%,#8ab66b), color-stop(100%,#398235));
+    background: -webkit-linear-gradient(top,  #c9de96 0%,#8ab66b 44%,#398235 100%);
+    background: -o-linear-gradient(top,  #c9de96 0%,#8ab66b 44%,#398235 100%);
+    background: -ms-linear-gradient(top,  #c9de96 0%,#8ab66b 44%,#398235 100%);
+    background: linear-gradient(to bottom,  #c9de96 0%,#8ab66b 44%,#398235 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#c9de96', endColorstr='#398235',GradientType=0 );
+    border-color: #32702f;
+}
+
+.page-header .auth a.logout {
+    background: #49c0f0;
+    background: -moz-linear-gradient(top,  #49c0f0 0%, #2cafe3 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#49c0f0), color-stop(100%,#2cafe3));
+    background: -webkit-linear-gradient(top,  #49c0f0 0%,#2cafe3 100%);
+    background: -o-linear-gradient(top,  #49c0f0 0%,#2cafe3 100%);
+    background: -ms-linear-gradient(top,  #49c0f0 0%,#2cafe3 100%);
+    background: linear-gradient(to bottom,  #49c0f0 0%,#2cafe3 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#49c0f0', endColorstr='#2cafe3',GradientType=0 );
+    border-color: #2493bc;
+}
