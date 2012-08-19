@@ -111,6 +111,7 @@ INSTALLED_APPS = (
     'django_assets',
     'gunicorn',  # Web Server
     'social_auth',
+    'storages',
 
     # Custom
     'main',
