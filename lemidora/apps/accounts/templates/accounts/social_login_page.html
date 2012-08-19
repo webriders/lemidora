@@ -1,9 +1,25 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title></title>
-</head>
-<body>
-    <a
-</body>
-</html>
+{% extends 'layout/base.html' %}
+
+{% load assets %}
+
+{% block static %}
+    {% assets "social_login_page_css" %}
+        <link rel="stylesheet" type="text/css" href="{{ ASSET_URL }}" />
+    {% endassets %}
+
+    {% assets "social_login_page_js" %}
+        <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+    {% endassets %}
+
+<script type="text/javascript">
+    Lemidora.auth.redirectUrl = '{{ redirect_url }}';
+</script>
+{% endblock %}
+
+{% block content %}
+    <div style="margin-top: 100px">
+        <a href="{% url socialauth_begin 'facebook' %}" class="social-auth">Dive in using Facebook</a>
+        <a href="{% url socialauth_begin 'github' %}" class="social-auth">Dive in using Github</a>
+        <a href="{% url socialauth_begin 'google-oauth2' %}" class="social-auth">Dive in using Google</a>
+    </div>
+{% endblock %}

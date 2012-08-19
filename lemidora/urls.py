@@ -13,6 +13,10 @@ urlpatterns = patterns('',
     # Custom
     url(r'^', include('main.urls')),
     url(r'^', include('walls.urls')),
+    url(r'^', include('accounts.urls')),
+
+    # 3rd party
+    url(r'', include('social_auth.urls')),
 )
 
 

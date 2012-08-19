@@ -167,7 +167,7 @@ SOCIAL_AUTH_SESSION_EXPIRATION = False
 AUTHENTICATION_BACKENDS = (
     'social_auth.backends.facebook.FacebookBackend',
     'social_auth.backends.contrib.vkontakte.VKontakteOAuth2Backend',
-    'social_auth.backends.google.GoogleOAuth2Backend'
+    'social_auth.backends.google.GoogleOAuth2Backend',
     'django.contrib.auth.backends.ModelBackend',  # We need this backend since we using default django.auth user model
 )
 
