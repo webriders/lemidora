@@ -71,10 +71,43 @@ Lemidora.Wall.prototype = {
 
         this.images[wallImage.attrs.id] = wallImage;
 
-        wallImage.on('image-move');
-        wallImage.on('image-resize');
+        wallImage.on('image-move', $.proxy(this, 'moveImageRequest'));
+        wallImage.on('image-resize', $.proxy(this, 'resizeImageRequest'));
     },
 
+    updateImageUrl: '',
+    csrf: '',
+
+    moveImageRequest: function(e, id, x, y) {
+        this.updateImageRequest(id, { x: x, y: y });
+    },
+
+    resizeImageRequest: function(e, id, width, height) {
+        this.updateImageRequest(id, { width: width, height: height });
+    },
+
+    updateImageRequest: function(id, attrs) {
+        var self = this;
+
+        var data = $.extend(
+            true,
+            {
+                image_id: id,
+                csrfmiddlewaretoken: this.csrf
+            },
+            attrs
+        );
+
+        $.post(this.updateImageUrl, data)
+            .success(function(res) {
+                self.updateWall(res);
+            })
+            .fail(function() {
+                self.showMessages({
+                    error: ['Your last action was not saved to server. Please, repeat it']
+                });
+            });
+    },
     /**
      * 'wallInfo' example:
      *
@@ -139,6 +172,34 @@ Lemidora.Wall.prototype = {
 
             if (!(id in incomingIds))
                 image.deleteImage();
+        });
+
+        if (wallInfo.messages)
+            this.showMessages(wallInfo.messages);
+    },
+
+    /**
+     * 'messages' example:
+     *
+     * {
+     *     "_exception": [],
+     *     "information": [],
+     *     "success": [
+     *         "File Ski-Photo-20120203-165808.jpg successfully uploaded!"
+     *     ],
+     *     "alert": [],
+     *     "warning": [],
+     *     "error": []
+     * }
+     *
+     */
+    showMessages: function(messages) {
+        $.each(messages, function(type, msgs) {
+            if (type in Lemidora.messages.supportedTypes) {
+                $.each(msgs, function(i, text) {
+                    Lemidora.messages.message(type, text);
+                });
+            }
         });
     }
 };

@@ -97,7 +97,7 @@ Lemidora.WallImage.prototype = {
                 var newX = pos.left,
                     newY = pos.top;
 
-                self.trigger('image-move', [newX, newY]);
+                self.trigger('image-move', [self.attrs.id, newX, newY]);
             }
         });
     },
@@ -131,7 +131,7 @@ Lemidora.WallImage.prototype = {
                         height: newHeight
                     });
 
-                    self.trigger('image-resize', [newWidth, newHeight]);
+                    self.trigger('image-resize', [self.attrs.id, newWidth, newHeight]);
                 }
             });
 

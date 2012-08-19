@@ -23,6 +23,7 @@ Lemidora.WallUploader.prototype = {
     maxFileSize: 10 * 1024 * 1024,
     allowedMimeType: /^image\/.*$/,
     uploadUrl: '',
+    csrf: '',
 
     init: function(cfg) {
         $.extend(true, this, cfg);
@@ -167,6 +168,7 @@ Lemidora.WallUploader.prototype = {
 
         formdata.append('x', coords.x);
         formdata.append('y', coords.y - parseInt(this.wall.area.css('margin-top')));
+        formdata.append('csrfmiddlewaretoken', this.csrf);
 
         var self = this,
             cnt = this.container,
@@ -181,11 +183,6 @@ Lemidora.WallUploader.prototype = {
 
             success: function (res) {
                 cnt.removeClass('uploading active');
-
-                // Show response messages
-                if (res.messages)
-                    self.showMessages(res.messages);
-
                 self.trigger('uploaded', [res]);
             },
 
@@ -213,31 +210,6 @@ Lemidora.WallUploader.prototype = {
                 }, false);
 
                 return xhr;
-            }
-        });
-    },
-
-    /**
-     * 'messages' example:
-     *
-     * {
-     *     "_exception": [],
-     *     "information": [],
-     *     "success": [
-     *         "File Ski-Photo-20120203-165808.jpg successfully uploaded!"
-     *     ],
-     *     "alert": [],
-     *     "warning": [],
-     *     "error": []
-     * }
-     *
-     */
-    showMessages: function(messages) {
-        $.each(messages, function(type, msgs) {
-            if (type in Lemidora.messages.supportedTypes) {
-                $.each(msgs, function(i, text) {
-                    Lemidora.messages.message(type, text);
-                });
             }
         });
     },

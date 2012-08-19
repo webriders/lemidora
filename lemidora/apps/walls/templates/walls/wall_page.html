@@ -6,11 +6,15 @@
     {% assets "wall_page_css" %}
         <link rel="stylesheet" type="text/css" href="{{ ASSET_URL }}" />
     {% endassets %}
+
     {% assets "wall_page_js" %}
         <script type="text/javascript" src="{{ ASSET_URL }}"></script>
     {% endassets %}
+
     <script type="text/javascript">
         Lemidora.wallPage.uploadUrl = '{% url upload_image wall.hash %}';
+        Lemidora.wallPage.updateImageUrl = '{% url update_image wall.hash %}';
+        Lemidora.wallPage.csrf = '{{ csrf_token }}';
     </script>
 {% endblock %}
 

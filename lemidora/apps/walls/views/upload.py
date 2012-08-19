@@ -1,8 +1,5 @@
-import json
 from django.http import HttpResponse
-from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import View, TemplateView
-from main.utils.messages_utils import MessagesContextManager
+from django.views.generic import TemplateView
 from walls.facades.wall_facade import WallFacade
 from walls.services.wall_image_service import WallImageService
 
@@ -23,4 +20,4 @@ class UploadImageView(TemplateView):
         return HttpResponse(result, mimetype="application/json")
 
 
-upload_image = csrf_exempt(UploadImageView.as_view())
+upload_image = UploadImageView.as_view()
