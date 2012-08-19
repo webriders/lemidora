@@ -6,14 +6,14 @@ Description
 -----------
 
 [Lemidora](http://lemidora.com) is a new way to share your photos. You have freedom now!
-No more table layouts and additional clicks, just compose your photo wall as you like in the most intuitive way.
+No more table layouts with thumbnails and additional clicks, just compose your photo wall as you like in the most intuitive way.
 
 What you can do with Lemidora:
 * create photo Wall
 * upload images by drag-and-dropping on the Wall
 * resize, move your pictures
 * share Wall with your friends
-* The Top Feature: real-time Wall editing in collaborations
+* **The Top Feature:** when multiple users edit Wall - you see their updates in real-time
 And please note, when you resize photo, we always create it from originally uploaded image, without quality loss!
 
 Planned features
