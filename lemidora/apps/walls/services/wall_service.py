@@ -7,7 +7,8 @@ class WallService(object):
     def create_wall(self, user=None):
         wall = Wall()
         wall.hash = self.generate_key()
-        wall.owner = user
+        if user and user.is_authenticated():
+            wall.owner = user
         wall.save()
         return wall
 

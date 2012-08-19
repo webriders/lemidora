@@ -1,3 +1,4 @@
+from django.contrib.auth.models import AnonymousUser
 from django.test import TestCase
 from main.utils.test_utils import create_user
 from walls.models import Wall
@@ -10,6 +11,12 @@ class TestWallService(TestCase):
     def test_create_anonymous_wall(self):
         wall = self.wall_service.create_wall()
 
+        self.assertIsInstance(wall, Wall)
+        self.assertIsNotNone(wall.hash)
+        self.assertEqual(wall.owner, None)
+
+        user = AnonymousUser()
+        wall = self.wall_service.create_wall(user)
         self.assertIsInstance(wall, Wall)
         self.assertIsNotNone(wall.hash)
         self.assertEqual(wall.owner, None)

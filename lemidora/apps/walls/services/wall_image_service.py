@@ -32,8 +32,9 @@ class WallImageService(object):
         image = WallImage()
         image.wall = wall
         image.image_file = image_data
-        image.created_by = user
-        image.updated_by = user
+        if user.is_authenticated():
+            image.created_by = user
+            image.updated_by = user
 
         base_z = WallImage.objects.filter(wall=wall).aggregate(Max('z')).values().pop() or 0
 
@@ -89,8 +90,8 @@ class WallImageService(object):
         image = self.get_image(user, image_data.id)
 
         self.__update_image_data(image, image_data)
-
-        image.updated_by = user
+        if user.is_authenticated():
+            image.updated_by = user
 
         image.save()
         self._add_thumbnail(image)
