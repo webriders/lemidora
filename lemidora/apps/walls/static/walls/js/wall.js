@@ -21,6 +21,7 @@ Lemidora.Wall.prototype = {
 
         this.initUploader();
         this.initExistingImages();
+        this.initGreeter();
         this.startAutoUpdate();
     },
 
@@ -111,9 +112,20 @@ Lemidora.Wall.prototype = {
             });
     },
 
+    initGreeter: function() {
+        var count = 0;
+
+        $.each(this.images, function() { count++; });
+
+        if (!count)
+            this.container.addClass('greeting');
+        else
+            this.container.removeClass('greeting');
+    },
+
     autoUpdateUrl: '',
     poll: null,
-    pollDelay: 7000,
+    pollDelay: 5000,
 
     startAutoUpdate: function() {
         console.log('next auto-update wil start in 7 sec.');
@@ -211,12 +223,16 @@ Lemidora.Wall.prototype = {
         $.each(images, function(i, image) {
             var id = image.attrs.id;
 
-            if (!(id in incomingIds))
+            if (!(id in incomingIds)) {
                 image.deleteImage();
+                delete images[id];
+            }
         });
 
         if (wallInfo.messages)
             this.showMessages(wallInfo.messages);
+
+        this.initGreeter();
     },
 
     /**

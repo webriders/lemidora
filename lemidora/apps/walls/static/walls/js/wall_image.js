@@ -234,7 +234,7 @@ Lemidora.WallImage.updateImageElement = function(imageEl, attrs) {
     imageEl.data(attrs)
         .find(Lemidora.WallImage.prototype.title).text(attrs.title).end()
         .find(Lemidora.WallImage.prototype.lastEditDate).text(lastEditDate).end()
-        .find(Lemidora.WallImage.prototype.lastEditPerson).text(attrs.updated_by).end()
+        .find(Lemidora.WallImage.prototype.lastEditPerson).text(attrs.updated_by || '').end()
         .find(Lemidora.WallImage.prototype.image).attr('src', attrs.url).attr('width', attrs.width).attr('height', attrs.height).end()
         .animate({
             left: attrs.x,
