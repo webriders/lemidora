@@ -14,8 +14,8 @@ class UploadImageView(TemplateView):
     def post(self, request, *args, **kwargs):
         wall_key = kwargs['wall_id']
         user = request.user.is_authenticated() and request.user or None
-        x = request.POST.get('x')
-        y = request.POST.get('y')
+        x = int(request.POST.get('x'))
+        y = int(request.POST.get('y'))
 
         images = [image for key, image in request.FILES.items() if key.lower().startswith('image')]
         result = self.facade.upload_images(user, wall_key, x, y, images)
