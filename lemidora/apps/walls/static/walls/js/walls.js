@@ -13,9 +13,8 @@ Lemidora.Wall.prototype = {
      * Images upload manager
      */
     uploader: null,
-    // Restricted object. Please don't use it directly
+    // Internal object. Please don't override it in constructor
     _uploaderDefaultConfig: {
-        container: '.uploader'
     },
 
     init: function(cfg) {
