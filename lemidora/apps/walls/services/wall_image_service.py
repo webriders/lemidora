@@ -8,7 +8,11 @@ from sorl.thumbnail import default
 class WallImageService(object):
     DEFAULT_WIDTH = 300
     DEFAULT_HEIGHT = 300
+
     CROP_MODE = 'center'
+
+    THUMBNAIL_QUALITY = 95
+
     DEFAULT_X_OFFSET = 20
     DEFAULT_Y_OFFSET = 20
 
@@ -42,16 +46,16 @@ class WallImageService(object):
         image.height = self.DEFAULT_HEIGHT
         image.save()
 
-        width, height = self.get_geometry(image.image_file)
+        width, height = self._get_geometry(image.image_file)
         image.width = width
         image.height = height
-        self.add_thumbnail(image)
+        self._add_thumbnail(image)
         image.width = image.thumbnail.width
         image.height = image.thumbnail.height
         image.save()
         return image
 
-    def get_geometry(self, image_file):
+    def _get_geometry(self, image_file):
         image = ImageFile(image_file)
         source_image = default.engine.get_image(image)
         size = default.engine.get_image_size(source_image)
@@ -86,7 +90,7 @@ class WallImageService(object):
         image.updated_by = user
 
         image.save()
-        self.add_thumbnail(image)
+        self._add_thumbnail(image)
         return image
 
     def _format_geometry(self, image):
@@ -98,30 +102,55 @@ class WallImageService(object):
             return 'x%s' % str(image.height)
         return '%sx%s' % (image.width, image.height)
 
-    def add_thumbnail(self, image):
+    def _add_thumbnail(self, image):
+        """
+        Generates thumbnail for wall display and set as .thumbnail attribute.
+        It is important that all WallImage instances used at views has this thumbnail.
+        :param image:
+        :return: None
+        """
         geometry = self._format_geometry(image)
 
         image.thumbnail = get_thumbnail(
             image.image_file,
             geometry,
             crop=self.CROP_MODE,
-            quality=99
+            quality=self.THUMBNAIL_QUALITY
         )
 
     def delete_image(self, user, id):
+        """
+        Delete image by id
+        :param user: user
+        :param id: image id
+        :return: None
+        """
         # TODO: check permission
         image = self.get_image(user, id)
         image.delete()
 
     def get_image(self, user, id):
+        """
+        Get image by id
+        :param user: user
+        :param id: image id
+        :return: WallImage
+        """
         # TODO: check permission
         image = WallImage.objects.get(id=id)
-        self.add_thumbnail(image)
+        self._add_thumbnail(image)
         return image
 
     def get_wall_images(self, user, wall_id):
+        """
+        Get list of wall images, with thumbnail attached.
+        Can be used to render wall.
+        :param user: user
+        :param wall_id: Wall id
+        :return: list of WallImage
+        """
         # TODO: check permission
         images = list(WallImage.objects.filter(wall=wall_id))
         for image in images:
-            self.add_thumbnail(image)
+            self._add_thumbnail(image)
         return images
