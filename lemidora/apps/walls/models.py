@@ -1,11 +1,13 @@
 from django.contrib.auth.models import User
 from django.db import models
 from main.utils.model_utils import ModifyControlModelMixin
-import os
 from sorl.thumbnail import ImageField
+import os
+
 
 def wall_upload_dir(instance, filename):
     return os.path.join(instance.wall.hash, filename)
+
 
 class Wall(ModifyControlModelMixin):
     title = models.CharField(max_length=256, blank=True, null=True)
@@ -17,6 +19,7 @@ class Wall(ModifyControlModelMixin):
 
     def __unicode__(self):
         return self.title + ': %s' % self.owner or 'anonymous'
+
 
 class WallImage(ModifyControlModelMixin):
     title = models.CharField(max_length=256, blank=True, null=True)

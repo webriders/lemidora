@@ -3,6 +3,7 @@ from main.utils.test_utils import create_user
 from walls.models import Wall
 from walls.services.wall_service import WallService
 
+
 class TestWallService(TestCase):
     wall_service = WallService()
 

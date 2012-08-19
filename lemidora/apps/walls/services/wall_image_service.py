@@ -1,6 +1,7 @@
 from sorl.thumbnail.shortcuts import get_thumbnail
 from walls.models import WallImage
 
+
 class WallImageService(object):
     DEFAULT_WIDTH = 200
     DEFAULT_HEIGHT = 200
@@ -19,8 +20,8 @@ class WallImageService(object):
         """
         images = []
         for image_data in image_data_list:
-            image_data.x=x
-            image_data.y=y
+            image_data.x = x
+            image_data.y = y
             images.append(self.create_image(user, image_data))
             x += self.DEFAULT_X_OFFSET
             y += self.DEFAULT_Y_OFFSET
@@ -64,7 +65,7 @@ class WallImageService(object):
     def add_thumbnail(self, image):
         image.thumbnail = get_thumbnail(
             image.image_file,
-            '%sx%s' % (image.width or self.DEFAULT_WIDTH , image.height or self.DEFAULT_HEIGHT),
+            '%sx%s' % (image.width or self.DEFAULT_WIDTH, image.height or self.DEFAULT_HEIGHT),
             crop=self.CROP_MODE,
             quality=99
         )

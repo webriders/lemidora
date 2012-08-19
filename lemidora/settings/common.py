@@ -168,7 +168,7 @@ SOUTH_TESTS_MIGRATE = False
 ### Social settings block
 
 ## General
-SOCIAL_AUTH_PROTECTED_USER_FIELDS = ['email',]  # We want to persist e-mail, that we obtained from 1st user social account
+SOCIAL_AUTH_PROTECTED_USER_FIELDS = ['email', ]  # We want to persist e-mail, that we obtained from 1st user social account
 SOCIAL_AUTH_SESSION_EXPIRATION = False
 
 AUTHENTICATION_BACKENDS = (

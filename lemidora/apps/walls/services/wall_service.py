@@ -1,6 +1,7 @@
 from main.utils.uniq_generators import id_generator
 from walls.models import Wall
 
+
 class WallService(object):
 
     def create_wall(self, user=None):
@@ -15,7 +16,7 @@ class WallService(object):
         Generate unique key for Wall
         :return: key (6 symbols)
         """
-        for i in xrange(10): # try 10 times
+        for i in xrange(10):  # try 10 times
             key = id_generator()
             if Wall.objects.filter(hash=key).count() == 0:
                 return key

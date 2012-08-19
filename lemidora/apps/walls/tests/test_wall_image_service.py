@@ -1,4 +1,3 @@
-from datetime import datetime
 from django.test import TestCase
 from main.utils.test_utils import create_user
 from sorl.thumbnail.images import ImageFile
@@ -6,6 +5,7 @@ from walls.models import WallImage
 from walls.services.wall_image_service import WallImageService
 from walls.services.wall_service import WallService
 from walls.tests.utils import get_django_file
+
 
 class TestWallImageService(TestCase):
     image_service = WallImageService()
@@ -16,7 +16,7 @@ class TestWallImageService(TestCase):
         wall = self.wall_service.create_wall(user)
 
         image_data = WallImage(image_file=get_django_file('ubuntu_grunge_800x600.jpg'))
-        image_data.wall_id=wall.id
+        image_data.wall_id = wall.id
 
         image = self.image_service.create_image(user, image_data)
         image = self.image_service.get_image(user, image.id)
@@ -37,7 +37,7 @@ class TestWallImageService(TestCase):
         wall = self.wall_service.create_wall(user)
 
         image_data = WallImage(image_file=get_django_file('ubuntu_grunge_800x600.jpg'))
-        image_data.wall_id=wall.id
+        image_data.wall_id = wall.id
         old_image = self.image_service.create_image(user, image_data)
 
         image_data = WallImage(
@@ -46,7 +46,7 @@ class TestWallImageService(TestCase):
             width=500, height=700,
             title='I am swimming in the woods'
         )
-        image_data.wall_id=wall.id
+        image_data.wall_id = wall.id
 
         updater = create_user('updater')
         image = self.image_service.update_image(updater, image_data)
@@ -90,5 +90,5 @@ class TestWallImageService(TestCase):
         self.assertEqual(images[1].x, 10 + WallImageService.DEFAULT_X_OFFSET)
         self.assertEqual(images[1].y, 20 + WallImageService.DEFAULT_Y_OFFSET)
 
-        self.assertEqual(images[2].x, 10 + WallImageService.DEFAULT_X_OFFSET*2)
-        self.assertEqual(images[2].y, 20 + WallImageService.DEFAULT_Y_OFFSET*2)
+        self.assertEqual(images[2].x, 10 + WallImageService.DEFAULT_X_OFFSET * 2)
+        self.assertEqual(images[2].y, 20 + WallImageService.DEFAULT_Y_OFFSET * 2)

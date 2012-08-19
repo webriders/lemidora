@@ -1,5 +1,5 @@
 from django.conf import settings
-from django_assets import Bundle, register
+from django_assets import Bundle
 
 
 class AbstractBundle(Bundle):
