@@ -8,19 +8,27 @@ class WallImageService(object):
     DEFAULT_X_OFFSET = 20
     DEFAULT_Y_OFFSET = 20
 
-    def create_images(self, user, x, y, image_data_list):
+    def create_images(self, user, wall_id, image_file_list, x=None, y=None):
         """
         Create list of images
         :param user: User
         :param x: basic coordinate
         :param y: basic coordinate
-        :param image_data_list: list of WallImage
+        :param wall_id: Wall id
+        :param image_file_list: list of uploaded Files
         :return: list of created WallImage
         """
+
+        if not x:
+            x = self.DEFAULT_X_OFFSET
+        if not y:
+            y = self.DEFAULT_Y_OFFSET
+
         images = []
-        for image_data in image_data_list:
-            image_data.x=x
-            image_data.y=y
+        for image_file in image_file_list:
+            image_data = WallImage(
+                x=x, y=y, image_file=image_file, wall_id=wall_id
+            )
             images.append(self.create_image(user, image_data))
             x += self.DEFAULT_X_OFFSET
             y += self.DEFAULT_Y_OFFSET
