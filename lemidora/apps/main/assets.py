@@ -1,5 +1,7 @@
-from main.abstract_assets import CssBundle, JsBundle, register
+from django_assets import register
+from main.abstract_assets import CssBundle, JsBundle
 from walls.assets import walls_css, walls_js
+
 
 layout_css = CssBundle(
     'layout/css/reset.css',

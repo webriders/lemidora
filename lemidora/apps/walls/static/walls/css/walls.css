@@ -1,0 +1,18 @@
+.wall .area {
+    width: 1000px;
+    height: 600px;
+    background-color: #333;
+    border-radius: 10px;
+    margin: 100px auto 0;
+}
+
+.wall .uploader {
+    display: none;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #ccc;
+}
+
