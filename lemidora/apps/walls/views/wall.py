@@ -6,7 +6,7 @@ from walls.services.wall_service import WallService
 
 
 class WallPageView(TemplateView):
-    template_name = 'walls/main_wall.html'
+    template_name = 'walls/wall_page.html'
     facade = WallFacade()
 
     def get_context_data(self, **kwargs):
