@@ -36,7 +36,7 @@ class WallImage(ModifyControlModelMixin):
     height = models.IntegerField(default=0)
 
     # Link to image
-    image_file = ImageField(upload_to=wall_upload_dir)
+    image_file = ImageField(upload_to=wall_upload_dir, max_length=1024)
 
     # Update management
     created_by = models.ForeignKey(User, blank=True, null=True, related_name='created_by')
