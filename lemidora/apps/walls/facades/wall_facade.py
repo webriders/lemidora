@@ -21,7 +21,7 @@ class WallFacade(object):
             images=images
         )
 
-    def get_wall_json(self, user, hash):
+    def get_wall_json(self, user, hash, messages_context_manager=None):
         wall, images = self.get_wall(user, hash)
 
         json_data = {
@@ -50,5 +50,8 @@ class WallFacade(object):
                 ) for image in images
             ]
         }
+        if messages_context_manager:
+            json_data['messages'] = messages_context_manager.get_messages()
+
         date_handler = lambda obj: obj.isoformat() if isinstance(obj, datetime.datetime) else None
         return json.dumps(json_data, indent=4, default=date_handler)
