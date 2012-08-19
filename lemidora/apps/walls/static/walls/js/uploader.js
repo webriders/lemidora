@@ -166,9 +166,10 @@ Lemidora.WallUploader.prototype = {
         });
 
         formdata.append('x', coords.x);
-        formdata.append('y', coords.y);
+        formdata.append('y', coords.y - parseInt(this.wall.area.css('margin-top')));
 
-        var cnt = this.container,
+        var self = this,
+            cnt = this.container,
             pb = this.progressBar;
 
         $.ajax({
@@ -182,15 +183,10 @@ Lemidora.WallUploader.prototype = {
                 cnt.removeClass('uploading active');
 
                 // Show response messages
-                if (res.messages) {
-                    $.each(res.messages, function(type, msgs) {
-                        if (type in Lemidora.messages.supportedTypes) {
-                            $.each(msgs, function(i, text) {
-                                Lemidora.messages.message(type, text);
-                            });
-                        }
-                    });
-                }
+                if (res.messages)
+                    self.showMessages(res.messages);
+
+                self.trigger('uploaded', [res]);
             },
 
             error: function() {
@@ -219,5 +215,42 @@ Lemidora.WallUploader.prototype = {
                 return xhr;
             }
         });
+    },
+
+    /**
+     * 'messages' example:
+     *
+     * {
+     *     "_exception": [],
+     *     "information": [],
+     *     "success": [
+     *         "File Ski-Photo-20120203-165808.jpg successfully uploaded!"
+     *     ],
+     *     "alert": [],
+     *     "warning": [],
+     *     "error": []
+     * }
+     *
+     */
+    showMessages: function(messages) {
+        $.each(messages, function(type, msgs) {
+            if (type in Lemidora.messages.supportedTypes) {
+                $.each(msgs, function(i, text) {
+                    Lemidora.messages.message(type, text);
+                });
+            }
+        });
+    },
+
+    on: function(event, fn) {
+        return this.container.on(event, fn);
+    },
+
+    off: function(event, fn) {
+        return this.container.off(event, fn);
+    },
+
+    trigger: function(event, args) {
+        return this.container.trigger(event, args);
     }
 };
