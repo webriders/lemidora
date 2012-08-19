@@ -1,5 +1,6 @@
 from sorl.thumbnail.shortcuts import get_thumbnail
 from walls.models import WallImage
+from walls.services.wall_service import WallService
 
 
 class WallImageService(object):
@@ -9,16 +10,19 @@ class WallImageService(object):
     DEFAULT_X_OFFSET = 20
     DEFAULT_Y_OFFSET = 20
 
-    def create_images(self, user, wall_id, image_file_list, x=None, y=None):
+    wall_service = WallService()
+
+    def create_images(self, user, wall_key, image_file_list, x=None, y=None):
         """
         Create list of images
         :param user: User
-        :param wall_id: Wall id
+        :param wall_key: Wall key
         :param image_file_list: list of uploaded Files
         :param x: basic coordinate
         :param y: basic coordinate
         :return: list of created WallImage
         """
+        wall = self.wall_service.get_wall_by_hash(user, wall_key)
 
         if not x:
             x = self.DEFAULT_X_OFFSET
@@ -28,7 +32,7 @@ class WallImageService(object):
         images = []
         for image_file in image_file_list:
             image_data = WallImage(
-                x=x, y=y, image_file=image_file, wall_id=wall_id
+                x=x, y=y, image_file=image_file, wall=wall
             )
             images.append(self.create_image(user, image_data))
             x += self.DEFAULT_X_OFFSET
@@ -36,7 +40,7 @@ class WallImageService(object):
         return images
 
     def create_image(self, user, image_data):
-        #TODO: check permission
+        # TODO: check permission
         image = WallImage()
         image.wall_id = image_data.wall_id
         image.image_file = image_data.image_file
@@ -51,12 +55,18 @@ class WallImageService(object):
 
     def __update_image_data(self, image, image_data):
         image.title = image_data.title
-        image.x = image_data.x
-        image.y = image_data.y
-        image.z = image_data.z
-        image.rotation = image_data.rotation
-        image.width = image_data.width
-        image.height = image_data.height
+        if image_data.x is not None:
+            image.x = image_data.x
+        if image_data.y is not None:
+            image.y = image_data.y
+        if image_data.z is not None:
+            image.z = image_data.z
+        if image_data.rotation is not None:
+            image.rotation = image_data.rotation
+        if image_data.width is not None:
+            image.width = image_data.width
+        if image_data.height is not None:
+            image.height = image_data.height
 
     def update_image(self, user, image_data):
         # TODO: check permission
