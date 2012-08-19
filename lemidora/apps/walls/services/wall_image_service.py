@@ -12,45 +12,36 @@ class WallImageService(object):
 
     wall_service = WallService()
 
-    def create_images(self, user, wall_key, image_file_list, x=None, y=None):
+    def create_image(self, user, wall, image, x, y):
         """
         Create list of images
-        :param user: User
-        :param wall_key: Wall key
-        :param image_file_list: list of uploaded Files
-        :param x: basic coordinate
-        :param y: basic coordinate
-        :return: list of created WallImage
+        :param user: User instance
+        :param wall: Wall instance
+        :param image: image file instance
+        :param x: X coordinate
+        :param y: Y coordinate
         """
-        wall = self.wall_service.get_wall_by_hash(user, wall_key)
 
-        if not x:
-            x = self.DEFAULT_X_OFFSET
-        if not y:
-            y = self.DEFAULT_Y_OFFSET
+        image_data = WallImage(x=x, y=y, image_file=image, wall=wall)
+        self._create_image(user, image_data)
 
-        images = []
-        for image_file in image_file_list:
-            image_data = WallImage(
-                x=x, y=y, image_file=image_file, wall=wall
-            )
-            images.append(self.create_image(user, image_data))
-            x += self.DEFAULT_X_OFFSET
-            y += self.DEFAULT_Y_OFFSET
-        return images
-
-    def create_image(self, user, image_data):
+    def _create_image(self, user, image_data):
         # TODO: check permission
+
         image = WallImage()
         image.wall_id = image_data.wall_id
         image.image_file = image_data.image_file
         image.created_by = user
         image.updated_by = user
+
         self.__update_image_data(image, image_data)
+
         image.width = self.DEFAULT_WIDTH
         image.height = self.DEFAULT_HEIGHT
         image.save()
+
         self.add_thumbnail(image)
+
         return image
 
     def __update_image_data(self, image, image_data):
@@ -70,6 +61,7 @@ class WallImageService(object):
 
     def update_image(self, user, image_data):
         # TODO: check permission
+
         image = self.get_image(user, image_data.id)
 
         self.__update_image_data(image, image_data)

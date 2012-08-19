@@ -91,3 +91,28 @@ class WallFacade(object):
                         messages_manager.error(str(form_error))
         return self.get_wall_json(user, wall_key, messages_manager)
 
+    def upload_images(self, user, wall_key, x, y, images):
+        messages_manager = MessagesContextManager()
+
+        if not x:
+            x = self.image_service.DEFAULT_X_OFFSET
+        if not y:
+            y = self.image_service.DEFAULT_Y_OFFSET
+
+        with messages_manager(error="Wall with key '%s' not found! :(" % wall_key, critical=True):
+            wall = self.wall_service.get_wall_by_hash(user, wall_key)
+
+        if not messages_manager.is_critical_failure:
+            self._upload_images(user, wall, x, y, images, messages_manager)
+
+        return self.get_wall_json(user, wall_key, messages_manager)
+
+    def _upload_images(self, user, wall, x, y, images, messages_manager):
+        for image in images:
+            with messages_manager('File %s successfully uploaded!' % image.name,
+                'There is error occurred while uploading %s image! :(' % image.name):
+
+                self.image_service.create_image(user, wall, image, x, y)
+
+            x += self.image_service.DEFAULT_X_OFFSET
+            y += self.image_service.DEFAULT_Y_OFFSET
