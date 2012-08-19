@@ -125,6 +125,26 @@ class TestWallFacade(TestCase):
         self.assertEqual(images[4].y, 200  + WallImageService.DEFAULT_Y_OFFSET * 4)
         self.assertTrue(u"very_long_name_very_longvery_Привiт Чуваки! Cлава Українi !long_name_very_long.gif" in images[4].image_file.name)
 
+    def test_upload_images_check_limit(self):
+        user = create_user('dojo')
+        wall = self.wall_service.create_wall(user)
+
+        saved_limit = WallImageService.WALL_UPLOAD_LIMIT
+        WallImageService.WALL_UPLOAD_LIMIT = 3
+        images = [
+            get_django_file('ubuntu_grunge_800x600.jpg'),
+            get_django_file('lviv_photo_portrait.jpg'),
+            get_django_file('ubuntu_grunge_800x600.png'),
+            get_django_file('01.gif'),
+            get_django_file(u"very_long_name_very_longvery_Привiт Чуваки! Cлава Українi !long_name_very_long.gif"),
+            ]
+
+        self.facade.upload_images(user, wall.hash, 10, 200, images)
+        images = self.image_service.get_wall_images(user, wall.id)
+        self.assertEqual(len(images), 3)
+
+        WallImageService.WALL_UPLOAD_LIMIT = saved_limit
+
     def test_upload_images_anonymous(self):
         user = AnonymousUser()
         wall = self.wall_service.create_wall(user)
