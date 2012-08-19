@@ -7,9 +7,9 @@ Lemidora.WallUploader = function(cfg) {
 };
 
 /**
- * WallUploader is part of WallManager.
- * It's responsible for files drag-and-drop to the work area and their upload.
+ * Images upload manager
  *
+ * It's responsible for files drag-and-drop to the work area and upload
  */
 Lemidora.WallUploader.prototype = {
     wall: null,

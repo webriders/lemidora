@@ -12,7 +12,7 @@ Lemidora.Wall.prototype = {
     imageItemTmpl: '#image-item',
 
     init: function(cfg) {
-        this.initUploaderConfig(); // this init must go before $.extend(true, this, cfg);
+        this.uploaderConfig = { wall: this }; // this init must go before $.extend(true, this, cfg);
         $.extend(true, this, cfg);
 
         this.container = $(this.container);
@@ -23,21 +23,7 @@ Lemidora.Wall.prototype = {
         this.initExistingImages();
     },
 
-    /**
-     * Images upload manager
-     */
     uploader: null,
-    // Internal object. Please don't override it in constructor
-    _uploaderDefaultConfig: {
-    },
-
-    initUploaderConfig: function() {
-        this.uploaderConfig = $.extend(
-            true,
-            { wall: this },
-            this._uploaderDefaultConfig
-        );
-    },
 
     initUploader: function() {
         this.uploader = new Lemidora.WallUploader(this.uploaderConfig);
