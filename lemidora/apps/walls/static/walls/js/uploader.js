@@ -92,9 +92,14 @@ Lemidora.WallUploader.prototype = {
                 return false;
             }
 
+            var coords = {
+                x: e.originalEvent.pageX,
+                y: e.originalEvent.pageY
+            };
+
             self.initFileList(files);
             self.initProgressBar();
-            self.upload(files);
+            self.upload(files, coords);
         });
     },
 
@@ -153,12 +158,15 @@ Lemidora.WallUploader.prototype = {
             .find('.ui-progressbar-value').text('');
     },
 
-    upload: function(files) {
+    upload: function(files, coords) {
         var formdata = new FormData();
 
         $.each(files, function(i, file) {
             formdata.append('image_' + i, file);
         });
+
+        formdata.append('x', coords.x);
+        formdata.append('y', coords.y);
 
         var cnt = this.container,
             pb = this.progressBar;

@@ -86,4 +86,3 @@ Lemidora.Wall.prototype = {
         return wallImage;
     }
 };
-

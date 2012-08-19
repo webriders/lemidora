@@ -123,5 +123,7 @@ Lemidora.WallImage.prototype = {
                     });
                 }
             });
+
+        this.imageContainer.find('.ui-resizable-handle').css('z-index', 1);
     }
 };
