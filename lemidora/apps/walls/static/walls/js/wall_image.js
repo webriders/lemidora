@@ -16,9 +16,11 @@ Lemidora.WallImage.prototype = {
     container: null,
     image: 'img.image',
     imageContainer: '.image-container',
-    title: '.title',
+    title: '> .title',
     editTitleButton: '.set-title',
     rotationButton: '.handle-rotate',
+    lastEditDate: '.last-edit .datetime',
+    lastEditPerson: '.last-edit .person',
     deleteButton: '.delete',
 
     /**
@@ -32,7 +34,9 @@ Lemidora.WallImage.prototype = {
      *     z: 0,
      *     rotate: 45,
      *     title: "Hello, world",
-     *     url: 'http://your.cdn/image.png'
+     *     url: 'http://your.cdn/image.png'б
+     *     updated_date: "2012-08-19T17:38:41.212292+00:00",
+     *     updated_by: "John Smith"
      * }
      */
     attrs: {},
@@ -47,6 +51,8 @@ Lemidora.WallImage.prototype = {
         this.editTitleButton = this.container.find(this.editTitleButton);
         this.rotationButton = this.container.find(this.rotationButton);
         this.deleteButton = this.container.find(this.deleteButton);
+        this.lastEditDate = this.container.find(this.lastEditDate);
+        this.lastEditPerson = this.container.find(this.lastEditPerson);
 
         this.initElement();
         this.initTitleEdit();
@@ -68,7 +74,9 @@ Lemidora.WallImage.prototype = {
             z: cnt.data('z'),
             rotate: cnt.data('rotate'),
             url: cnt.data('url'),
-            title: cnt.find('.title').text()
+            title: cnt.find(Lemidora.WallImage.prototype.title).text(),
+            updated_date: cnt.data('updated_date'),
+            updated_by: cnt.data('updated_by')
         };
 
         Lemidora.WallImage.updateImageElement(this.container, this.attrs);
@@ -198,8 +206,26 @@ Lemidora.WallImage.createImage = function(wall, attrs) {
 
 
 Lemidora.WallImage.updateImageElement = function(imageEl, attrs) {
+    function _parseDate(dateString) {
+        var date = new Date(dateString);
+
+        var day = ("0" + date.getDate()).slice(-2);
+        var month = ("0" + (date.getMonth() + 1)).slice(-2);
+        var year = ('' + date.getFullYear()).substr(2);
+        var hours = ("0" + date.getHours()).slice(-2);
+        var minutes = ("0" + date.getMinutes()).slice(-2);
+        var seconds = ("0" + date.getSeconds()).slice(-2);
+
+        date = day + '.' + month + '.' + year + ' ' + hours + ':' + minutes + ':' + seconds;
+        return date;
+    }
+
+    var lastEditDate = _parseDate(attrs.updated_date);
+
     imageEl.data(attrs)
         .find(Lemidora.WallImage.prototype.title).text(attrs.title).end()
+        .find(Lemidora.WallImage.prototype.lastEditDate).text(lastEditDate).end()
+        .find(Lemidora.WallImage.prototype.lastEditPerson).text(attrs.updated_by).end()
         .find(Lemidora.WallImage.prototype.image).attr('src', attrs.url).attr('width', attrs.width).attr('height', attrs.height).end()
         .animate({
             left: attrs.x,

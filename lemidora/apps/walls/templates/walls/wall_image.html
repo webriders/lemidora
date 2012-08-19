@@ -7,6 +7,8 @@
         data-z="{{ image.z }}"
         data-ratate="{{ image.rotate }}"
         data-url="{{ image.thumbnail.url }}"
+        data-updated_date="{{ image.updated_date|date:'c' }}"
+        data-updated_by="{{ image.updated_by|default:'' }}"
     {% endif %}
 >
     <div class="image-container">
@@ -16,6 +18,16 @@
     <div class="title">{{ image.title|default:'' }}</div>
     <a href="#set-title" class="set-title">set title</a>
     <a href="#delete" class="delete">delete</a>
+
+    <div class="last-edit">
+        <span class="label">last update:</span>
+        <span class="datetime">
+            <!-- Will be filled via JavaScript -->
+        </span>
+        <span class="person">
+            <!-- Will be filled via JavaScript -->
+        </span>
+    </div>
 
     <a href="#rotate" title="rotate" class="handle-rotate">rotate</a>
 </div>

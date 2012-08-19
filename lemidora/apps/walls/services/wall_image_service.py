@@ -9,12 +9,14 @@ class WallImageService(object):
     DEFAULT_WIDTH = 300
     DEFAULT_HEIGHT = 300
 
-    CROP_MODE = 'center'
+    CROP_MODE = 'noop'
 
     THUMBNAIL_QUALITY = 95
 
     DEFAULT_X_OFFSET = 20
     DEFAULT_Y_OFFSET = 20
+
+    EXIF_ORIENTATION_TAG = 274
 
     def create_image(self, user, wall, image_file, x, y):
         """
@@ -62,10 +64,25 @@ class WallImageService(object):
         size = default.engine.get_image_size(source_image)
         print "GEOM: %sx%s" % (str(size[0]), str(size[1]))
         image.set_size(size)
-        if image.is_portrait():
-            return None, self.DEFAULT_HEIGHT
+
+        exif_rotated = False
+
+        if hasattr(source_image, '_getexif'):
+            exif = source_image._getexif()
+            orientation = exif and exif.get(self.EXIF_ORIENTATION_TAG, 0)
+            exif_rotated = orientation in (6, 8)
+
+        actual_size = exif_rotated and size[::-1] or size
+        width, height = actual_size
+
+        if width >= height:
+            height = height*self.DEFAULT_WIDTH/width
+            width = self.DEFAULT_WIDTH
         else:
-            return self.DEFAULT_WIDTH, None
+            width = width*self.DEFAULT_WIDTH/height
+            height = self.DEFAULT_WIDTH
+
+        return width, height
 
     def __update_image_user_data(self, image, image_data):
         image.title = image_data.title
