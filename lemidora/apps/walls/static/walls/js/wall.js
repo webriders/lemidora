@@ -58,10 +58,10 @@ Lemidora.Wall.prototype = {
 
         this.images[wallImage.attrs.id] = wallImage;
 
-        wallImage.on('image-move', $.proxy(this, 'moveImageRequest'));
         wallImage.on('image-move-start', $.proxy(this, 'stopAutoUpdate'));
-        wallImage.on('image-resize', $.proxy(this, 'resizeImageRequest'));
+        wallImage.on('image-move', $.proxy(this, 'moveImageRequest'));
         wallImage.on('image-resize-start', $.proxy(this, 'stopAutoUpdate'));
+        wallImage.on('image-resize', $.proxy(this, 'resizeImageRequest'));
         wallImage.on('image-delete', $.proxy(this, 'deleteImageRequest'));
     },
 
@@ -244,3 +244,8 @@ Lemidora.Wall.prototype = {
         });
     }
 };
+
+
+if (!window.console) {
+    console = { log:$.noop };
+}
