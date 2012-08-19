@@ -1,14 +1,17 @@
-function WallUploader(cfg) {
+Lemidora = window.Lemidora || {};
+
+
+Lemidora.WallUploader = function(cfg) {
     if (cfg)
         this.init(cfg);
-}
+};
 
 /**
  * WallUploader is part of WallManager.
  * It's responsible for files drag-and-drop to the work area and their upload.
  *
  */
-WallUploader.prototype = {
+Lemidora.WallUploader.prototype = {
     wall: null,
     container: null,
 
@@ -42,6 +45,8 @@ WallUploader.prototype = {
 
         wall.on("dragover", _preventDefault);
 
+        var self = this;
+
         wall.on("drop", function(e) {
 
         });
@@ -56,22 +61,8 @@ WallUploader.prototype = {
 
 
 
+/*
 $(function() {
-    var wall = $('#wall'),
-        uploader = $('#uploader');
-
-    wall.on("dragenter", function(e) {
-        e.stopPropagation();
-        e.preventDefault();
-        uploader.addClass('active');
-
-    });
-
-    wall.on("dragexit", function(e) {
-        e.stopPropagation();
-        e.preventDefault();
-        uploader.removeClass('active');
-    });
 
     wall.on("dragover", function(e) {
         e.stopPropagation();
@@ -152,4 +143,4 @@ $(function() {
             alert('Unfurtunately you cant upload files for now :(');
         }
     });
-});
+});*/

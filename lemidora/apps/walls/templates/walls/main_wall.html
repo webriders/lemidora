@@ -1,4 +1,24 @@
 <div class="wall" id="main-wall">
-    <div class="area"></div>
-    <div class="uploader"></div>
+    <div class="area">
+        <!-- Will be filled with JavaScript -->
+    </div>
+
+    <div class="uploader">
+        <div class="overlay"></div>
+
+        <div class="content-wrap">
+            <div class="content">
+                <div class="title">Drop your images <em>(anywhere)</em></div>
+                <ul class="file-list"></ul>
+                <div class="progress-bar"></div>
+            </div>
+        </div>
+
+        <script type="text/x-lemidora-template" id="file-item">
+            <li>
+                <div class="name">${name}</div>
+                <div class="size">${size}</div>
+            </li>
+        </script>
+    </div>
 </div>

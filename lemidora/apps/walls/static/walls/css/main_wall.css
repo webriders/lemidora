@@ -1,5 +1,7 @@
-#main-waldl .area {
+#main-wall .area {
     width: 8000px;
     height: 6000px;
     margin-top: 70px;
+    background: #222;
+    border-radius: 0;
 }

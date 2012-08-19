@@ -1,9 +1,12 @@
-function Wall(cfg) {
+Lemidora = window.Lemidora || {};
+
+
+Lemidora.Wall = function(cfg) {
     if (cfg)
         this.init(cfg);
-}
+};
 
-Wall.prototype = {
+Lemidora.Wall.prototype = {
     container: null,
 
     /**
@@ -25,6 +28,6 @@ Wall.prototype = {
         $.extend(true, this, cfg);
 
         this.container = $(this.container);
-        this.uploader = new WallUploader(this.uploaderConfig);
+        this.uploader = new Lemidora.WallUploader(this.uploaderConfig);
     }
 };

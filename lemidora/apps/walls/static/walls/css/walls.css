@@ -1,7 +1,7 @@
 .wall .area {
     width: 1000px;
     height: 600px;
-    background-color: #333;
+    background-color: #d1ffbb;
     border-radius: 10px;
     margin: 100px auto 0;
 }
@@ -13,6 +13,44 @@
     top: 0;
     width: 100%;
     height: 100%;
-    background-color: #ccc;
 }
 
+.wall .uploader.active {
+    display: block;
+}
+
+.wall .uploader .overlay {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: #222;
+    opacity: .5;
+}
+
+.wall .uploader .content-wrap {
+    display: table;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    z-index: 2;
+}
+
+.wall .uploader .content {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+}
+
+.wall .uploader .content .title {
+    display: inline-block;
+    font-size: 40px;
+    text-shadow: 0 -2px 0 #222;
+    font-weight: bold;
+    color: #eee;
+}
+
+.wall .uploader .content .title em {
+    color: #c4ff6e;
+}

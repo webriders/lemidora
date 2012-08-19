@@ -20,7 +20,18 @@ home_css = CssBundle(
 register('home_css', home_css)
 
 
+messages_js = JsBundle(
+    # Noty - jQuery notifications
+    'noty/jquery.noty.js',
+    'noty/layouts/top.js',
+    'noty/layouts/topCenter.js',
+    'noty/themes/default.js',
+    'layout/js/messages.js',
+)
+
+
 home_js = JsBundle(
+    messages_js,
     walls_js,
     output="home/js/home_page_bundle.js",
 )
