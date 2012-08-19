@@ -1,3 +1,5 @@
+from ExifTags import TAGS
+import Image
 from django.test import TestCase
 from main.utils.test_utils import create_user
 from sorl.thumbnail.images import ImageFile
@@ -15,10 +17,9 @@ class TestWallImageService(TestCase):
         user = create_user('dojo')
         wall = self.wall_service.create_wall(user)
 
-        image_data = WallImage(image_file=get_django_file('ubuntu_grunge_800x600.jpg'))
-        image_data.wall_id = wall.id
+        image_data = get_django_file('ubuntu_grunge_800x600.jpg')
 
-        image = self.image_service._create_image(user, image_data)
+        image = self.image_service.create_image(user, wall, image_data, 0, 0)
         image = self.image_service.get_image(user, image.id)
 
         self.assertIsInstance(image, WallImage)
@@ -26,7 +27,7 @@ class TestWallImageService(TestCase):
         self.assertEqual(image.updated_by, user)
         self.assertEqual(image.width, WallImageService.DEFAULT_WIDTH)
         self.assertEqual(image.height, 240)
-        # self.assertEqual(image.image_file.name, 'spring_ubuntu_1900x1200.jpg')
+        self.assertTrue('ubuntu_grunge_800x600.jpg' in image.image_file.name)
         self.assertIsInstance(image.thumbnail, ImageFile)
         self.assertTrue(hasattr(image, 'thumbnail'))
         self.assertEqual(image.thumbnail.width, WallImageService.DEFAULT_WIDTH)
@@ -36,9 +37,9 @@ class TestWallImageService(TestCase):
         user = create_user('dojo')
         wall = self.wall_service.create_wall(user)
 
-        image_data = WallImage(image_file=get_django_file('ubuntu_grunge_800x600.jpg'))
-        image_data.wall_id = wall.id
-        old_image = self.image_service._create_image(user, image_data)
+        image_data = get_django_file('ubuntu_grunge_800x600.jpg')
+
+        old_image = self.image_service.create_image(user, wall, image_data, 0, 0)
 
         image_data = WallImage(
             id=old_image.id,
@@ -71,49 +72,27 @@ class TestWallImageService(TestCase):
         self.assertEqual(image.thumbnail.width, 500)
         self.assertEqual(image.thumbnail.height, 700)
 
-    def test_create_images(self):
-        user = create_user('dojo')
-        wall = self.wall_service.create_wall(user)
-
-        image_file_list = [
-            get_django_file('ubuntu_grunge_800x600.jpg'),
-            get_django_file('ubuntu_black_1440x900.jpg'),
-            get_django_file('ubuntu_grunge_800x600.jpg'),
-        ]
-
-        images = self.image_service.create_images(user, wall.hash, image_file_list, 10, 20)
-        self.assertEqual(len(images), 3)
-
-        self.assertEqual(images[0].x, 10)
-        self.assertEqual(images[0].y, 20)
-
-        self.assertEqual(images[1].x, 10 + WallImageService.DEFAULT_X_OFFSET)
-        self.assertEqual(images[1].y, 20 + WallImageService.DEFAULT_Y_OFFSET)
-
-        self.assertEqual(images[2].x, 10 + WallImageService.DEFAULT_X_OFFSET * 2)
-        self.assertEqual(images[2].y, 20 + WallImageService.DEFAULT_Y_OFFSET * 2)
-
     def test_get_geometry(self):
         user = create_user('dojo')
         wall = self.wall_service.create_wall(user)
 
-        image_data = WallImage(image_file=get_django_file('ubuntu_grunge_800x600.jpg'))
-        image_data.wall_id = wall.id
+        image_data = get_django_file('ubuntu_grunge_800x600.jpg')
 
-        image = self.image_service.create_image(user, image_data)
+        image = self.image_service.create_image(user, wall, image_data, 0, 0)
 
         width, height = self.image_service._get_geometry(image.image_file)
         self.assertEqual(width, WallImageService.DEFAULT_WIDTH)
         self.assertIsNone(height)
 
-        image_data = WallImage(image_file=get_django_file('ubuntu_portrait.jpg'))
-        image_data.wall_id = wall.id
+        image_data = get_django_file('ubuntu_portrait.jpg')
 
-        image = self.image_service.create_image(user, image_data)
+        image = self.image_service.create_image(user, wall, image_data, 0,0 )
 
         width, height = self.image_service._get_geometry(image.image_file)
         self.assertEqual(height, WallImageService.DEFAULT_HEIGHT)
         self.assertIsNone(width)
+
+
 
     def test_format_geometry(self):
         image = WallImage(width=None, height=300)
@@ -127,3 +106,14 @@ class TestWallImageService(TestCase):
 
         image = WallImage(width=None, height=None)
         self.assertEqual(self.image_service._format_geometry(image), str(WallImageService.DEFAULT_WIDTH))
+
+    def test_get_wh(self):
+        file = get_django_file('lviv_photo_portrait.jpg')
+        image = Image.open(file)
+
+        info = image._getexif()
+        for tag, value in info.items():
+            decoded = TAGS.get(tag, tag)
+            print "%s : %s" % (decoded, value)
+
+#        print "%sx%s" % (str(width), str(height))

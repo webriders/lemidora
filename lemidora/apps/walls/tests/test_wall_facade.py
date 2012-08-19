@@ -20,8 +20,8 @@ class TestWallFacade(TestCase):
         user = create_user('dojo')
         wall = self.wall_service.create_wall(user)
 
-        image_data = WallImage(image_file=get_django_file('ubuntu_grunge_800x600.jpg'), wall_id=wall.id)
-        image = self.image_service._create_image(user, image_data)
+        image_data = get_django_file('ubuntu_grunge_800x600.jpg')
+        image = self.image_service.create_image(user, wall, image_data, 0, 0)
 
         self.facade.update_image(user, wall.hash, image.id, RequestMock(dict(
             x=10, y=20, rotation=200, width=900, height=800, z=-1, title="Hello babies"
@@ -42,8 +42,8 @@ class TestWallFacade(TestCase):
         user = create_user('dojo')
         wall = self.wall_service.create_wall(user)
 
-        image_data = WallImage(image_file=get_django_file('ubuntu_grunge_800x600.jpg'), wall_id=wall.id)
-        image = self.image_service._create_image(user, image_data)
+        image_data = get_django_file('ubuntu_grunge_800x600.jpg')
+        image = self.image_service.create_image(user, wall, image_data, 0, 0)
         old_image = self.image_service.get_image(user, image.id)
 
         self.facade.update_image(user, wall.hash, image.id, RequestMock(dict(
@@ -65,8 +65,8 @@ class TestWallFacade(TestCase):
         user = create_user('dojo')
         wall = self.wall_service.create_wall(user)
 
-        image_data = WallImage(image_file=get_django_file('ubuntu_grunge_800x600.jpg'), wall_id=wall.id)
-        image = self.image_service._create_image(user, image_data)
+        image_data = get_django_file('ubuntu_grunge_800x600.jpg')
+        image = self.image_service.create_image(user, wall, image_data, 0, 0)
 
         self.facade.delete_image(user, wall.hash, image.id)
         self.assertRaises(WallImage.DoesNotExist, self.image_service.get_image, user, image.id)
