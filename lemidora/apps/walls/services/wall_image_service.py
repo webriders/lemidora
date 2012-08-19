@@ -2,7 +2,6 @@ from django.db.models import Max
 from sorl.thumbnail.images import ImageFile
 from sorl.thumbnail.shortcuts import get_thumbnail
 from walls.models import WallImage
-from walls.services.wall_service import WallService
 from sorl.thumbnail import default
 
 
@@ -19,44 +18,44 @@ class WallImageService(object):
 
     EXIF_ORIENTATION_TAG = 274
 
-    wall_service = WallService()
-
-    def create_image(self, user, wall, image_data, x, y):
+    def create_image(self, user, wall, image_file, x, y):
         """
         Create list of images
         :param user: User instance
         :param wall: Wall instance
-        :param image_data: image file instance
+        :param image_file: image file instance
         :param x: X coordinate
         :param y: Y coordinate
         """
-
         image = WallImage()
-        image.wall = wall
-        image.image_file = image_data
-        image.created_by = user
-        image.updated_by = user
+        try:
+            image = WallImage()
+            self.__update_image_system_data(user, image, wall, image_file)
 
-        base_z = WallImage.objects.filter(wall=wall).aggregate(Max('z')).values().pop() or 0
+            base_z = WallImage.objects.filter(wall=wall).aggregate(Max('z')).values().pop() or 0
 
-        image.z = base_z + 1
-        image.x = x
-        image.y = y
+            image.z = base_z + 1
+            image.x = x
+            image.y = y
 
-        image.width = self.DEFAULT_WIDTH
-        image.height = self.DEFAULT_HEIGHT
-        print "Init: %sx%s" % (str(image.width), str(image.height))
-        image.save()
+            image.width = self.DEFAULT_WIDTH
+            image.height = self.DEFAULT_HEIGHT
+            print "Init: %sx%s" % (str(image.width), str(image.height))
+            image.save()
 
-        image.width, image.height = self._get_geometry(image.image_file)
-        print "Geometry: %sx%s" % (str(image.width), str(image.height))
+            image.width, image.height = self._get_geometry(image.image_file)
+            print "Geometry: %sx%s" % (str(image.width), str(image.height))
 
-        self._add_thumbnail(image)
-        image.width = image.thumbnail.width
-        image.height = image.thumbnail.height
-        print "Th: %sx%s" % (str(image.width), str(image.height))
-        image.save()
-
+            self._add_thumbnail(image)
+            image.width = image.thumbnail.width
+            image.height = image.thumbnail.height
+            print "Th: %sx%s" % (str(image.width), str(image.height))
+            image.save()
+        except IOError, e:
+            # This is the broken image case
+            # delete should also remove the file?
+            image.delete()
+            raise e
         return image
 
     def _get_geometry(self, image_file):
@@ -85,7 +84,7 @@ class WallImageService(object):
 
         return width, height
 
-    def __update_image_data(self, image, image_data):
+    def __update_image_user_data(self, image, image_data):
         image.title = image_data.title
         if image_data.x is not None:
             image.x = image_data.x
@@ -100,14 +99,28 @@ class WallImageService(object):
         if image_data.height is not None:
             image.height = image_data.height
 
+    def __update_image_system_data(self, user, image, wall, image_file):
+        image.wall = wall
+        image.image_file = image_file
+        if user and user.is_authenticated():
+            image.created_by = user
+            image.updated_by = user
+
+    def fork_image(self, user, forked_wall, source_image):
+        forked_image = WallImage(wall=forked_wall, image_file=source_image.image_file)
+        self.__update_image_user_data(forked_image, source_image)
+        self.__update_image_system_data(user, forked_image, forked_wall, source_image.image_file)
+        forked_image.save()
+        return forked_image
+
     def update_image(self, user, image_data):
         # TODO: check permission
 
         image = self.get_image(user, image_data.id)
 
-        self.__update_image_data(image, image_data)
-
-        image.updated_by = user
+        self.__update_image_user_data(image, image_data)
+        if user and user.is_authenticated():
+            image.updated_by = user
 
         image.save()
         self._add_thumbnail(image)

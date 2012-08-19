@@ -9,7 +9,7 @@ class DeleteImageView(View):
     """
     facade = WallFacade()
 
-    def get(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         wall_key = kwargs.get('wall_id')
         image_id = request.REQUEST.get('image_id')
         response_json = self.facade.delete_image(request.user, wall_key, image_id)
@@ -24,7 +24,7 @@ class UpdateImageView(View):
     """
     facade = WallFacade()
 
-    def get(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         wall_key = kwargs.get('wall_id')
         image_id = request.REQUEST.get('image_id')
         response_json = self.facade.update_image(request.user, wall_key, image_id, request)

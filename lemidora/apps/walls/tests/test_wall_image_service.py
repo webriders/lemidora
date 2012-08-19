@@ -17,9 +17,9 @@ class TestWallImageService(TestCase):
         user = create_user('dojo')
         wall = self.wall_service.create_wall(user)
 
-        image_data = get_django_file('ubuntu_grunge_800x600.jpg')
+        image_file = get_django_file('ubuntu_grunge_800x600.jpg')
 
-        image = self.image_service.create_image(user, wall, image_data, 0, 0)
+        image = self.image_service.create_image(user, wall, image_file, 0, 0)
         image = self.image_service.get_image(user, image.id)
 
         self.assertIsInstance(image, WallImage)
@@ -114,6 +114,6 @@ class TestWallImageService(TestCase):
         info = image._getexif()
         for tag, value in info.items():
             decoded = TAGS.get(tag, tag)
-            print "%s : %s" % (decoded, value)
+#            print "%s : %s" % (decoded, value)
 
 #        print "%sx%s" % (str(width), str(height))

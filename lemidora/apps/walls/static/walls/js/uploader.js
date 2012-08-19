@@ -23,6 +23,7 @@ Lemidora.WallUploader.prototype = {
     maxFileSize: 10 * 1024 * 1024,
     allowedMimeType: /^image\/.*$/,
     uploadUrl: '',
+    csrf: '',
 
     init: function(cfg) {
         $.extend(true, this, cfg);
@@ -166,9 +167,11 @@ Lemidora.WallUploader.prototype = {
         });
 
         formdata.append('x', coords.x);
-        formdata.append('y', coords.y);
+        formdata.append('y', coords.y - parseInt(this.wall.area.css('margin-top')));
+        formdata.append('csrfmiddlewaretoken', this.csrf);
 
-        var cnt = this.container,
+        var self = this,
+            cnt = this.container,
             pb = this.progressBar;
 
         $.ajax({
@@ -180,17 +183,7 @@ Lemidora.WallUploader.prototype = {
 
             success: function (res) {
                 cnt.removeClass('uploading active');
-
-                // Show response messages
-                if (res.messages) {
-                    $.each(res.messages, function(type, msgs) {
-                        if (type in Lemidora.messages.supportedTypes) {
-                            $.each(msgs, function(i, text) {
-                                Lemidora.messages.message(type, text);
-                            });
-                        }
-                    });
-                }
+                self.trigger('uploaded', [res]);
             },
 
             error: function() {
@@ -219,5 +212,17 @@ Lemidora.WallUploader.prototype = {
                 return xhr;
             }
         });
+    },
+
+    on: function(event, fn) {
+        return this.container.on(event, fn);
+    },
+
+    off: function(event, fn) {
+        return this.container.off(event, fn);
+    },
+
+    trigger: function(event, args) {
+        return this.container.trigger(event, args);
     }
 };

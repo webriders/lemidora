@@ -41,6 +41,12 @@ Lemidora.Wall.prototype = {
 
     initUploader: function() {
         this.uploader = new Lemidora.WallUploader(this.uploaderConfig);
+
+        var self = this;
+
+        this.uploader.on('uploaded', function(e, wallInfo) {
+            self.updateWall(wallInfo);
+        });
     },
 
     images: {},
@@ -49,40 +55,159 @@ Lemidora.Wall.prototype = {
      * Init images that are already on the wall (initially)
      */
     initExistingImages: function() {
-        var wall = this,
+        var self = this,
             images = this.images = {};
 
-        this.container.find('.wall-image').each(function(i, image) {
-            var wallImage = new Lemidora.WallImage({
-                wall:  wall,
-                container: image
-            });
-            images[wallImage.attrs.id] = wallImage;
+        this.container.find('.wall-image').each(function(i, imageEl) {
+            self.initImage(imageEl);
         });
     },
 
-    /**
-     * Look into wall_image.js for 'attrs' specification
-     */
-    addImage: function(attrs) {
-        if (!attrs.id)
-            throw 'You must specify attrs.id';
-
-        if (attrs.id in this.images)
-            throw 'Image with id="' + attrs.id + '" already exists';
-
-        var imageEl = $(this.imageItemTmpl).appendTo(this.area)
-            .data(attrs)
-            .find(Lemidora.WallImage.prototype.title).text(attrs.title).end()
-            .find(Lemidora.WallImage.prototype.image).attr('src', attrs.url).attr('width', attrs.width).attr('height', attrs.height).end();
-
+    initImage: function(imageEl) {
         var wallImage = new Lemidora.WallImage({
             wall:  this,
             container: imageEl
         });
 
-        this.images[attrs.id] = wallImage;
+        this.images[wallImage.attrs.id] = wallImage;
 
-        return wallImage;
+        wallImage.on('image-move', $.proxy(this, 'moveImageRequest'));
+        wallImage.on('image-resize', $.proxy(this, 'resizeImageRequest'));
+        wallImage.on('image-delete', $.proxy(this, 'deleteImageRequest'));
+    },
+
+    updateImageUrl: '',
+    deleteImageUrl: '',
+    csrf: '',
+
+    moveImageRequest: function(e, id, x, y) {
+        this.updateImageRequest(id, { x: x, y: y });
+    },
+
+    resizeImageRequest: function(e, id, width, height) {
+        this.updateImageRequest(id, { width: width, height: height });
+    },
+
+    deleteImageRequest: function(e, id) {
+        this.updateImageRequest(id, null, 'delete, please');
+    },
+
+    updateImageRequest: function(id, attrs, del) {
+        var self = this;
+
+        var data = $.extend(
+            true,
+            {
+                image_id: id,
+                csrfmiddlewaretoken: this.csrf
+            },
+            attrs
+        );
+
+        url = del ? this.deleteImageUrl : this.updateImageUrl;
+
+        $.post(url, data)
+            .success(function(res) {
+                self.updateWall(res);
+            })
+            .fail(function() {
+                self.showMessages({
+                    error: ['Your last action was not saved to server. Please, repeat it']
+                });
+            });
+    },
+    /**
+     * 'wallInfo' example:
+     *
+     * {
+     *     "wall": {
+     *         "owner": null,
+     *         "created_date": "2012-08-19T17:38:34.454021+00:00",
+     *         "id": 8,
+     *         "key": "OB1RDS",
+     *         "title": null
+     *     },
+     *     "images": [
+     *         {
+     *             "updated_date": "2012-08-19T17:41:14.619743+00:00",
+     *             "updated_by": null,
+     *             "title": null,
+     *             "url": "/media/cache/e0/a0/e0a0aaa60a8844e60906ad1eaa7af0b3.jpg",
+     *             "created_by": null,
+     *             "height": 200,
+     *             "width": 300,
+     *             "created_date": "2012-08-19T17:41:13.277312+00:00",
+     *             "y": 198.0,
+     *             "x": 742.0,
+     *             "rotation": 0.0,
+     *             "z": 2,
+     *             "id": 29
+     *         },
+     *     ],
+     *     "messages": {
+     *         "_exception": [],
+     *         "information": [],
+     *         "success": [
+     *             "File Ski-Photo-20120203-165808.jpg successfully uploaded!"
+     *         ],
+     *         "alert": [],
+     *         "warning": [],
+     *         "error": []
+     *     }
+     * }
+     *
+     */
+    updateWall: function(wallInfo) {
+        var wall = this,
+            images = this.images,
+            incomingImages = wallInfo.images,
+            incomingIds = {};
+
+        $.each(incomingImages, function(i, attrs) {
+            var id = attrs.id;
+
+            if (id in images) {
+                images[id].updateImage(attrs);
+            } else {
+                Lemidora.WallImage.createImage(wall, attrs);
+            }
+
+            incomingIds[id] = true;
+        });
+
+        $.each(images, function(i, image) {
+            var id = image.attrs.id;
+
+            if (!(id in incomingIds))
+                image.deleteImage();
+        });
+
+        if (wallInfo.messages)
+            this.showMessages(wallInfo.messages);
+    },
+
+    /**
+     * 'messages' example:
+     *
+     * {
+     *     "_exception": [],
+     *     "information": [],
+     *     "success": [
+     *         "File Ski-Photo-20120203-165808.jpg successfully uploaded!"
+     *     ],
+     *     "alert": [],
+     *     "warning": [],
+     *     "error": []
+     * }
+     *
+     */
+    showMessages: function(messages) {
+        $.each(messages, function(type, msgs) {
+            if (type in Lemidora.messages.supportedTypes) {
+                $.each(msgs, function(i, text) {
+                    Lemidora.messages.message(type, text);
+                });
+            }
+        });
     }
 };

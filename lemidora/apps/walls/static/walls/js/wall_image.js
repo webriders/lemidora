@@ -19,6 +19,7 @@ Lemidora.WallImage.prototype = {
     title: '.title',
     editTitleButton: '.set-title',
     rotationButton: '.handle-rotate',
+    deleteButton: '.delete',
 
     /**
      * Example:
@@ -45,16 +46,17 @@ Lemidora.WallImage.prototype = {
         this.title = this.container.find(this.title);
         this.editTitleButton = this.container.find(this.editTitleButton);
         this.rotationButton = this.container.find(this.rotationButton);
+        this.deleteButton = this.container.find(this.deleteButton);
 
-        this.initAttrs();
-        this.initContainer();
-        this.initTitle();
+        this.initElement();
+        this.initTitleEdit();
         this.initRotation();
+        this.initDeletion();
         this.initDraggable();
         this.initResizable();
     },
 
-    initAttrs: function() {
+    initElement: function() {
         var cnt = this.container;
 
         this.attrs = {
@@ -65,19 +67,14 @@ Lemidora.WallImage.prototype = {
             y: cnt.data('y'),
             z: cnt.data('z'),
             rotate: cnt.data('rotate'),
-            title: cnt.find('.title').text(),
-            url: cnt.data('url')
+            url: cnt.data('url'),
+            title: cnt.find('.title').text()
         };
+
+        Lemidora.WallImage.updateImageElement(this.container, this.attrs);
     },
 
-    initContainer: function() {
-        this.container.animate({
-            left: this.attrs.x,
-            top: this.attrs.y
-        });
-    },
-
-    initTitle: function() {
+    initTitleEdit: function() {
         if (this.attrs.title) {
             this.title.show();
         } else {
@@ -93,12 +90,34 @@ Lemidora.WallImage.prototype = {
         this.rotationButton.hide();
     },
 
+    initDeletion: function() {
+        var self = this;
+
+        this.deleteButton.click(function(e) {
+            e.preventDefault();
+            self.deleteImage();
+            self.trigger('image-delete', [self.attrs.id]);
+        });
+    },
+
     initDraggable: function() {
-        this.container.draggable();
+        var self = this;
+
+        this.container.draggable({
+            stop: function(e, ui) {
+                var pos = ui.helper.position();
+
+                var newX = pos.left,
+                    newY = pos.top;
+
+                self.trigger('image-move', [self.attrs.id, newX, newY]);
+            }
+        });
     },
 
     initResizable: function() {
-        var cnt = this.container,
+        var self = this,
+            cnt = this.container,
             image = this.image;
 
         this.imageContainer
@@ -111,19 +130,79 @@ Lemidora.WallImage.prototype = {
                 helper: 'wall-image-resizable-helper',
                 handles: "all",
                 stop: function(e, ui) {
-                    var rs = ui.element;
+                    var el = ui.element;
 
-                    cnt.css('left', parseInt(cnt.css('left')) + parseInt(rs.css('left')));
-                    cnt.css('top', parseInt(cnt.css('top')) + parseInt(rs.css('top')));
-                    rs.css({ left: 0, top: 0 });
+                    cnt.css('left', parseInt(cnt.css('left')) + parseInt(el.css('left')));
+                    cnt.css('top', parseInt(cnt.css('top')) + parseInt(el.css('top')));
+                    el.css({ left: 0, top: 0 });
+
+                    var newWidth = el.width(),
+                        newHeight = el.height();
 
                     image.css({
-                        width: rs.width(),
-                        height: rs.height()
+                        width: newWidth,
+                        height: newHeight
                     });
+
+                    self.trigger('image-resize', [self.attrs.id, newWidth, newHeight]);
                 }
             });
 
         this.imageContainer.find('.ui-resizable-handle').css('z-index', 1);
+    },
+
+    updateImage: function(attrs) {
+        // Update attrs
+        $.extend(true, this.attrs, attrs);
+        attrs = this.attrs;
+
+        // Update element
+        Lemidora.WallImage.updateImageElement(this.container, attrs);
+    },
+
+    deleteImage: function() {
+        this.container.fadeOut(function() {
+            $(this).remove();
+        });
+    },
+
+    on: function(event, fn) {
+        return this.container.on(event, fn);
+    },
+
+    off: function(event, fn) {
+        return this.container.off(event, fn);
+    },
+
+    trigger: function(event, args) {
+        return this.container.trigger(event, args);
     }
+};
+
+
+/**
+ * Utils
+ */
+Lemidora.WallImage.createImage = function(wall, attrs) {
+    if (!attrs.id)
+        throw 'You must specify attrs.id';
+
+    if (attrs.id in wall.images)
+        throw 'Image with id="' + attrs.id + '" already exists';
+
+    var imageEl = $(wall.imageItemTmpl).appendTo(wall.area);
+    Lemidora.WallImage.updateImageElement(imageEl, attrs);
+
+    wall.initImage(imageEl);
+};
+
+
+Lemidora.WallImage.updateImageElement = function(imageEl, attrs) {
+    imageEl.data(attrs)
+        .find(Lemidora.WallImage.prototype.title).text(attrs.title).end()
+        .find(Lemidora.WallImage.prototype.image).attr('src', attrs.url).attr('width', attrs.width).attr('height', attrs.height).end()
+        .animate({
+            left: attrs.x,
+            top: attrs.y
+        });
 };
