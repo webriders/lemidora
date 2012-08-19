@@ -1,3 +1,4 @@
+from django.db.models import Max
 from sorl.thumbnail.images import ImageFile
 from sorl.thumbnail.shortcuts import get_thumbnail
 from walls.models import WallImage
@@ -18,41 +19,40 @@ class WallImageService(object):
 
     wall_service = WallService()
 
-    def create_image(self, user, wall, image, x, y):
+    def create_image(self, user, wall, image_data, x, y):
         """
         Create list of images
         :param user: User instance
         :param wall: Wall instance
-        :param image: image file instance
+        :param image_data: image file instance
         :param x: X coordinate
         :param y: Y coordinate
         """
 
-        image_data = WallImage(x=x, y=y, image_file=image, wall=wall)
-        self._create_image(user, image_data)
-
-    def _create_image(self, user, image_data):
-        # TODO: check permission
-
         image = WallImage()
-        image.wall_id = image_data.wall_id
-        image.image_file = image_data.image_file
+        image.wall = wall
+        image.image_file = image_data
         image.created_by = user
         image.updated_by = user
 
-        self.__update_image_data(image, image_data)
+        base_z = WallImage.objects.filter(wall=wall).aggregate(Max('z')).values().pop() or 0
+
+        image.z = base_z + 1
+        image.x = x
+        image.y = y
 
         image.width = self.DEFAULT_WIDTH
         image.height = self.DEFAULT_HEIGHT
+
         image.save()
 
-        width, height = self._get_geometry(image.image_file)
-        image.width = width
-        image.height = height
+        image.width, image.height = self._get_geometry(image.image_file)
+
         self._add_thumbnail(image)
         image.width = image.thumbnail.width
         image.height = image.thumbnail.height
         image.save()
+
         return image
 
     def _get_geometry(self, image_file):

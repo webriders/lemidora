@@ -76,7 +76,7 @@ class WallFacade(object):
         messages_manager = MessagesContextManager()
 
         with messages_manager(critical=True, error="Wall not found by key: %s" % str(wall_key)):
-            wall = self.wall_service.get_wall_by_hash(request.user, wall_key)
+            wall = self.wall_service.get_wall_by_hash(user, wall_key)
 
         if not messages_manager.is_critical_failure:
             with messages_manager():
@@ -85,7 +85,7 @@ class WallFacade(object):
                     image_data = form.save(commit=False)
                     image_data.wall_id = wall.id
                     image_data.id = image_id
-                    self.image_service.update_image(request.user, image_data)
+                    self.image_service.update_image(user, image_data)
                 else:
                     for form_error in form.errors:
                         messages_manager.error(str(form_error))

@@ -6,7 +6,7 @@ class UpdateImageForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(UpdateImageForm, self).__init__(*args, **kwargs)
         for key, field in self.fields.iteritems():
-#            self.fields[key].required = False
+            self.fields[key].required = False
             pass
 
     class Meta:
