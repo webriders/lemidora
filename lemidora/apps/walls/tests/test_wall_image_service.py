@@ -114,6 +114,6 @@ class TestWallImageService(TestCase):
         info = image._getexif()
         for tag, value in info.items():
             decoded = TAGS.get(tag, tag)
-            print "%s : %s" % (decoded, value)
+#            print "%s : %s" % (decoded, value)
 
 #        print "%sx%s" % (str(width), str(height))
