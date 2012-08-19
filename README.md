@@ -11,9 +11,10 @@ No more table layouts with thumbnails and additional clicks, just compose your p
 What you can do with Lemidora:
 * create photo Wall
 * upload images by drag-and-dropping on the Wall
-* resize, move your pictures
+* resize and move your pictures
 * share Wall with your friends
-* **The Top Feature:** when multiple users edit Wall - you see their updates in real-time
+* **The Top Feature:** when multiple users edit Wall, you see their updates in real-time
+
 And please note, when you resize photo, we always create it from originally uploaded image, without quality loss!
 
 Planned features
