@@ -149,14 +149,15 @@ Lemidora.WallUploader.prototype = {
     },
 
     initProgressBar: function() {
-        this.progressBar.progressbar({ value: 0 });
+        this.progressBar.progressbar({ value: 0 })
+            .find('.ui-progressbar-value').text('');
     },
 
     upload: function(files) {
         var formdata = new FormData();
 
         $.each(files, function(i, file) {
-            formdata.append('images[]', file);
+            formdata.append('image_' + i, file);
         });
 
         var cnt = this.container,
@@ -171,7 +172,6 @@ Lemidora.WallUploader.prototype = {
 
             success: function (res) {
                 cnt.removeClass('uploading active');
-                pb.progressbar({ value: 100 });
 
                 // Show response messages
                 if (res.messages) {
@@ -195,7 +195,15 @@ Lemidora.WallUploader.prototype = {
                     if (e.lengthComputable) {
                         var percentComplete = e.loaded / e.total * 100;
                         pb.progressbar({ value: percentComplete });
+
+                        if (percentComplete == 100)
+                            pb.find('.ui-progressbar-value').text('processing your images ...');
                     }
+                }, false);
+
+                xhr.upload.addEventListener("load", function(e){
+                    pb.progressbar({ value: 100 });
+                    pb.find('.ui-progressbar-value').text('processing your images ...');
                 }, false);
 
                 return xhr;
