@@ -41,6 +41,12 @@ Lemidora.Wall.prototype = {
 
     initUploader: function() {
         this.uploader = new Lemidora.WallUploader(this.uploaderConfig);
+
+        var self = this;
+
+        this.uploader.on('uploaded', function(e, wallInfo) {
+            self.updateWall(wallInfo);
+        });
     },
 
     images: {},
@@ -62,27 +68,69 @@ Lemidora.Wall.prototype = {
     },
 
     /**
-     * Look into wall_image.js for 'attrs' specification
+     * 'wallInfo' example:
+     *
+     * {
+     *     "wall": {
+     *         "owner": null,
+     *         "created_date": "2012-08-19T17:38:34.454021+00:00",
+     *         "id": 8,
+     *         "key": "OB1RDS",
+     *         "title": null
+     *     },
+     *     "images": [
+     *         {
+     *             "updated_date": "2012-08-19T17:41:14.619743+00:00",
+     *             "updated_by": null,
+     *             "title": null,
+     *             "url": "/media/cache/e0/a0/e0a0aaa60a8844e60906ad1eaa7af0b3.jpg",
+     *             "created_by": null,
+     *             "height": 200,
+     *             "width": 300,
+     *             "created_date": "2012-08-19T17:41:13.277312+00:00",
+     *             "y": 198.0,
+     *             "x": 742.0,
+     *             "rotation": 0.0,
+     *             "z": 2,
+     *             "id": 29
+     *         },
+     *     ],
+     *     "messages": {
+     *         "_exception": [],
+     *         "information": [],
+     *         "success": [
+     *             "File Ski-Photo-20120203-165808.jpg successfully uploaded!"
+     *         ],
+     *         "alert": [],
+     *         "warning": [],
+     *         "error": []
+     *     }
+     * }
+     *
      */
-    addImage: function(attrs) {
-        if (!attrs.id)
-            throw 'You must specify attrs.id';
+    updateWall: function(wallInfo) {
+        var wall = this,
+            images = this.images,
+            incomingImages = wallInfo.images,
+            incomingIds = {};
 
-        if (attrs.id in this.images)
-            throw 'Image with id="' + attrs.id + '" already exists';
+        $.each(incomingImages, function(i, attrs) {
+            var id = attrs.id;
 
-        var imageEl = $(this.imageItemTmpl).appendTo(this.area)
-            .data(attrs)
-            .find(Lemidora.WallImage.prototype.title).text(attrs.title).end()
-            .find(Lemidora.WallImage.prototype.image).attr('src', attrs.url).attr('width', attrs.width).attr('height', attrs.height).end();
+            if (id in images) {
+                images[id].updateImage(attrs);
+            } else {
+                Lemidora.WallImage.createImage(wall, attrs);
+            }
 
-        var wallImage = new Lemidora.WallImage({
-            wall:  this,
-            container: imageEl
+            incomingIds[id] = true;
         });
 
-        this.images[attrs.id] = wallImage;
+        $.each(images, function(i, image) {
+            var id = image.attrs.id;
 
-        return wallImage;
+            if (!(id in incomingIds))
+                image.deleteImage();
+        });
     }
 };
