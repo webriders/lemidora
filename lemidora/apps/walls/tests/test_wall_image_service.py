@@ -3,7 +3,7 @@ from django.test import TestCase
 from main.utils.test_utils import create_user
 from sorl.thumbnail.images import ImageFile
 from walls.models import WallImage
-from walls.services.wall_image_service import WallImageService
+from walls.services.wall_image_service import WallImageService, LimitError
 from walls.services.wall_service import WallService
 from walls.tests.utils import get_django_file
 
@@ -31,6 +31,22 @@ class TestWallImageService(TestCase):
         self.assertTrue(hasattr(image, 'thumbnail'))
         self.assertEqual(image.thumbnail.width, WallImageService.DEFAULT_WIDTH)
         self.assertEqual(image.thumbnail.height, 240)
+
+    def test_create_check_limit(self):
+        user = create_user('dojo')
+        wall = self.wall_service.create_wall(user)
+
+        saved_limit = WallImageService.WALL_UPLOAD_LIMIT
+        WallImageService.WALL_UPLOAD_LIMIT = 3
+
+        self.image_service.create_image(user, wall, get_django_file('ubuntu_grunge_800x600.jpg'), 0, 0)
+        self.image_service.create_image(user, wall, get_django_file('lviv_photo_portrait.jpg'), 0, 0)
+        self.image_service.create_image(user, wall, get_django_file('ubuntu_grunge_800x600.png'), 0, 0)
+        self.image_service.create_image(user, wall, get_django_file('01.gif'), 0, 0)
+        self.assertRaises(LimitError, self.image_service.create_image, user, wall, get_django_file('01.gif'), 0, 0)
+
+        WallImageService.WALL_UPLOAD_LIMIT = saved_limit
+
 
     def test_update_image(self):
         user = create_user('dojo')

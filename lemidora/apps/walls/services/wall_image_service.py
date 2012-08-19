@@ -5,6 +5,10 @@ from walls.models import WallImage
 from sorl.thumbnail import default
 
 
+class LimitError(Exception):
+    pass
+
+
 class WallImageService(object):
     DEFAULT_WIDTH = 300
     DEFAULT_HEIGHT = 300
@@ -18,6 +22,8 @@ class WallImageService(object):
 
     EXIF_ORIENTATION_TAG = 274
 
+    WALL_UPLOAD_LIMIT = 50
+
     def create_image(self, user, wall, image_file, x, y):
         """
         Create list of images
@@ -27,6 +33,7 @@ class WallImageService(object):
         :param x: X coordinate
         :param y: Y coordinate
         """
+        self.check_is_upload_allowed(wall_id=wall.id)
         image = WallImage()
         try:
             image = WallImage()
@@ -198,3 +205,12 @@ class WallImageService(object):
         for image in images:
             self._add_dynamics(image)
         return images
+
+    def get_wall_image_count(self, user, wall_id):
+        # TODO: check permission
+        return WallImage.objects.filter(wall=wall_id).count()
+
+    def check_is_upload_allowed(self, wall_id):
+        if WallImage.objects.filter(wall=wall_id).count() < self.WALL_UPLOAD_LIMIT:
+            return True
+        raise LimitError("You have reached %d limit of images for one Wall" % self.WALL_UPLOAD_LIMIT)
