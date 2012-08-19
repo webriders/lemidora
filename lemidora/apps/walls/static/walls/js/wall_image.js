@@ -17,6 +17,7 @@ Lemidora.WallImage.prototype = {
     image: 'img.image',
     imageContainer: '.image-container',
     title: '.title',
+    editTitleButton: '.set-title',
 
     attrs: {},
 
@@ -26,6 +27,7 @@ Lemidora.WallImage.prototype = {
         this.image = this.container.find(this.image);
         this.imageContainer = this.container.find(this.imageContainer);
         this.title = this.container.find(this.title);
+        this.editTitleButton = this.container.find(this.editTitleButton);
         this.initAttrs();
         this.initTitle();
         this.initDraggable();
@@ -53,6 +55,9 @@ Lemidora.WallImage.prototype = {
         } else {
             this.title.hide();
         }
+
+        // TODO: enable title editing
+        this.editTitleButton.hide();
     },
 
     initDraggable: function() {
@@ -71,7 +76,7 @@ Lemidora.WallImage.prototype = {
                 minHeight: 200,
                 minWidth: 200,
                 helper: 'wall-image-resizable-helper',
-                handles: "n, e, s, w, se",
+                handles: "all",
                 stop: function(e, ui) {
                     var rs = ui.element;
 
