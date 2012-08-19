@@ -67,8 +67,10 @@ class WallFacade(object):
         return json_data
 
     def delete_image(self, user, wall_key, image_id):
-        self.image_service.delete_image(user, image_id)
-        return self.get_wall_json(user, wall_key)
+        messages_manager = MessagesContextManager()
+        with messages_manager(critical=True):
+            self.image_service.delete_image(user, image_id)
+        return self.get_wall_json(user, wall_key, messages_manager)
 
     def update_image(self, user, wall_key, image_id, request):
         messages_manager = MessagesContextManager()
