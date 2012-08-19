@@ -2,6 +2,43 @@
 Lemidora
 ========
 
+Description
+-----------
+
+[Lemidora](http://www.lemidora.com) is a new way to share your photos: create Wall drop there your photos and share with your friends.
+
+What you can do with Lemidora:
+* create photo Wall
+* upload images by drag-and-dropping on the Wall
+* resize, move your pictures
+* share Wall with your friends
+* The Top Feature: real-time Wall editing in collaboration with your friens
+And please note, when you resize photo, we always create it from originally uploaded image, without quality loss!
+
+Planned features
+----------------
+
+* Home page to view public walls
+* Private walls
+* Collaboratos management for private walls
+* Collaboratos permission management
+* Image rotation
+* Wall backgrouds
+
+
+Technical Features
+------------------
+
+* Powered by Django!
+* Amazon S3 storage for static and media files
+* [Heoroku](http://www.heroku.com/) hosting
+* Three tier server side architecture: Service layer (Django models and basic API), Facade layer , View layer (tiny and elegant))
+* Killer MessagesContextManager for ajax error/messages handing
+* Unit test coverage for Service/Facade layer
+* Collaborative, multi-user realtiome photo Wall editing
+* Object-oriented Javascript components
+* HTML5 multiple files ajax uploading
+
 
 Installation
 ------------

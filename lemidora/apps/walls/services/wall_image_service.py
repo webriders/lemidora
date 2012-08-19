@@ -47,16 +47,16 @@ class WallImageService(object):
 
             image.width = self.DEFAULT_WIDTH
             image.height = self.DEFAULT_HEIGHT
-            print "Init: %sx%s" % (str(image.width), str(image.height))
+#            print "Init: %sx%s" % (str(image.width), str(image.height))
             image.save()
 
             image.width, image.height = self._get_geometry(image.image_file)
-            print "Geometry: %sx%s" % (str(image.width), str(image.height))
+#            print "Geometry: %sx%s" % (str(image.width), str(image.height))
 
             self._add_dynamics(image)
             image.width = image.thumbnail.width
             image.height = image.thumbnail.height
-            print "Th: %sx%s" % (str(image.width), str(image.height))
+#            print "Th: %sx%s" % (str(image.width), str(image.height))
             image.save()
         except IOError, e:
             # This is the broken image case
