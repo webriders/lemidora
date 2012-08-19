@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 
+
 def create_user(name, email=None, password=None, first_name=None, last_name=None):
     user = User()
     user.username = name
@@ -14,4 +15,3 @@ def create_user(name, email=None, password=None, first_name=None, last_name=None
 
     user.save()
     return user
-
