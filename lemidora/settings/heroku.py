@@ -16,7 +16,7 @@ AWS_STORAGE_BUCKET_NAME = 'lemidora'
 S3_URL = 'http://lemidora.s3-website-eu-west-1.amazonaws.com/'
 
 AWS_S3_SECURE_URLS=False
-AWS_QUERYSTRING_AUTH=False
+AWS_QUERYSTRING_AUTH=True
 AWS_REDUCED_REDUNDANCY=True
 
 STATIC_URL = S3_URL + 'static/'
