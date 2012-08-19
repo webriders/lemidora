@@ -28,34 +28,38 @@ class WallImageService(object):
         :param x: X coordinate
         :param y: Y coordinate
         """
-
         image = WallImage()
-        image.wall = wall
-        image.image_file = image_data
-        if user.is_authenticated():
-            image.created_by = user
-            image.updated_by = user
+        try:
+            image = WallImage()
+            image.wall = wall
+            image.image_file = image_data
+            if user.is_authenticated():
+                image.created_by = user
+                image.updated_by = user
 
-        base_z = WallImage.objects.filter(wall=wall).aggregate(Max('z')).values().pop() or 0
+            base_z = WallImage.objects.filter(wall=wall).aggregate(Max('z')).values().pop() or 0
 
-        image.z = base_z + 1
-        image.x = x
-        image.y = y
+            image.z = base_z + 1
+            image.x = x
+            image.y = y
 
-        image.width = self.DEFAULT_WIDTH
-        image.height = self.DEFAULT_HEIGHT
-        print "Init: %sx%s" % (str(image.width), str(image.height))
-        image.save()
+            image.width = self.DEFAULT_WIDTH
+            image.height = self.DEFAULT_HEIGHT
+            print "Init: %sx%s" % (str(image.width), str(image.height))
+            image.save()
 
-        image.width, image.height = self._get_geometry(image.image_file)
-        print "Geometry: %sx%s" % (str(image.width), str(image.height))
+            image.width, image.height = self._get_geometry(image.image_file)
+            print "Geometry: %sx%s" % (str(image.width), str(image.height))
 
-        self._add_thumbnail(image)
-        image.width = image.thumbnail.width
-        image.height = image.thumbnail.height
-        print "Th: %sx%s" % (str(image.width), str(image.height))
-        image.save()
-
+            self._add_thumbnail(image)
+            image.width = image.thumbnail.width
+            image.height = image.thumbnail.height
+            print "Th: %sx%s" % (str(image.width), str(image.height))
+            image.save()
+        except IOError, e:
+            # This is the broken image case
+            image.delete()
+            raise e
         return image
 
     def _get_geometry(self, image_file):
