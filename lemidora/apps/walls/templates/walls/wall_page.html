@@ -15,6 +15,7 @@
         Lemidora.wallPage.uploadUrl = '{% url upload_image wall.hash %}';
         Lemidora.wallPage.updateImageUrl = '{% url update_image wall.hash %}';
         Lemidora.wallPage.deleteImageUrl = '{% url delete_image wall.hash %}';
+        Lemidora.wallPage.autoUpdateUrl = '{% url wall_status wall.hash %}';
         Lemidora.wallPage.csrf = '{{ csrf_token }}';
     </script>
 {% endblock %}

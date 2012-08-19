@@ -119,6 +119,10 @@ Lemidora.WallImage.prototype = {
                     newY = pos.top;
 
                 self.trigger('image-move', [self.attrs.id, newX, newY]);
+            },
+
+            start: function() {
+                self.trigger('image-move-start', [self.attrs.id]);
             }
         });
     },
@@ -137,6 +141,7 @@ Lemidora.WallImage.prototype = {
                 minWidth: 200,
                 helper: 'wall-image-resizable-helper',
                 handles: "all",
+
                 stop: function(e, ui) {
                     var el = ui.element;
 
@@ -153,6 +158,10 @@ Lemidora.WallImage.prototype = {
                     });
 
                     self.trigger('image-resize', [self.attrs.id, newWidth, newHeight]);
+                },
+
+                start: function() {
+                    self.trigger('image-resize-start', [self.attrs.id]);
                 }
             });
 

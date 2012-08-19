@@ -1,5 +1,4 @@
-from ExifTags import TAGS
-import Image
+from django.contrib.auth.models import User, AnonymousUser
 from django.test import TestCase
 from main.utils.test_utils import create_user
 from sorl.thumbnail.images import ImageFile
@@ -106,13 +105,12 @@ class TestWallImageService(TestCase):
         image = WallImage(width=None, height=None)
         self.assertEqual(self.image_service._format_geometry(image), str(WallImageService.DEFAULT_WIDTH))
 
-    def test_get_wh(self):
-        file = get_django_file('lviv_photo_portrait.jpg')
-        image = Image.open(file)
+    def test_get_user_title(self):
+        self.assertEqual(self.image_service._get_user_title(User(first_name='Goga', username="gogi")), 'Goga')
+        self.assertEqual(self.image_service._get_user_title(User(last_name='Goga', username="gogi")), 'Goga')
+        self.assertEqual(self.image_service._get_user_title(User(username="gogi")), 'gogi')
+        self.assertEqual(self.image_service._get_user_title(User(first_name="", last_name="", username="gogi")), 'gogi')
+        self.assertEqual(self.image_service._get_user_title(User(first_name="Goga", last_name="Gogi", username="gogi")), 'Goga Gogi')
 
-        info = image._getexif()
-        for tag, value in info.items():
-            decoded = TAGS.get(tag, tag)
-#            print "%s : %s" % (decoded, value)
-
-#        print "%sx%s" % (str(width), str(height))
+        self.assertEqual(self.image_service._get_user_title(None), None)
+        self.assertEqual(self.image_service._get_user_title(AnonymousUser()), None)

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from django.contrib.auth.models import User, AnonymousUser
+from django.contrib.auth.models import AnonymousUser
 
 from django.test import TestCase
 from main.utils.test_utils import create_user
@@ -70,7 +70,7 @@ class TestWallFacade(TestCase):
 
         image_data = get_django_file('ubuntu_grunge_800x600.jpg')
         image = self.image_service.create_image(user, wall, image_data, 0, 0)
-        old_image = self.image_service.get_image(user, image.id)
+        self.image_service.get_image(user, image.id)
 
         self.facade.update_image(user, wall.hash, image.id, RequestMock(dict(
             x=10, width=900, title="Hello babies"

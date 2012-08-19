@@ -5,6 +5,7 @@ Lemidora.wallPage = {
     uploadUrl: '',
     updateImageUrl: '',
     deleteImageUrl: '',
+    autoUpdateUrl: '',
     csrf: '',
 
     init: function() {
@@ -12,6 +13,7 @@ Lemidora.wallPage = {
             container: '#main-wall',
             updateImageUrl: this.updateImageUrl,
             deleteImageUrl: this.deleteImageUrl,
+            autoUpdateUrl: this.autoUpdateUrl,
             csrf: this.csrf,
 
             uploaderConfig: {

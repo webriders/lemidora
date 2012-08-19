@@ -21,6 +21,7 @@ Lemidora.Wall.prototype = {
 
         this.initUploader();
         this.initExistingImages();
+        this.startAutoUpdate();
     },
 
     uploader: null,
@@ -57,7 +58,9 @@ Lemidora.Wall.prototype = {
 
         this.images[wallImage.attrs.id] = wallImage;
 
+        wallImage.on('image-move-start', $.proxy(this, 'stopAutoUpdate'));
         wallImage.on('image-move', $.proxy(this, 'moveImageRequest'));
+        wallImage.on('image-resize-start', $.proxy(this, 'stopAutoUpdate'));
         wallImage.on('image-resize', $.proxy(this, 'resizeImageRequest'));
         wallImage.on('image-delete', $.proxy(this, 'deleteImageRequest'));
     },
@@ -81,6 +84,8 @@ Lemidora.Wall.prototype = {
     updateImageRequest: function(id, attrs, del) {
         var self = this;
 
+        this.stopAutoUpdate();
+
         var data = $.extend(
             true,
             {
@@ -100,8 +105,50 @@ Lemidora.Wall.prototype = {
                 self.showMessages({
                     error: ['Your last action was not saved to server. Please, repeat it']
                 });
+            })
+            .complete(function() {
+                self.startAutoUpdate();
             });
     },
+
+    autoUpdateUrl: '',
+    poll: null,
+    pollDelay: 7000,
+
+    startAutoUpdate: function() {
+        console.log('next auto-update wil start in 7 sec.');
+
+        var self = this;
+
+        this.poll = setTimeout(function() {
+            self.autoUpdate();
+        }, this.pollDelay);
+    },
+
+    stopAutoUpdate: function() {
+        console.log('auto-update stopped');
+
+        clearTimeout(this.poll);
+    },
+
+    autoUpdate: function() {
+        console.log('auto-update started');
+
+        var self = this;
+
+        $.get(this.autoUpdateUrl)
+            .success(function(res) {
+                self.updateWall(res);
+            })
+            .fail(function() {
+                self.showMessages({
+                    error: ["I can't update the wall :("]
+                });
+            }).complete(function() {
+                self.startAutoUpdate();
+            });
+    },
+
     /**
      * 'wallInfo' example:
      *
@@ -197,3 +244,8 @@ Lemidora.Wall.prototype = {
         });
     }
 };
+
+
+if (!window.console) {
+    console = { log:$.noop };
+}

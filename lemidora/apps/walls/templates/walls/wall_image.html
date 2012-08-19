@@ -8,7 +8,7 @@
         data-ratate="{{ image.rotate }}"
         data-url="{{ image.thumbnail.url }}"
         data-updated_date="{{ image.updated_date|date:'c' }}"
-        data-updated_by="{{ image.updated_by|default:'' }}"
+        data-updated_by="{{ image.updated_by_title|default:'' }}"
     {% endif %}
 >
     <div class="image-container">
@@ -20,7 +20,7 @@
     <a href="#delete" class="delete">delete</a>
 
     <div class="last-edit">
-        <span class="label">last update:</span>
+        <span class="label">UPD:</span>
         <span class="datetime">
             <!-- Will be filled via JavaScript -->
         </span>
