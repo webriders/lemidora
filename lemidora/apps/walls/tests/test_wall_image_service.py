@@ -1,4 +1,3 @@
-from datetime import datetime
 from django.test import TestCase
 from main.utils.test_utils import create_user
 from sorl.thumbnail.images import ImageFile
