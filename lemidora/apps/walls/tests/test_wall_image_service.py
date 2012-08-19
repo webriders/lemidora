@@ -75,13 +75,13 @@ class TestWallImageService(TestCase):
         user = create_user('dojo')
         wall = self.wall_service.create_wall(user)
 
-        image_data_list = [
-            WallImage(image_file=get_django_file('ubuntu_grunge_800x600.jpg'), wall_id=wall.id),
-            WallImage(image_file=get_django_file('ubuntu_black_1440x900.jpg'), wall_id=wall.id),
-            WallImage(image_file=get_django_file('ubuntu_grunge_800x600.jpg'), wall_id=wall.id),
+        image_file_list = [
+            get_django_file('ubuntu_grunge_800x600.jpg'),
+            get_django_file('ubuntu_black_1440x900.jpg'),
+            get_django_file('ubuntu_grunge_800x600.jpg'),
         ]
 
-        images = self.image_service.create_images(user, 10, 20, image_data_list)
+        images = self.image_service.create_images(user, wall.id, image_file_list, 10, 20)
         self.assertEqual(len(images), 3)
 
         self.assertEqual(images[0].x, 10)

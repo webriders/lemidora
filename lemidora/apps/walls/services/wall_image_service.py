@@ -1,7 +1,6 @@
 from sorl.thumbnail.shortcuts import get_thumbnail
 from walls.models import WallImage
 
-
 class WallImageService(object):
     DEFAULT_WIDTH = 200
     DEFAULT_HEIGHT = 200
@@ -9,19 +8,27 @@ class WallImageService(object):
     DEFAULT_X_OFFSET = 20
     DEFAULT_Y_OFFSET = 20
 
-    def create_images(self, user, x, y, image_data_list):
+    def create_images(self, user, wall_id, image_file_list, x=None, y=None):
         """
         Create list of images
         :param user: User
+        :param wall_id: Wall id
+        :param image_file_list: list of uploaded Files
         :param x: basic coordinate
         :param y: basic coordinate
-        :param image_data_list: list of WallImage
         :return: list of created WallImage
         """
+
+        if not x:
+            x = self.DEFAULT_X_OFFSET
+        if not y:
+            y = self.DEFAULT_Y_OFFSET
+
         images = []
-        for image_data in image_data_list:
-            image_data.x = x
-            image_data.y = y
+        for image_file in image_file_list:
+            image_data = WallImage(
+                x=x, y=y, image_file=image_file, wall_id=wall_id
+            )
             images.append(self.create_image(user, image_data))
             x += self.DEFAULT_X_OFFSET
             y += self.DEFAULT_Y_OFFSET
@@ -65,7 +72,7 @@ class WallImageService(object):
     def add_thumbnail(self, image):
         image.thumbnail = get_thumbnail(
             image.image_file,
-            '%sx%s' % (image.width or self.DEFAULT_WIDTH, image.height or self.DEFAULT_HEIGHT),
+            '%sx%s' % (image.width or self.DEFAULT_WIDTH , image.height or self.DEFAULT_HEIGHT),
             crop=self.CROP_MODE,
             quality=99
         )
@@ -80,3 +87,10 @@ class WallImageService(object):
         image = WallImage.objects.get(id=id)
         self.add_thumbnail(image)
         return image
+
+    def get_wall_images(self, user, wall_id):
+        #TODO: check permission
+        images = list(WallImage.objects.filter(wall=wall_id))
+        for image in images:
+            self.add_thumbnail(image)
+        return images
