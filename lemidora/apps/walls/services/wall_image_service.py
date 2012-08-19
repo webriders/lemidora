@@ -51,12 +51,18 @@ class WallImageService(object):
 
     def __update_image_data(self, image, image_data):
         image.title = image_data.title
-        image.x = image_data.x
-        image.y = image_data.y
-        image.z = image_data.z
-        image.rotation = image_data.rotation
-        image.width = image_data.width
-        image.height = image_data.height
+        if image_data.x is not None:
+            image.x = image_data.x
+        if image_data.y is not None:
+            image.y = image_data.y
+        if image_data.z is not None:
+            image.z = image_data.z
+        if image_data.rotation is not None:
+            image.rotation = image_data.rotation
+        if image_data.width is not None:
+            image.width = image_data.width
+        if image_data.height is not None:
+            image.height = image_data.height
 
     def update_image(self, user, image_data):
         # TODO: check permission

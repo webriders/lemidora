@@ -18,7 +18,7 @@ class Wall(ModifyControlModelMixin):
         pass
 
     def __unicode__(self):
-        return self.title + ': %s' % self.owner or 'anonymous'
+        return str(self.title) + ': %s' % self.owner or 'anonymous'
 
 
 class WallImage(ModifyControlModelMixin):
