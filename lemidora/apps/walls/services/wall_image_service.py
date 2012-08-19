@@ -1,44 +1,61 @@
+from sorl.thumbnail.images import ImageFile
 from sorl.thumbnail.shortcuts import get_thumbnail
 from walls.models import WallImage
 from walls.services.wall_service import WallService
+from sorl.thumbnail import default
 
 
 class WallImageService(object):
-    DEFAULT_WIDTH = 200
-    DEFAULT_HEIGHT = 200
+    DEFAULT_WIDTH = 300
+    DEFAULT_HEIGHT = 300
     CROP_MODE = 'center'
     DEFAULT_X_OFFSET = 20
     DEFAULT_Y_OFFSET = 20
 
     wall_service = WallService()
 
-    def create_image(self, user, wall, image, x, y):
+    def create_image(self, user, wall, image_data, x, y):
         """
         Create list of images
         :param user: User instance
         :param wall: Wall instance
-        :param image: image file instance
+        :param image_data: image file instance
         :param x: X coordinate
         :param y: Y coordinate
         """
 
-        # TODO: check permission
+        image = WallImage()
+        image.wall = wall
+        image.image_file = image_data
+        image.created_by = user
+        image.updated_by = user
 
-        wall_image = WallImage()
-        wall_image.wall_id = wall.id
-        wall_image.image_file = image
-        wall_image.created_by = user
-        wall_image.updated_by = user
-        wall_image.x = x
-        wall_image.y = y
+        image.x = x
+        image.y = y
+        image.width = self.DEFAULT_WIDTH
+        image.height = self.DEFAULT_HEIGHT
 
-        wall_image.width = self.DEFAULT_WIDTH
-        wall_image.height = self.DEFAULT_HEIGHT
-        wall_image.save()
+        image.save()
 
-        self.add_thumbnail(wall_image)
+        image.width, image.height = self.get_geometry(image.image_file)
 
-        return wall_image
+        self.add_thumbnail(image)
+
+        image.width = image.thumbnail.width
+        image.height = image.thumbnail.height
+        image.save()
+
+        return image
+
+    def get_geometry(self, image_file):
+        image = ImageFile(image_file)
+        source_image = default.engine.get_image(image)
+        size = default.engine.get_image_size(source_image)
+        image.set_size(size)
+        if image.is_portrait():
+            return None, self.DEFAULT_HEIGHT
+        else:
+            return self.DEFAULT_WIDTH, None
 
     def __update_image_data(self, image, image_data):
         image.title = image_data.title
@@ -68,10 +85,21 @@ class WallImageService(object):
         self.add_thumbnail(image)
         return image
 
+    def _format_geometry(self, image):
+        if not image.height and not image.width:
+            return "%s" % str(self.DEFAULT_WIDTH)
+        if not image.height:
+            return '%s' % str(image.width)
+        if not image.width:
+            return 'x%s' % str(image.height)
+        return '%sx%s' % (image.width, image.height)
+
     def add_thumbnail(self, image):
+        geometry = self._format_geometry(image)
+
         image.thumbnail = get_thumbnail(
             image.image_file,
-            '%sx%s' % (image.width or self.DEFAULT_WIDTH, image.height or self.DEFAULT_HEIGHT),
+            geometry,
             crop=self.CROP_MODE,
             quality=99
         )

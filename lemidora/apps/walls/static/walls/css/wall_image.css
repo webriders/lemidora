@@ -43,7 +43,25 @@
     display: block;
 }
 
-/* jQuery UI tweaks */
+/* jQuery UI tweak */
 .wall-image-resizable-helper {
     border: 3px solid #c4ff6e;
+}
+
+.wall-image .handle-rotate {
+    position: absolute;
+    right: 0;
+    top: 0;
+    background: #fff url(../img/rotate_icon.png) center no-repeat;
+    display: none;
+    width: 24px;
+    height: 24px;
+    overflow: hidden;
+    text-indent: -100px;
+    border-bottom-left-radius: 6px;
+    cursor: move;
+}
+
+.wall-image:hover .handle-rotate {
+    display: block;
 }
