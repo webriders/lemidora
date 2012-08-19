@@ -67,4 +67,3 @@ class WallImage(ModifyControlModelMixin):
 #
 #    def __unicode__(self):
 #        return "%s: [%d x %d]" % (self.image.image_file, self.width, self.height)
-
