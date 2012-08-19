@@ -22,7 +22,7 @@ class WallImageService(object):
 
     EXIF_ORIENTATION_TAG = 274
 
-    WALL_UPLOAD_LIMIT = 50
+    WALL_UPLOAD_LIMIT = 3
 
     def create_image(self, user, wall, image_file, x, y):
         """
@@ -213,4 +213,4 @@ class WallImageService(object):
     def check_is_upload_allowed(self, wall_id):
         if WallImage.objects.filter(wall=wall_id).count() < self.WALL_UPLOAD_LIMIT:
             return True
-        raise LimitError("You have reached %d limit of images for one Wall" % self.WALL_UPLOAD_LIMIT)
+        raise LimitError("You have reached '%d' images limit for one Wall" % self.WALL_UPLOAD_LIMIT)

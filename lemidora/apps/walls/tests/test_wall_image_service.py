@@ -42,7 +42,6 @@ class TestWallImageService(TestCase):
         self.image_service.create_image(user, wall, get_django_file('ubuntu_grunge_800x600.jpg'), 0, 0)
         self.image_service.create_image(user, wall, get_django_file('lviv_photo_portrait.jpg'), 0, 0)
         self.image_service.create_image(user, wall, get_django_file('ubuntu_grunge_800x600.png'), 0, 0)
-        self.image_service.create_image(user, wall, get_django_file('01.gif'), 0, 0)
         self.assertRaises(LimitError, self.image_service.create_image, user, wall, get_django_file('01.gif'), 0, 0)
 
         WallImageService.WALL_UPLOAD_LIMIT = saved_limit

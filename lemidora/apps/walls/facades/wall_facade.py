@@ -109,10 +109,13 @@ class WallFacade(object):
 
     def _upload_images(self, user, wall, x, y, images, messages_manager):
         for image in images:
-            with messages_manager('File %s successfully uploaded!' % image.name,
-                'There is error occurred while uploading %s image! :(' % image.name):
+            with messages_manager(critical=True):
+                self.image_service.check_is_upload_allowed(wall.id)
 
-                self.image_service.create_image(user, wall, image, x, y)
+            if not messages_manager.is_critical_failure:
+                with messages_manager('File %s successfully uploaded!' % image.name,
+                    'There is error occurred while uploading %s image! :(' % image.name):
+                    self.image_service.create_image(user, wall, image, x, y)
 
             x += self.image_service.DEFAULT_X_OFFSET
             y += self.image_service.DEFAULT_Y_OFFSET
