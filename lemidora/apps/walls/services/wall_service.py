@@ -37,4 +37,3 @@ class WallService(object):
         #TODO: check permission
         wall = Wall.objects.get(id=wall_id)
         return wall
-

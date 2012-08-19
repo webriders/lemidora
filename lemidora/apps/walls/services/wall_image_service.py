@@ -12,10 +12,10 @@ class WallImageService(object):
         """
         Create list of images
         :param user: User
-        :param x: basic coordinate
-        :param y: basic coordinate
         :param wall_id: Wall id
         :param image_file_list: list of uploaded Files
+        :param x: basic coordinate
+        :param y: basic coordinate
         :return: list of created WallImage
         """
 
@@ -87,3 +87,10 @@ class WallImageService(object):
         image = WallImage.objects.get(id=id)
         self.add_thumbnail(image)
         return image
+
+    def get_wall_images(self, user, wall_id):
+        #TODO: check permission
+        images = list(WallImage.objects.filter(wall=wall_id))
+        for image in images:
+            self.add_thumbnail(image)
+        return images
