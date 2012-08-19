@@ -85,10 +85,16 @@ Lemidora.WallUploader.prototype = {
             var oe = e.originalEvent;
             var files = oe.dataTransfer.files;
             files = self.validateFiles(files);
+
+            if (!files.length) {
+                Lemidora.messages.warning('Nothing to upload');
+                cnt.removeClass('uploading active');
+                return false;
+            }
+
             self.initFileList(files);
             self.initProgressBar();
             self.upload(files);
-
         });
     },
 
@@ -164,12 +170,12 @@ Lemidora.WallUploader.prototype = {
             contentType: false,
 
             success: function (res) {
-                cnt.removeClass('uploading');
+                cnt.removeClass('uploading active');
                 pb.progressbar({ value: 100 });
             },
 
             error: function() {
-                cnt.removeClass('uploading');
+                cnt.removeClass('uploading active');
                 Lemidora.messages.error('Error happend during your file(s) uploading');
             },
 
