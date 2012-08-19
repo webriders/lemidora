@@ -1,15 +1,24 @@
+from django_assets import register
 from main.abstract_assets import CssBundle, JsBundle
+from main.common_assets import layout_css, messages_js
+from walls.common_assets import walls_css, walls_js
 
 
-# 'walls' is an inner application that has no own pages at the web-site. So its bundles should be included somewhere
-walls_css = CssBundle(
-    'walls/css/walls.css',
-    'walls/css/main_wall.css',
+wall_page_css = CssBundle(
+    layout_css,
+    walls_css,
+    'walls/css/wall_page.css',
+    output="walls/css/wall_page_bundle.css",
 )
 
+register('wall_page_css', wall_page_css)
 
-walls_js = JsBundle(
-    'walls/js/uploader.js',
-    'walls/js/walls.js',
-    'walls/js/main_wall.js',
+
+wall_page_js = JsBundle(
+    messages_js,
+    walls_js,
+    'walls/js/wall_page.js',
+    output="walls/js/wall_page_bundle.js",
 )
+
+register('wall_page_js', wall_page_js)

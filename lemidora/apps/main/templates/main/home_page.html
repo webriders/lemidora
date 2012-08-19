@@ -3,10 +3,10 @@
 {% load assets %}
 
 {% block static %}
-    {% assets "home_css" %}
+    {% assets "home_page_css" %}
         <link rel="stylesheet" type="text/css" href="{{ ASSET_URL }}" />
     {% endassets %}
-    {% assets "home_js" %}
+    {% assets "home_page_js" %}
         <script type="text/javascript" src="{{ ASSET_URL }}"></script>
     {% endassets %}
 {% endblock %}
