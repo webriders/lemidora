@@ -6,7 +6,6 @@ from walls.models import WallImage
 from walls.services.wall_image_service import WallImageService
 from walls.services.wall_service import WallService
 from walls.tests.utils import get_django_file
-from django.utils.timezone import utc
 
 class TestWallImageService(TestCase):
     image_service = WallImageService()

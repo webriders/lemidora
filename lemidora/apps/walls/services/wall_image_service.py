@@ -1,5 +1,3 @@
-from datetime import datetime
-import uuid
 from sorl.thumbnail.shortcuts import get_thumbnail
 from walls.models import WallImage
 
@@ -15,23 +13,27 @@ class WallImageService(object):
         image.image_file = image_data.image_file
         image.created_by = user
         image.updated_by = user
+        self.__update_image_data(image, image_data)
         image.width = self.DEFAULT_WIDTH
         image.height = self.DEFAULT_HEIGHT
         image.save()
         self.add_thumbnail(image)
         return image
 
-    def update_image(self, user, image_data):
-        #TODO: check permission
-        image = self.get_image(user, image_data.id)
+    def __update_image_data(self, image, image_data):
         image.title = image_data.title
-
         image.x = image_data.x
         image.y = image_data.y
         image.z = image_data.z
         image.rotation = image_data.rotation
         image.width = image_data.width
         image.height = image_data.height
+
+    def update_image(self, user, image_data):
+        #TODO: check permission
+        image = self.get_image(user, image_data.id)
+
+        self.__update_image_data(image, image_data)
 
         image.updated_by = user
 
