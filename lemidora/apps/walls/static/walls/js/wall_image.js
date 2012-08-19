@@ -24,6 +24,7 @@ Lemidora.WallImage.prototype = {
         $.extend(true, this, cfg);
         this.container = $(this.container);
         this.image = this.container.find(this.image);
+        this.imageContainer = this.container.find(this.imageContainer);
         this.title = this.container.find(this.title);
         this.initAttrs();
         this.initTitle();
@@ -59,10 +60,10 @@ Lemidora.WallImage.prototype = {
     },
 
     initResizable: function() {
-        var image = this.image,
-            titleHeight = this.title.height();
+        var cnt = this.container,
+            image = this.image;
 
-        this.image
+        this.imageContainer
             .resizable({
                 aspectRatio: this.attrs.width / this.attrs.height,
                 maxHeight: 1200,
@@ -70,11 +71,19 @@ Lemidora.WallImage.prototype = {
                 minHeight: 200,
                 minWidth: 200,
                 helper: 'wall-image-resizable-helper',
-//                stop: function(e, ui) {
-//                    var size = ui.size;
-//                    size.height -= titleHeight;
-//                    image.css(size);
-//                }
+                handles: "n, e, s, w, se",
+                stop: function(e, ui) {
+                    var rs = ui.element;
+
+                    cnt.css('left', parseInt(cnt.css('left')) + parseInt(rs.css('left')));
+                    cnt.css('top', parseInt(cnt.css('top')) + parseInt(rs.css('top')));
+                    rs.css({ left: 0, top: 0 });
+
+                    image.css({
+                        width: rs.width(),
+                        height: rs.height()
+                    });
+                }
             });
     }
 };
