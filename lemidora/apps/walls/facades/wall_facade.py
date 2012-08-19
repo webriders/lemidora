@@ -2,6 +2,7 @@ import json
 from walls.services.wall_image_service import WallImageService
 from walls.services.wall_service import WallService
 
+
 class WallFacade(object):
     wall_service = WallService()
     image_service = WallImageService()

@@ -26,6 +26,11 @@ Lemidora.WallUploader.prototype = {
         var wall = this.wall.container,
             cnt = this.container;
 
+        if (!window.ForfmData) {
+            Lemidora.messages.warning("Unfortunately your browser doesn't support JS File API and you can't drag'n'drop files", { timeout: false });
+        }
+
+
         function _preventDefault(e) {
             e.stopPropagation();
             e.preventDefault();
@@ -48,7 +53,10 @@ Lemidora.WallUploader.prototype = {
         var self = this;
 
         wall.on("drop", function(e) {
+            _preventDefault(e);
 
+            var oe = e.originalEvent;
+            var files = oe.dataTransfer.files;
         });
     }
 };
@@ -64,10 +72,6 @@ Lemidora.WallUploader.prototype = {
 /*
 $(function() {
 
-    wall.on("dragover", function(e) {
-        e.stopPropagation();
-        e.preventDefault();
-    });
 
     wall.on("drop", function(e) {
         e.stopPropagation();

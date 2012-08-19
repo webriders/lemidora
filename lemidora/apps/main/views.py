@@ -1,8 +1,5 @@
 from django.views.generic.base import TemplateView
+from walls.views.wall import create_wall_view
 
 
-class HomePageView(TemplateView):
-    template_name = 'main/home_page.html'
-
-
-home_page = HomePageView.as_view()
+home_page = create_wall_view

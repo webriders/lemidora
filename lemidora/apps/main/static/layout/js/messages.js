@@ -6,32 +6,41 @@ Lemidora.messages = {
      * @param type - 'alert', 'success', 'error', 'warning', 'information', 'confirmation'
      * @param text
      */
-    message: function(type, text) {
-        var msg = noty({ type: type, text: text, dismissQueue: true, timeout: 5000 });
+    message: function(type, text, cfg) {
+        var msg = $.extend({
+            type: type,
+            text: text,
+            layout: 'topCenter',
+            dismissQueue: true,
+            timeout: 5000
+        }, cfg);
+
+        msg = noty(msg);
+
         return msg;
     },
 
     alert: function(text) {
-        return this.message('alert', text);
+        return this.message('alert', text, cfg);
     },
 
-    success: function(text) {
-        return this.message('success', text);
+    success: function(text, cfg) {
+        return this.message('success', text, cfg);
     },
 
-    error: function(text) {
-        return this.message('error', text);
+    error: function(text, cfg) {
+        return this.message('error', text, cfg);
     },
 
-    warning: function(text) {
-        return this.message('warning', text);
+    warning: function(text, cfg) {
+        return this.message('warning', text, cfg);
     },
 
-    information: function(text) {
-        return this.message('information', text);
+    information: function(text, cfg) {
+        return this.message('information', text, cfg);
     },
 
-    confirmation: function(text) {
-        return this.message('confirmation', text);
+    confirmation: function(text, cfg) {
+        return this.message('confirmation', text, cfg);
     }
 };

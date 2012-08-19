@@ -1,0 +1,38 @@
+
+
+<div class="wall" id="main-wall">
+    <div class="area">
+        <h2>
+            {{ wall.hash }} : {{ wall.created_date }} : ownby: {{ wall.owner }}
+        </h2>
+
+        {% for image in images %}
+            <div>
+                <img src='{{ image.thumbnail.url }}'/>
+                <span>{{ image.title }}</span>
+                <span>{{ image.x }}</span>
+                <span>{{ image.y }}</span>
+                <span>{{ image.width }}x{{ image.height }}</span>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="uploader">
+        <div class="overlay"></div>
+
+        <div class="content-wrap">
+            <div class="content">
+                <div class="title">Drop your images <em>(anywhere)</em></div>
+                <ul class="file-list"></ul>
+                <div class="progress-bar"></div>
+            </div>
+        </div>
+
+        <script type="text/x-lemidora-template" id="file-item">
+            <li>
+                <div class="name">${name}</div>
+                <div class="size">${size}</div>
+            </li>
+        </script>
+    </div>
+</div>
