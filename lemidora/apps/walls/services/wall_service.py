@@ -38,3 +38,7 @@ class WallService(object):
         # TODO: check permission
         wall = Wall.objects.get(id=wall_id)
         return wall
+
+    def get_wall_by_hash(self, user, hash):
+        # TODO: check permission
+        return Wall.objects.get(hash=hash)
