@@ -18,18 +18,24 @@ Lemidora.WallImage.prototype = {
     imageContainer: '.image-container',
     title: '.title',
     editTitleButton: '.set-title',
+    rotationButton: '.handle-rotate',
 
     attrs: {},
 
     init: function(cfg) {
         $.extend(true, this, cfg);
+
         this.container = $(this.container);
         this.image = this.container.find(this.image);
         this.imageContainer = this.container.find(this.imageContainer);
         this.title = this.container.find(this.title);
         this.editTitleButton = this.container.find(this.editTitleButton);
+        this.rotationButton = this.container.find(this.rotationButton);
+
         this.initAttrs();
+        this.initContainer();
         this.initTitle();
+        this.initRotation();
         this.initDraggable();
         this.initResizable();
     },
@@ -49,6 +55,13 @@ Lemidora.WallImage.prototype = {
         };
     },
 
+    initContainer: function() {
+        this.container.animate({
+            left: this.attrs.x,
+            top: this.attrs.y
+        });
+    },
+
     initTitle: function() {
         if (this.attrs.title) {
             this.title.show();
@@ -58,6 +71,11 @@ Lemidora.WallImage.prototype = {
 
         // TODO: enable title editing
         this.editTitleButton.hide();
+    },
+
+    initRotation: function() {
+        // TODO: enable rotation
+        this.rotationButton.hide();
     },
 
     initDraggable: function() {
