@@ -116,6 +116,7 @@ INSTALLED_APPS = (
     # Custom
     'main',
     'walls',
+    'accounts',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -184,3 +185,21 @@ GITHUB_API_SECRET = os.environ.get('LEMIDORA_GITHUB_API_SECRET')
 # Google OAuth2
 GOOGLE_OAUTH2_CLIENT_ID = os.environ.get('LEMIDORA_GOOGLE_OAUTH2_CLIENT_ID')
 GOOGLE_OAUTH2_CLIENT_SECRET = os.environ.get('LEMIDORA_GOOGLE_OAUTH2_CLIENT_SECRET')
+
+SOCIAL_AUTH_PIPELINE = (
+    'social_auth.backends.pipeline.social.social_auth_user',
+    'social_auth.backends.pipeline.associate.associate_by_email',
+    'social_auth.backends.pipeline.misc.save_status_to_session',
+    'social_auth.backends.pipeline.user.get_username',
+    'social_auth.backends.pipeline.user.create_user',
+    'social_auth.backends.pipeline.social.associate_user',
+    'social_auth.backends.pipeline.social.load_extra_data',
+    'social_auth.backends.pipeline.user.update_user_details',
+    )
+
+LOGIN_URL = '/dive/'
+LOGIN_ERROR_URL = LOGIN_URL
+LOGOUT_URL = '/leave/'
+LOGIN_REDIRECT_URL = '/'
+
+SOCIAL_AUTH_BACKEND_ERROR_URL = LOGIN_URL

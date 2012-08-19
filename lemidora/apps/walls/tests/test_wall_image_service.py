@@ -97,7 +97,7 @@ class TestWallImageService(TestCase):
 
         width, height = self.image_service._get_geometry(image.image_file)
         self.assertEqual(width, WallImageService.DEFAULT_WIDTH)
-        self.assertIsNone(height)
+        self.assertEqual(height, 240)
 
         image_data = get_django_file('ubuntu_portrait.jpg')
 
@@ -105,7 +105,7 @@ class TestWallImageService(TestCase):
 
         width, height = self.image_service._get_geometry(image.image_file)
         self.assertEqual(height, WallImageService.DEFAULT_HEIGHT)
-        self.assertIsNone(width)
+        self.assertEqual(width, 242)
 
 
     def test_format_geometry(self):
