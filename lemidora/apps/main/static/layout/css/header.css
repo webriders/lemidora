@@ -17,7 +17,13 @@
     width: 100%;
 }
 
-.page-header h1 {
+.page-header .logo {
+    float: left;
+    height: 60px;
+    margin-right: 30px;
+}
+
+.page-header .logo h1 {
     margin: 0 20px;
     font-size: 2.2em;
     line-height: 60px;
@@ -26,8 +32,8 @@
     text-shadow: 3px 3px 0 #222;
 }
 
-.page-header .slogan {
-    font-size: 11px;
+.page-header .logo .slogan {
+    font-size: 12px;
     font-style: italic;
 }
 

@@ -4,3 +4,7 @@ body {
     font: 14px/1.2 Arial, Liberation Sans, sans-serif;
     color: #fff;
 }
+
+.clear {
+    clear: both;
+}
