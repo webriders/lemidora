@@ -22,7 +22,7 @@ class WallImageService(object):
 
     EXIF_ORIENTATION_TAG = 274
 
-    WALL_UPLOAD_LIMIT = 3
+    WALL_UPLOAD_LIMIT = 30
 
     def create_image(self, user, wall, image_file, x, y):
         """
