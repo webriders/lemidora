@@ -46,7 +46,7 @@ class WallImageService(object):
             image.width, image.height = self._get_geometry(image.image_file)
             print "Geometry: %sx%s" % (str(image.width), str(image.height))
 
-            self._add_thumbnail(image)
+            self._add_dynamics(image)
             image.width = image.thumbnail.width
             image.height = image.thumbnail.height
             print "Th: %sx%s" % (str(image.width), str(image.height))
@@ -123,7 +123,7 @@ class WallImageService(object):
             image.updated_by = user
 
         image.save()
-        self._add_thumbnail(image)
+        self._add_dynamics(image)
         return image
 
     def _format_geometry(self, image):
@@ -134,6 +134,17 @@ class WallImageService(object):
         if not image.width:
             return 'x%s' % str(image.height)
         return '%sx%s' % (image.width, image.height)
+
+    def _add_dynamics(self, image):
+        self._add_thumbnail(image)
+        image.created_by_title = self._get_user_title(image.created_by)
+        image.updated_by_title = self._get_user_title(image.updated_by)
+
+    def _get_user_title(self, user):
+        if user and user.is_authenticated():
+            return user.get_full_name() or user.username
+        else:
+            return None
 
     def _add_thumbnail(self, image):
         """
@@ -171,7 +182,7 @@ class WallImageService(object):
         """
         # TODO: check permission
         image = WallImage.objects.get(id=id)
-        self._add_thumbnail(image)
+        self._add_dynamics(image)
         return image
 
     def get_wall_images(self, user, wall_id):
@@ -185,5 +196,5 @@ class WallImageService(object):
         # TODO: check permission
         images = list(WallImage.objects.filter(wall=wall_id))
         for image in images:
-            self._add_thumbnail(image)
+            self._add_dynamics(image)
         return images
