@@ -1,0 +1,17 @@
+<div class="wall-image" id="image-{{ image.id }}"
+    data-id="{{ image.id }}"
+    data-width="{{ image.width }}" data-height="{{ image.height }}"
+    data-x="{{ image.x }}"
+    data-y="{{ image.y }}"
+    data-z="{{ image.z }}"
+    data-ratate="{{ image.rotate }}"
+>
+    <div class="image-container">
+        <img class="image" src="{{ image.thumbnail.url }}" width="{{ image.width }}" height="{{ image.height }}" />
+    </div>
+
+    <div class="title">{{ image.title|default:'' }}</div>
+    <a href="#set-title" class="set-title">set title</a>
+
+    <div class="handle-rotate"></div>
+</div>
