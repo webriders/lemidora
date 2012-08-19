@@ -27,7 +27,7 @@
             xhr.addEventListener("load", uploadComplete, false);
             xhr.addEventListener("error", uploadFailed, false);
             xhr.addEventListener("abort", uploadCanceled, false);
-            xhr.open("POST", "http://127.0.0.1:8000/upload/");
+            xhr.open("POST", ".");
             xhr.send(fd);
         }
 
@@ -56,7 +56,7 @@
     </script>
 </head>
 <body>
-<form id="form1" enctype="multipart/form-data" method="post" action="http://127.0.0.1:8000/upload/">
+<form id="form1" enctype="multipart/form-data" method="post" action=".">
     <div class="row">
         <label for="fileToUpload">Select a File to Upload</label><br />
         <input type="file" name="fileToUpload" id="fileToUpload" onchange="fileSelected();"/>

@@ -1,5 +1,6 @@
 from sorl.thumbnail.shortcuts import get_thumbnail
 from walls.models import WallImage
+from walls.services.wall_service import WallService
 
 
 class WallImageService(object):
@@ -9,16 +10,19 @@ class WallImageService(object):
     DEFAULT_X_OFFSET = 20
     DEFAULT_Y_OFFSET = 20
 
-    def create_images(self, user, wall_id, image_file_list, x=None, y=None):
+    wall_service = WallService()
+
+    def create_images(self, user, wall_key, image_file_list, x=None, y=None):
         """
         Create list of images
         :param user: User
-        :param wall_id: Wall id
+        :param wall_key: Wall key
         :param image_file_list: list of uploaded Files
         :param x: basic coordinate
         :param y: basic coordinate
         :return: list of created WallImage
         """
+        wall = self.wall_service.get_wall_by_hash(user, wall_key)
 
         if not x:
             x = self.DEFAULT_X_OFFSET
@@ -28,7 +32,7 @@ class WallImageService(object):
         images = []
         for image_file in image_file_list:
             image_data = WallImage(
-                x=x, y=y, image_file=image_file, wall_id=wall_id
+                x=x, y=y, image_file=image_file, wall=wall
             )
             images.append(self.create_image(user, image_data))
             x += self.DEFAULT_X_OFFSET
@@ -36,7 +40,7 @@ class WallImageService(object):
         return images
 
     def create_image(self, user, image_data):
-        #TODO: check permission
+        # TODO: check permission
         image = WallImage()
         image.wall_id = image_data.wall_id
         image.image_file = image_data.image_file
