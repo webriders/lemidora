@@ -15,7 +15,6 @@ class WallService(object):
         #TODO: check permission
         wall = self.get_wall(user, wall_data.id)
         wall.title = wall_data.title
-        wall.updated_date = datetime.now()
         wall.save()
         return wall
 
