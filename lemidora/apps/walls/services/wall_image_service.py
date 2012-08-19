@@ -1,6 +1,7 @@
 from sorl.thumbnail.shortcuts import get_thumbnail
 from walls.models import WallImage
 
+
 class WallImageService(object):
     DEFAULT_WIDTH = 200
     DEFAULT_HEIGHT = 200
@@ -58,7 +59,7 @@ class WallImageService(object):
         image.height = image_data.height
 
     def update_image(self, user, image_data):
-        #TODO: check permission
+        # TODO: check permission
         image = self.get_image(user, image_data.id)
 
         self.__update_image_data(image, image_data)
@@ -78,18 +79,18 @@ class WallImageService(object):
         )
 
     def delete_image(self, user, id):
-        #TODO: check permission
+        # TODO: check permission
         image = self.get_image(user, id)
         image.delete()
 
     def get_image(self, user, id):
-        #TODO: check permission
+        # TODO: check permission
         image = WallImage.objects.get(id=id)
         self.add_thumbnail(image)
         return image
 
     def get_wall_images(self, user, wall_id):
-        #TODO: check permission
+        # TODO: check permission
         images = list(WallImage.objects.filter(wall=wall_id))
         for image in images:
             self.add_thumbnail(image)

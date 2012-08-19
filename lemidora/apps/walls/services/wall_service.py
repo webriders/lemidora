@@ -18,23 +18,23 @@ class WallService(object):
         """
         for i in xrange(10):  # try 10 times
             key = id_generator()
-            if Wall.objects.filter(hash=key).count() == 0:
+            if not Wall.objects.filter(hash=key).exists():
                 return key
         raise ValueError('Wrong generator! 10 times unique key generation did not return unique value.')
 
     def update_wall(self, user, wall_data):
-        #TODO: check permission
+        # TODO: check permission
         wall = self.get_wall(user, wall_data.id)
         wall.title = wall_data.title
         wall.save()
         return wall
 
     def delete_wall(self, user, wall_id):
-        #TODO: check permission
+        # TODO: check permission
         wall = self.get_wall(user, wall_id)
         wall.delete()
 
     def get_wall(self, user, wall_id):
-        #TODO: check permission
+        # TODO: check permission
         wall = Wall.objects.get(id=wall_id)
         return wall
