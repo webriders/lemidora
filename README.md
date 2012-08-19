@@ -5,7 +5,8 @@ Lemidora
 Description
 -----------
 
-[Lemidora](http://www.lemidora.com) is a new way to share your photos: create Wall drop there your photos and share with your friends.
+[Lemidora](http://lemidora.com) is a new way to share your photos: create Wall drop there your photos and share with your friends.
+You have freedom now! No more table layouts and additional clicks, just compose your photo wall as you like.
 
 What you can do with Lemidora:
 * create photo Wall
