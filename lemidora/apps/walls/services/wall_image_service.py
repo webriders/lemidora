@@ -73,7 +73,7 @@ class WallImageService(object):
     def add_thumbnail(self, image):
         image.thumbnail = get_thumbnail(
             image.image_file,
-            '%sx%s' % (image.width or self.DEFAULT_WIDTH , image.height or self.DEFAULT_HEIGHT),
+            '%sx%s' % (image.width or self.DEFAULT_WIDTH, image.height or self.DEFAULT_HEIGHT),
             crop=self.CROP_MODE,
             quality=99
         )
