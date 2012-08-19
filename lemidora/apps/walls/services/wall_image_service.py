@@ -5,6 +5,26 @@ class WallImageService(object):
     DEFAULT_WIDTH = 200
     DEFAULT_HEIGHT = 200
     CROP_MODE = 'center'
+    DEFAULT_X_OFFSET = 20
+    DEFAULT_Y_OFFSET = 20
+
+    def create_images(self, user, x, y, image_data_list):
+        """
+        Create list of images
+        :param user: User
+        :param x: basic coordinate
+        :param y: basic coordinate
+        :param image_data_list: list of WallImage
+        :return: list of created WallImage
+        """
+        images = []
+        for image_data in image_data_list:
+            image_data.x=x
+            image_data.y=y
+            images.append(self.create_image(user, image_data))
+            x += self.DEFAULT_X_OFFSET
+            y += self.DEFAULT_Y_OFFSET
+        return images
 
     def create_image(self, user, image_data):
         #TODO: check permission
