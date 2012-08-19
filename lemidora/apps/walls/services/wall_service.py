@@ -29,6 +29,13 @@ class WallService(object):
         wall.save()
         return wall
 
+    def fork_wall(self, user, wall_data):
+        # TODO: check permission
+        wall = self.get_wall(user, wall_data.id)
+        wall.title = wall_data.title
+        wall.save()
+        return wall
+
     def delete_wall(self, user, wall_id):
         # TODO: check permission
         wall = self.get_wall(user, wall_id)

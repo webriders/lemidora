@@ -43,14 +43,16 @@ class WallImageService(object):
 
         image.width = self.DEFAULT_WIDTH
         image.height = self.DEFAULT_HEIGHT
-
+        print "Init: %sx%s" % (str(image.width), str(image.height))
         image.save()
 
         image.width, image.height = self._get_geometry(image.image_file)
+        print "Geometry: %sx%s" % (str(image.width), str(image.height))
 
         self._add_thumbnail(image)
         image.width = image.thumbnail.width
         image.height = image.thumbnail.height
+        print "Th: %sx%s" % (str(image.width), str(image.height))
         image.save()
 
         return image
@@ -59,6 +61,7 @@ class WallImageService(object):
         image = ImageFile(image_file)
         source_image = default.engine.get_image(image)
         size = default.engine.get_image_size(source_image)
+        print "GEOM: %sx%s" % (str(size[0]), str(size[1]))
         image.set_size(size)
         if image.is_portrait():
             return None, self.DEFAULT_HEIGHT

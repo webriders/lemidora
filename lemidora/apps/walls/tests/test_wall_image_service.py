@@ -1,3 +1,5 @@
+from ExifTags import TAGS
+import Image
 from django.test import TestCase
 from main.utils.test_utils import create_user
 from sorl.thumbnail.images import ImageFile
@@ -90,6 +92,8 @@ class TestWallImageService(TestCase):
         self.assertEqual(height, WallImageService.DEFAULT_HEIGHT)
         self.assertIsNone(width)
 
+
+
     def test_format_geometry(self):
         image = WallImage(width=None, height=300)
         self.assertEqual(self.image_service._format_geometry(image), "x300")
@@ -102,3 +106,14 @@ class TestWallImageService(TestCase):
 
         image = WallImage(width=None, height=None)
         self.assertEqual(self.image_service._format_geometry(image), str(WallImageService.DEFAULT_WIDTH))
+
+    def test_get_wh(self):
+        file = get_django_file('lviv_photo_portrait.jpg')
+        image = Image.open(file)
+
+        info = image._getexif()
+        for tag, value in info.items():
+            decoded = TAGS.get(tag, tag)
+            print "%s : %s" % (decoded, value)
+
+#        print "%sx%s" % (str(width), str(height))
