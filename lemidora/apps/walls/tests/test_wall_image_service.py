@@ -102,7 +102,7 @@ class TestWallImageService(TestCase):
 
         image = self.image_service.create_image(user, image_data)
 
-        width, height = self.image_service.get_geometry(image.image_file)
+        width, height = self.image_service._get_geometry(image.image_file)
         self.assertEqual(width, WallImageService.DEFAULT_WIDTH)
         self.assertIsNone(height)
 
@@ -111,7 +111,7 @@ class TestWallImageService(TestCase):
 
         image = self.image_service.create_image(user, image_data)
 
-        width, height = self.image_service.get_geometry(image.image_file)
+        width, height = self.image_service._get_geometry(image.image_file)
         self.assertEqual(height, WallImageService.DEFAULT_HEIGHT)
         self.assertIsNone(width)
 

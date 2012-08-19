@@ -11,14 +11,17 @@ def wall_upload_dir(instance, filename):
 
 class Wall(ModifyControlModelMixin):
     title = models.CharField(max_length=256, blank=True, null=True)
+
+    # hash is used as unique key for wall (in URL)
     hash = models.CharField(max_length=64, unique=True)
+
     owner = models.ForeignKey(User, blank=True, null=True)
 
     class Meta:
         pass
 
     def __unicode__(self):
-        return str(self.title) + ': %s' % self.owner or 'anonymous'
+        return str(self.title or self.hash) + ': %s' % self.owner or 'anonymous'
 
 
 class WallImage(ModifyControlModelMixin):
@@ -31,7 +34,7 @@ class WallImage(ModifyControlModelMixin):
     z = models.IntegerField(default=0)
     rotation = models.FloatField(default=0)
 
-    # Image dimensions
+    # Image geometry
     width = models.IntegerField(default=0)
     height = models.IntegerField(default=0)
 

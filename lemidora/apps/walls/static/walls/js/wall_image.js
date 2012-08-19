@@ -20,6 +20,20 @@ Lemidora.WallImage.prototype = {
     editTitleButton: '.set-title',
     rotationButton: '.handle-rotate',
 
+    /**
+     * Example:
+     * {
+     *     id: 123,
+     *     width: 400,
+     *     height: 300,
+     *     x: 253,
+     *     y: 136,
+     *     z: 0,
+     *     rotate: 45,
+     *     title: "Hello, world",
+     *     url: 'http://your.cdn/image.png'
+     * }
+     */
     attrs: {},
 
     init: function(cfg) {
@@ -51,7 +65,8 @@ Lemidora.WallImage.prototype = {
             y: cnt.data('y'),
             z: cnt.data('z'),
             rotate: cnt.data('rotate'),
-            title: cnt.find('.title').text()
+            title: cnt.find('.title').text(),
+            url: cnt.data('url')
         };
     },
 

@@ -1,17 +1,17 @@
 <div class="wall" id="main-wall">
-    <div class="area">
-        {% comment %}<h2>
-            {{ wall.hash }} : {{ wall.created_date }} : ownby: {{ wall.owner }}
-        </h2>{% endcomment %}
+    {% comment %}<h2>
+        {{ wall.hash }} : {{ wall.created_date }} : ownby: {{ wall.owner }}
+    </h2>{% endcomment %}
 
+    <div class="area">
         {% for image in images %}
             {% include 'walls/wall_image.html' %}
         {% endfor %}
-
-        <script type="text/x-lemidora-template" id="image-item">
-            {% include 'walls/wall_image.html' %}
-        </script>
     </div>
+
+    <script type="text/x-lemidora-template" id="image-item">
+        {% include 'walls/wall_image.html' %}
+    </script>
 
     <div class="uploader">
         <div class="overlay"></div>
