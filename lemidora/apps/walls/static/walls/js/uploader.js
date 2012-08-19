@@ -176,9 +176,11 @@ Lemidora.WallUploader.prototype = {
                 // Show response messages
                 if (res.messages) {
                     $.each(res.messages, function(type, msgs) {
-                        $.each(msgs, function(i, text) {
-                            Lemidora.messages.message(type, text);
-                        });
+                        if (type in Lemidora.messages.supportedTypes) {
+                            $.each(msgs, function(i, text) {
+                                Lemidora.messages.message(type, text);
+                            });
+                        }
                     });
                 }
             },

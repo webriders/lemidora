@@ -20,6 +20,15 @@ Lemidora.messages = {
         return msg;
     },
 
+    supportedTypes: {
+        'alert': 1,
+        'success': 1,
+        'error': 1,
+        'warning': 1,
+        'information': 1,
+        'confirmation': 1
+    },
+
     alert: function(text) {
         return this.message('alert', text, cfg);
     },
