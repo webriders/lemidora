@@ -9,6 +9,9 @@
     {% assets "wall_page_js" %}
         <script type="text/javascript" src="{{ ASSET_URL }}"></script>
     {% endassets %}
+    <script type="text/javascript">
+        Lemidora.wallPage.uploadUrl = '{% url upload_image wall.hash %}';
+    </script>
 {% endblock %}
 
 {% block content %}

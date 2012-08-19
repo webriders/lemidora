@@ -13,23 +13,45 @@ Lemidora.WallUploader = function(cfg) {
  */
 Lemidora.WallUploader.prototype = {
     wall: null,
-    container: null,
+    container: '.uploader',
+    title: '.title',
+    fileList: '.file-list',
+    fileItemTmpl: '#file-item',
+    progressBar: '.progress-bar',
+    closeButton: '.close-button',
+    maxFilesAmount: 10,
+    maxFileSize: 10 * 1024 * 1024,
+    allowedMimeType: /^image\/.*$/,
+    uploadUrl: '',
 
     init: function(cfg) {
         $.extend(true, this, cfg);
-        this.container = $(this.wall.container.find(this.container));
 
+        this.container = $(this.wall.container.find(this.container));
+        this.title = this.container.find(this.title);
+        this.fileList = this.container.find(this.fileList);
+        this.fileItemTmpl = this.container.find(this.fileItemTmpl).html();
+        this.progressBar = this.container.find(this.progressBar);
+        this.closeButton = this.container.find(this.closeButton);
+
+        this.initCloseButton();
         this.initDragAndDrop();
     },
 
-    initDragAndDrop: function() {
-        var wall = this.wall.container,
-            cnt = this.container;
+    initCloseButton: function() {
+        this.closeButton.click(function(e) {
+            e.preventDefault();
+            cnt.removeClass('active');
+        });
+    },
 
-        if (!window.ForfmData) {
+    initDragAndDrop: function() {
+        if (!window.FormData) {
             Lemidora.messages.warning("Unfortunately your browser doesn't support JS File API and you can't drag'n'drop files", { timeout: false });
         }
 
+        var wall = this.wall.container,
+            cnt = this.container;
 
         function _preventDefault(e) {
             e.stopPropagation();
@@ -39,13 +61,11 @@ Lemidora.WallUploader.prototype = {
         wall.on("dragenter", function(e) {
             _preventDefault(e);
             cnt.addClass('active');
-            console.log('over');
         });
 
         wall.on("dragexit", function(e) {
             _preventDefault(e);
             cnt.removeClass('active');
-            console.log('out');
         });
 
         wall.on("dragover", _preventDefault);
@@ -55,96 +75,122 @@ Lemidora.WallUploader.prototype = {
         wall.on("drop", function(e) {
             _preventDefault(e);
 
+            if (cnt.is('.uploading')) {
+                Lemidora.messages.warning('Another upload is in progress');
+                return false;
+            }
+
+            cnt.addClass('uploading');
+
             var oe = e.originalEvent;
             var files = oe.dataTransfer.files;
+            files = self.validateFiles(files);
+
+            if (!files.length) {
+                Lemidora.messages.warning('Nothing to upload');
+                cnt.removeClass('uploading active');
+                return false;
+            }
+
+            self.initFileList(files);
+            self.initProgressBar();
+            self.upload(files);
         });
-    }
-};
+    },
 
-
-
-
-
-
-
-
-
-/*
-$(function() {
-
-
-    wall.on("drop", function(e) {
-        e.stopPropagation();
-        e.preventDefault();
-        var oe = e.originalEvent;
-        var files = oe.dataTransfer.files;
-
-        var count = files.length;
-        var MAX_AMOUNT = 10;
-        if (count > MAX_AMOUNT) {
-            console.log("Sorry, but for now I can't upload more than " + MAX_AMOUNT + " files at a time");
+    validateFiles: function(files) {
+        var maxAmount = this.maxFilesAmount;
+        if (files.length > maxAmount) {
+            Lemidora.messages.error("Can't upload more than " + maxAmount + " files at a time, sorry");
             return false;
         }
 
         var toUpload = [];
-        var ALLOWED_TYPE = /^image\/.*$/;
-        var MAX_SIZE = 10 * 1024 * 1024;
+        var mime = this.allowedMimeType;
+        var maxSize = this.maxFileSize;
 
         $.each(files, function(i, file) {
-            if (!file.type.match(ALLOWED_TYPE)) {
-                console.log("Sorry, but file \"" + file.name + "\" is not an image");
+            if (!file.type.match(mime)) {
+                Lemidora.messages.error("\"" + file.name + "\" is not an image");
                 return true;
             }
-            if (file.size > MAX_SIZE) {
-                console.log("Sorry, but image \"" + file.name + "\" is larger than " + MAX_SIZE + " bytes");
+
+            if (file.size > maxSize) {
+                Lemidora.messages.error("Image \"" + file.name + "\" is larger than " + maxSize + " bytes");
                 return true;
             }
+
             toUpload.push(file);
         });
 
-        if (!toUpload.length) {
-            return;
-        }
+        return toUpload;
+    },
 
-        if (window.FormData) {
-            var formdata = new FormData();
+    initFileList: function(files) {
+        var fileList = this.fileList,
+            fileItemTmpl = this.fileItemTmpl;
 
-            $.each(toUpload, function(i, file) {
-                $('<li><span class="name"></span> <span class="size">(<i></i> bytes)</span> <div class="progress-bar"><div class="current"></div></div></li>')
-                    .appendTo('#uploader .to-upload')
-                    .find('.name').text(file.name).end()
-                    .find('.size i').text(file.size);
+        fileList.empty();
 
-                // File API - not for all!
-                formdata.append('images[]', file);
-            });
+        $.each(files, function(i, file) {
+            var fileName = file.name;
+            var nBytes = file.size;
 
-            $.ajax({
-                url: '/uploader/',
-                type: "POST",
-                data: formdata,
-                processData: false,
-                contentType: false,
-                success: function (res) {
-                    $('body').append(res);
-                },
-                xhr: function() {
-                    var xhr = new window.XMLHttpRequest();
+            var sOutput = nBytes + " bytes";
+            // optional code for multiples approximation
+            for (var aMultiples = ["KiB", "MiB", "GiB", "TiB", "PiB", "EiB", "ZiB", "YiB"], nMultiple = 0, nApprox = nBytes / 1024; nApprox > 1; nApprox /= 1024, nMultiple++) {
+                sOutput = nApprox.toFixed(3) + " " + aMultiples[nMultiple] + " <span>(" + nBytes + " bytes)</span>";
+            }
 
-                    //Upload progress
-                    xhr.upload.addEventListener("progress", function(e) {
-                        if (e.lengthComputable) {
-                            var percentComplete = e.loaded / e.total;
-                            //Do something with upload progress
-                            console.log(percentComplete);
-                        }
-                    }, false);
+            $(fileItemTmpl).appendTo(fileList)
+                .find('.name').text(fileName).end()
+                .find('.size').html(sOutput);
+        });
+    },
 
-                    return xhr;
-                }
-            });
-        } else {
-            alert('Unfurtunately you cant upload files for now :(');
-        }
-    });
-});*/
+    initProgressBar: function() {
+        this.progressBar.progressbar({ value: 0 });
+    },
+
+    upload: function(files) {
+        var formdata = new FormData();
+
+        $.each(files, function(i, file) {
+            formdata.append('images[]', file);
+        });
+
+        var cnt = this.container,
+            pb = this.progressBar;
+
+        $.ajax({
+            url: this.uploadUrl,
+            type: "POST",
+            data: formdata,
+            processData: false,
+            contentType: false,
+
+            success: function (res) {
+                cnt.removeClass('uploading active');
+                pb.progressbar({ value: 100 });
+            },
+
+            error: function() {
+                cnt.removeClass('uploading active');
+                Lemidora.messages.error('Error happend during your file(s) uploading');
+            },
+
+            xhr: function() {
+                var xhr = new window.XMLHttpRequest();
+
+                xhr.upload.addEventListener("progress", function(e) {
+                    if (e.lengthComputable) {
+                        var percentComplete = e.loaded / e.total * 100;
+                        pb.progressbar({ value: percentComplete });
+                    }
+                }, false);
+
+                return xhr;
+            }
+        });
+    }
+};

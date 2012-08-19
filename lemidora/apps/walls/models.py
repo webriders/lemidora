@@ -18,7 +18,7 @@ class Wall(ModifyControlModelMixin):
         pass
 
     def __unicode__(self):
-        return self.title + ': %s' % self.owner or 'anonymous'
+        return str(self.title) + ': %s' % self.owner or 'anonymous'
 
 
 class WallImage(ModifyControlModelMixin):
@@ -50,20 +50,3 @@ class WallImage(ModifyControlModelMixin):
 
     def __unicode__(self):
         return "%s: %s" % (self.image_file, self.title or 'Untitled')
-
-
-#class Image(models.Model, ModifyControlModelMixin):
-#    #TODO: Create AbstractImage (updated, )
-#    image_file = ImageField()
-#
-#    def __unicode__(self):
-#        return self.image_file
-
-#class Thumbnail(models.Model, ModifyControlModelMixin):
-#    image = models.ForeignKey(Image)
-#    image_file = ImageField()
-#    width = models.IntegerField(default=0)
-#    height = models.IntegerField(default=0)
-#
-#    def __unicode__(self):
-#        return "%s: [%d x %d]" % (self.image.image_file, self.width, self.height)
