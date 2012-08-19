@@ -17,9 +17,9 @@
 {% endblock %}
 
 {% block content %}
-    <div style="margin-top: 100px">
-        <a href="{% url socialauth_begin 'facebook' %}" class="social-auth">Dive in using Facebook</a>
-        <a href="{% url socialauth_begin 'github' %}" class="social-auth">Dive in using Github</a>
-        <a href="{% url socialauth_begin 'google-oauth2' %}" class="social-auth">Dive in using Google</a>
+    <div class="auth-container">
+        <a href="{% url socialauth_begin 'facebook' %}" class="social-auth btn-auth btn-facebook large">Dive in using Facebook</a>
+{#        <a href="{% url socialauth_begin 'github' %}" class="social-auth btn-auth btn-github large">Dive in using Github</a>#}
+        <a href="{% url socialauth_begin 'google-oauth2' %}" class="social-auth btn-auth btn-google large">Dive in using Google</a>
     </div>
 {% endblock %}

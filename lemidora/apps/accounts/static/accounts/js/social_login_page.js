@@ -7,7 +7,7 @@ Lemidora.auth = {
     },
 
     initSocialAuth: function () {
-        $(".social-auth").click(this.sociaAuth);
+        $(".social-auth").click(this.socialAuth);
     },
 
     socialAuth: function (e) {

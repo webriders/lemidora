@@ -5,6 +5,7 @@ from main.common_assets import layout_css, messages_js
 
 wall_page_css = CssBundle(
     layout_css,
+    'social_signin_buttons/auth-buttons.css',
     'accounts/css/social_login_page.css',
     output="accounts/css/social_login_page_bundle.css",
 )

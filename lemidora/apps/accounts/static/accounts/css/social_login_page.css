@@ -1,0 +1,9 @@
+.auth-container {
+    margin-top: 70px;
+    padding: 150px 80px 0;
+    text-align: center;
+}
+
+.auth-container .social-auth {
+    margin: 0 20px;
+}

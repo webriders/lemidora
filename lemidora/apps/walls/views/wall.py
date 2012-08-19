@@ -16,6 +16,7 @@ class WallPageView(TemplateView):
         data.update(
             self.facade.get_wall_data(self.request.user, wall_key)
         )
+        data['wall_page'] = True
         return data
 
 wall_page = WallPageView.as_view()

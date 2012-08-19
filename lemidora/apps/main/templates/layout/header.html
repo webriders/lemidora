@@ -4,13 +4,15 @@
         <span class="slogan">best way to share your photos</span>
     </div>
 
-    {% include 'walls/wall_header.html' %}
+    {% if wall_page %}
+        {% include 'walls/wall_header.html' %}
+    {% endif %}
 
     <div class="auth">
         {% if user.is_authenticated %}
             <a class="logout" href="out">Sign Out</a>
         {% else %}
-            <a class="login" href="in">Sign In</a>
+            <a class="login" href="{% url login %}">Sign In</a>
         {% endif %}
     </div>
 
