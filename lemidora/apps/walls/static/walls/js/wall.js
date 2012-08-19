@@ -73,9 +73,11 @@ Lemidora.Wall.prototype = {
 
         wallImage.on('image-move', $.proxy(this, 'moveImageRequest'));
         wallImage.on('image-resize', $.proxy(this, 'resizeImageRequest'));
+        wallImage.on('image-delete', $.proxy(this, 'deleteImageRequest'));
     },
 
     updateImageUrl: '',
+    deleteImageUrl: '',
     csrf: '',
 
     moveImageRequest: function(e, id, x, y) {
@@ -86,7 +88,11 @@ Lemidora.Wall.prototype = {
         this.updateImageRequest(id, { width: width, height: height });
     },
 
-    updateImageRequest: function(id, attrs) {
+    deleteImageRequest: function(e, id) {
+        this.updateImageRequest(id, null, 'delete, please');
+    },
+
+    updateImageRequest: function(id, attrs, del) {
         var self = this;
 
         var data = $.extend(
@@ -98,7 +104,9 @@ Lemidora.Wall.prototype = {
             attrs
         );
 
-        $.post(this.updateImageUrl, data)
+        url = del ? this.deleteImageUrl : this.updateImageUrl;
+
+        $.post(url, data)
             .success(function(res) {
                 self.updateWall(res);
             })

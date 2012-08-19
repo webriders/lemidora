@@ -23,11 +23,18 @@
 .wall-image .set-title {
     font-family: Arial, Helvetica, sans-serif;
     font-size: 14px;
-    color: #ffffff;
+    color: #fff;
     padding: 4px 10px;
-    background: #2fbd5c;
-    background: -moz-linear-gradient(top, #26cc2c 0%, #1aad48);
-    background: -webkit-gradient(linear, left top, left bottom, from(#26cc2c), to(#1aad48));
+
+    background: #26cc2c;
+    background: -moz-linear-gradient(top,  #26cc2c 0%, #1aad48 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#26cc2c), color-stop(100%,#1aad48));
+    background: -webkit-linear-gradient(top,  #26cc2c 0%,#1aad48 100%);
+    background: -o-linear-gradient(top,  #26cc2c 0%,#1aad48 100%);
+    background: -ms-linear-gradient(top,  #26cc2c 0%,#1aad48 100%);
+    background: linear-gradient(to bottom,  #26cc2c 0%,#1aad48 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#26cc2c', endColorstr='#1aad48',GradientType=0 );
+
     border-radius: 6px;
     border: 1px solid #008a25;
     box-shadow: 0 1px 3px rgba(000,000,000,0.5), inset 0 0 1px rgba(255,255,255,1);
@@ -40,6 +47,36 @@
 }
 
 .wall-image:hover .set-title {
+    display: block;
+}
+
+.wall-image .delete {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+    color: #fff;
+    padding: 4px 10px;
+
+    background: #ff0000;
+    background: -moz-linear-gradient(top,  #ff0000 0%, #ad0000 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ff0000), color-stop(100%,#ad0000));
+    background: -webkit-linear-gradient(top,  #ff0000 0%,#ad0000 100%);
+    background: -o-linear-gradient(top,  #ff0000 0%,#ad0000 100%);
+    background: -ms-linear-gradient(top,  #ff0000 0%,#ad0000 100%);
+    background: linear-gradient(to bottom,  #ff0000 0%,#ad0000 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ff0000', endColorstr='#ad0000',GradientType=0 );
+
+    border-radius: 6px;
+    border: 1px solid #8c0000;
+    box-shadow: 0 1px 3px rgba(000,000,000,0.5), inset 0 0 1px rgba(255,255,255,1);
+    text-shadow: 0 1px 0 rgba(000,000,000,0.4);
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    text-decoration: none;
+}
+
+.wall-image:hover .delete {
     display: block;
 }
 

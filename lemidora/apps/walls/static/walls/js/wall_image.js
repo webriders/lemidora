@@ -19,6 +19,7 @@ Lemidora.WallImage.prototype = {
     title: '.title',
     editTitleButton: '.set-title',
     rotationButton: '.handle-rotate',
+    deleteButton: '.delete',
 
     /**
      * Example:
@@ -45,10 +46,12 @@ Lemidora.WallImage.prototype = {
         this.title = this.container.find(this.title);
         this.editTitleButton = this.container.find(this.editTitleButton);
         this.rotationButton = this.container.find(this.rotationButton);
+        this.deleteButton = this.container.find(this.deleteButton);
 
         this.initElement();
         this.initTitleEdit();
         this.initRotation();
+        this.initDeletion();
         this.initDraggable();
         this.initResizable();
     },
@@ -85,6 +88,16 @@ Lemidora.WallImage.prototype = {
     initRotation: function() {
         // TODO: enable rotation
         this.rotationButton.hide();
+    },
+
+    initDeletion: function() {
+        var self = this;
+
+        this.deleteButton.click(function(e) {
+            e.preventDefault();
+            self.deleteImage();
+            self.trigger('image-delete', [self.attrs.id]);
+        });
     },
 
     initDraggable: function() {
