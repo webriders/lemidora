@@ -172,6 +172,15 @@ Lemidora.WallUploader.prototype = {
             success: function (res) {
                 cnt.removeClass('uploading active');
                 pb.progressbar({ value: 100 });
+
+                // Show response messages
+                if (res.messages) {
+                    $.each(res.messages, function(type, msgs) {
+                        $.each(msgs, function(i, text) {
+                            Lemidora.messages.message(type, text);
+                        });
+                    });
+                }
             },
 
             error: function() {
