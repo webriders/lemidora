@@ -205,7 +205,7 @@ Lemidora.Wall.prototype = {
     updateWall: function(wallInfo) {
         var wall = this,
             images = this.images,
-            incomingImages = wallInfo.images,
+            incomingImages = wallInfo.images || [],
             incomingIds = {};
 
         $.each(incomingImages, function(i, attrs) {
