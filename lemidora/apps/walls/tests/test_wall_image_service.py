@@ -93,7 +93,6 @@ class TestWallImageService(TestCase):
         self.assertIsNone(width)
 
 
-
     def test_format_geometry(self):
         image = WallImage(width=None, height=300)
         self.assertEqual(self.image_service._format_geometry(image), "x300")
