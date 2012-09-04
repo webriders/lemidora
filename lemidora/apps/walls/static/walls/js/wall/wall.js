@@ -12,7 +12,7 @@ Lemidora = window.Lemidora || {};
   *     wall.image.js (required)
   *     ... (more sub-modules could be required by mentioned above)
   *
-  * @cfg {Object} - constructor params. See the .init() docstring for details
+  * @cfg {Object} - constructor params. See the .init(...) JSDoc for details
   */
 Lemidora.Wall = function(cfg) {
     if (cfg)
@@ -30,10 +30,8 @@ Lemidora.Wall.prototype = {
      * @cfg area {String/Element/jQuery} - wall working area (where the Images are placed);
      *      area selector/element will be searched inside the container
      * @cfg hideGreeter {Boolean} - set to true if you want greeting message never to be shown; default - false
-     * @cfg editor {Object/false} - WallEditor config or false (if want to disable editing); default - config;
+     * @cfg editor {Object/false} - Lemidora.WallEditor config or false (if want to disable editing); default - config;
      *      wall.editor.js is required if the wall is editable
-     * 
-     * More config options are available in specific modules
      */
     init: function(cfg) {
         $.extend(true, this, cfg);
@@ -53,7 +51,7 @@ Lemidora.Wall.prototype = {
      */
     initExistingImages: function() {
         if (!Lemidora.WallImage)
-            raise "Init error: can't detect required module \"wall.image.js\"";
+            throw "Init error: can't detect required module \"wall.image.js\"";
 
         this.images = {};
         var self = this;
@@ -63,6 +61,9 @@ Lemidora.Wall.prototype = {
         });
     },
 
+    /**
+     * @imageEl {String/Element/jQuery} - WallImage container's selector/element
+     */
     initExistingImage: function(imageEl) {
         var wallImage = new Lemidora.WallImage({
             wall: this,
@@ -70,6 +71,8 @@ Lemidora.Wall.prototype = {
         });
 
         this.images[wallImage.attrs.id] = wallImage;
+
+        return wallImage;
     },
 
     initGreeter: function() {
@@ -88,7 +91,7 @@ Lemidora.Wall.prototype = {
             return false;
 
         if (!Lemidora.WallEditor)
-            raise "Init error: can't detect module \"wall.editor.js\" to enable edit mode";
+            throw "Init error: can't detect module \"wall.editor.js\" to enable edit mode";
 
         var editorConfig = $.extend(true, {}, this.editor, { wall: this });
         this.editor = new Lemidora.WallEditor(editorConfig);
@@ -98,6 +101,10 @@ Lemidora.Wall.prototype = {
     },
 
     /**
+     * Show nice popup notifications
+     *
+     * Requires module "messages.js" (in which Lemidora.messages defined) 
+     *
      * @messages {Object} - example:
      *
      * {

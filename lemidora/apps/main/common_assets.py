@@ -16,3 +16,15 @@ messages_js = JsBundle(
     'noty/themes/default.js',
     'layout/js/messages.js',
 )
+
+jquery_js = JsBundle(
+    'jquery/jquery-1.8.1.js',
+)
+
+jquery_ui_css = CssBundle(
+    'jquery/ui/css/custom-theme/jquery-ui-1.8.23.custom.css',
+)
+
+jquery_ui_js = CssBundle(
+    'jquery/ui/js/jquery-ui-1.8.23.custom.min.js',
+)

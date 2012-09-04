@@ -11,14 +11,15 @@ Lemidora.wallPage = {
     init: function() {
         this.wall = new Lemidora.Wall({
             container: '#main-wall',
-            updateImageUrl: this.updateImageUrl,
-            deleteImageUrl: this.deleteImageUrl,
-            autoUpdateUrl: this.autoUpdateUrl,
-            csrf: this.csrf,
-
-            uploaderConfig: {
-                uploadUrl: this.uploadUrl,
-                csrf: this.csrf
+            editor: {
+                updateImageUrl: this.updateImageUrl,
+                deleteImageUrl: this.deleteImageUrl,
+                autoUpdateUrl: this.autoUpdateUrl,
+                csrf: this.csrf,
+                uploader: {
+                    uploadUrl: this.uploadUrl,
+                    csrf: this.csrf
+                }
             }
         });
     }

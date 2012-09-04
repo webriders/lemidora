@@ -207,10 +207,11 @@ Lemidora.WallImage.createImage = function(wall, attrs) {
     if (attrs.id in wall.images)
         throw 'Image with id="' + attrs.id + '" already exists';
 
-    var imageEl = $(wall.imageItemTmpl).appendTo(wall.area);
+    var imageEl = $(wall.editor.imageItemTemplate).appendTo(wall.area);
     Lemidora.WallImage.updateImageElement(imageEl, attrs);
 
-    wall.initImage(imageEl);
+    var wallImage = wall.initExistingImage(imageEl);
+    wall.editor.initImageEvents(wallImage);
 };
 
 

@@ -1,7 +1,7 @@
 Lemidora = window.Lemidora || {};
 
 
-Lemidora.WallUploader = function(cfg) {
+Lemidora.WallImageUploader = function(cfg) {
     if (cfg)
         this.init(cfg);
 };
@@ -11,8 +11,8 @@ Lemidora.WallUploader = function(cfg) {
  *
  * It's responsible for files drag-and-drop to the work area and upload
  */
-Lemidora.WallUploader.prototype = {
-    wall: null,
+Lemidora.WallImageUploader.prototype = {
+    editor: null,
     container: '.uploader',
     title: '.title',
     fileList: '.file-list',
@@ -28,7 +28,7 @@ Lemidora.WallUploader.prototype = {
     init: function(cfg) {
         $.extend(true, this, cfg);
 
-        this.container = $(this.wall.container.find(this.container));
+        this.container = $(this.editor.wall.container.find(this.container));
         this.title = this.container.find(this.title);
         this.fileList = this.container.find(this.fileList);
         this.fileItemTmpl = this.container.find(this.fileItemTmpl).html();
@@ -51,7 +51,7 @@ Lemidora.WallUploader.prototype = {
             Lemidora.messages.warning("Unfortunately your browser doesn't support JS File API and you can't drag'n'drop files", { timeout: false });
         }
 
-        var wall = this.wall.container,
+        var wallContainer = this.editor.wall.container,
             cnt = this.container;
 
         function _preventDefault(e) {
@@ -59,21 +59,21 @@ Lemidora.WallUploader.prototype = {
             e.preventDefault();
         }
 
-        wall.on("dragenter", function(e) {
+        wallContainer.on("dragenter", function(e) {
             _preventDefault(e);
             cnt.addClass('active');
         });
 
-        wall.on("dragexit", function(e) {
+        wallContainer.on("dragexit", function(e) {
             _preventDefault(e);
             cnt.removeClass('active');
         });
 
-        wall.on("dragover", _preventDefault);
+        wallContainer.on("dragover", _preventDefault);
 
         var self = this;
 
-        wall.on("drop", function(e) {
+        wallContainer.on("drop", function(e) {
             _preventDefault(e);
 
             if (cnt.is('.uploading')) {
@@ -167,7 +167,7 @@ Lemidora.WallUploader.prototype = {
         });
 
         formdata.append('x', coords.x);
-        formdata.append('y', coords.y - parseInt(this.wall.area.css('margin-top')));
+        formdata.append('y', coords.y - parseInt(this.editor.wall.area.css('margin-top')));
         formdata.append('csrfmiddlewaretoken', this.csrf);
 
         var self = this,

@@ -3,14 +3,14 @@ Lemidora = window.Lemidora || {};
 /**
   * Lemidora Photo Wall Editor
   *
-  * Inner/system util
+  * Inner/system tool used inside the Lemidora.Wall instances. Don't use it directly!
   *
   * @author WebRiders
   *
   * Modules:
   *     wall.editor.uploader.js
   *
-  * @cfg {Object} - constructor params. See the .init() docstring for details
+  * @cfg {Object} - constructor params. See the .init(...) JSDoc for details
   */
 Lemidora.WallEditor = function(cfg) {
     if (cfg)
@@ -19,7 +19,7 @@ Lemidora.WallEditor = function(cfg) {
 
 Lemidora.WallEditor.prototype = {
     wall: null, // to be set from the outside
-    imageItemTmpl: '#image-item',
+    imageItemTemplate: '#image-item',
     uploader: {},
     csrf: '',
     updateImageUrl: '',
@@ -31,10 +31,22 @@ Lemidora.WallEditor.prototype = {
     _poll: null,
     _eventDispatcher: null,
 
+    /**
+     * @cfg wall {Lemidora.Wall} - wall instance
+     * @cfg imageItemTemplate {String/Element/jQuery} - Lemidora.WallImage template to create DOM element from it
+     *      imageItemTemplate selector/element will be searched inside this.wall.container 
+     * @cfg uploader {Object/false} - Lemidora.WallImageUploader config or false (if want to disable uploading); default - config;
+     *      wall.editor.uploader.js is required if uploading is enabled
+     * @cfg csrf {String} - CSRF token for AJAX POST requests (required by Django)
+     * @cfg updateImageUrl {String} - URL to update single image
+     * @cfg deleteImageUrl {String} - URL to delete single image
+     * @cfg autoUpdateUrl {String} - polling URL (to periodically update the wall)
+     * @cfg pollDelay {Number} - polling delay in milliseconds
+     */
     init: function(cfg) {
         $.extend(true, this, cfg);
 
-        this.imageItemTmpl = this.wall.container.find(this.imageItemTmpl).html();
+        this.imageItemTemplate = this.wall.container.find(this.imageItemTemplate).html();
         this._eventDispatcher = $({});
 
         this.initUploader();
@@ -47,7 +59,7 @@ Lemidora.WallEditor.prototype = {
             return false;
             
         if (!Lemidora.WallImageUploader)
-            raise "Init error: can't detect module \"wall.editor.uploader.js\" to enable images upload";
+            throw "Init error: can't detect module \"wall.editor.uploader.js\" to enable images upload";
 
         var uploaderConfig = $.extend(true, {}, this.uploader, { editor: this });
         this.uploader = new Lemidora.WallImageUploader(uploaderConfig);
@@ -59,6 +71,12 @@ Lemidora.WallEditor.prototype = {
         });
     },
 
+    /**
+     * Handle Lemidora.WallImage array
+     * See the .initImageEvents(...) JSDoc for details
+     *
+     * @wallImages {Array of Lemidora.WallImage}
+     */
     initImagesEvents: function(wallImages) {
         var self = this;
 
@@ -67,6 +85,11 @@ Lemidora.WallEditor.prototype = {
         });
     },
 
+    /**
+     * Handle Lemidora.WallImage events and update the wall state
+     *
+     * @wallImage {Lemidora.WallImage}
+     */
     initImageEvents: function(wallImage) {
         wallImage.on('image-move-start', $.proxy(this, 'stopAutoUpdate'));
         wallImage.on('image-move', $.proxy(this, 'moveImageRequest'));
@@ -75,18 +98,39 @@ Lemidora.WallEditor.prototype = {
         wallImage.on('image-delete', $.proxy(this, 'deleteImageRequest'));
     },
 
+    /**
+     * @e {jQuery.Event}
+     * @id {String/Number} - Lemidora.WallImage ID
+     * @x - new X-position
+     * @x - new Y-position 
+     */
     moveImageRequest: function(e, id, x, y) {
         this.updateImageRequest(id, { x: x, y: y });
     },
 
+    /**
+     * @e {jQuery.Event}
+     * @id {String/Number} - Lemidora.WallImage ID
+     * @width - new image width
+     * @height - new image height 
+     */
     resizeImageRequest: function(e, id, width, height) {
         this.updateImageRequest(id, { width: width, height: height });
     },
 
+    /**
+     * @e {jQuery.Event}
+     * @id {String/Number} - Lemidora.WallImage ID
+     */
     deleteImageRequest: function(e, id) {
         this.updateImageRequest(id, null, 'delete, please');
     },
 
+    /**
+     * @e {jQuery.Event}
+     * @attrs {Object} - Lemidora.WallImage attributes to update; null-able
+     * @del {Boolean} - flag that indicates image deletion; default - false (i.e. image update by default) 
+     */
     updateImageRequest: function(id, attrs, del) {
         var self = this;
 
