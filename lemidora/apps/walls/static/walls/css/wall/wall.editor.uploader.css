@@ -1,0 +1,132 @@
+.wall .uploader {
+    display: none;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.wall .uploader.active {
+    display: block;
+}
+
+.wall .uploader .overlay {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: #222;
+    opacity: .7;
+    display: none;
+}
+
+.wall .uploader.active .overlay {
+    display: block;
+}
+
+.wall .uploader .close-button {
+    position: absolute;
+    z-index: 3;
+    right: 20px;
+    top: 20px;
+    font-size: 14px;
+    color: #ddd;
+}
+
+.wall .uploader .content-wrap {
+    display: table;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    z-index: 2;
+}
+
+.wall .uploader .content {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+}
+
+.wall .uploader .content .title {
+    display: inline-block;
+    font-size: 40px;
+    text-shadow: 0 -2px 0 #222;
+    font-weight: bold;
+    color: #eee;
+    padding: 10px 20px;
+    background: #333;
+    border-radius: 10px;
+}
+
+.wall .uploader.uploading .content .title {
+    display: none;
+}
+
+.wall .uploader .content .title em {
+    color: #8dff5c;
+}
+
+.wall .uploader .content .file-list {
+    display: none;
+    width: auto;
+    margin: 40px auto;
+}
+
+.wall .uploader.uploading .content .file-list {
+    display: table;
+}
+
+.wall .uploader .content .file-list li {
+    margin-bottom: 16px;
+    display: table-row;
+}
+
+.wall .uploader .content .file-list li .name {
+    font-size: 18px;
+    display: table-cell;
+    padding: 10px;
+    vertical-align: middle;
+    text-align: left;
+}
+
+.wall .uploader .content .file-list li .size {
+    padding: 10px;
+    font-size: 18px;
+    color: #ff2a75;
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.wall .uploader .content .file-list li .size span {
+    color: gray;
+    font-size: 12px;
+    margin-left: 20px;
+}
+
+.wall .uploader .content .progress-bar {
+    width: 400px;
+    height: 20px;
+    display: none;
+    border: 4px solid #444;
+    padding: 6px;
+    border-radius: 10px;
+}
+
+.wall .uploader.uploading .content .progress-bar {
+    display: inline-block;
+}
+
+/* jQuery UI tweaks */
+.wall .uploader .ui-progressbar-value {
+    background: #17b2ff;
+    border: none;
+    margin: 0;
+    color: #fff;
+    font-weight: normal;
+    text-indent: 10px;
+    font-size: 12px;
+    line-height: 20px;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.7);
+}

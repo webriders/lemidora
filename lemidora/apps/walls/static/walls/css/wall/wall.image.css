@@ -1,0 +1,136 @@
+.wall-image {
+    position: absolute;
+    z-index: 1;
+    left: 20px;
+    top: 20px;
+    border: 1px solid #444;
+    background: #fff;
+    padding: 2px;
+}
+
+.wall-image img.image {
+    vertical-align: top;
+}
+
+.wall-image > .title {
+    padding: 4px;
+    display: none;
+    color: #333;
+}
+
+.wall-image:hover {
+    cursor: move;
+}
+
+.wall-image .set-title {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+    color: #fff;
+    padding: 4px 10px;
+
+    background: #26cc2c;
+    background: -moz-linear-gradient(top,  #26cc2c 0%, #1aad48 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#26cc2c), color-stop(100%,#1aad48));
+    background: -webkit-linear-gradient(top,  #26cc2c 0%,#1aad48 100%);
+    background: -o-linear-gradient(top,  #26cc2c 0%,#1aad48 100%);
+    background: -ms-linear-gradient(top,  #26cc2c 0%,#1aad48 100%);
+    background: linear-gradient(to bottom,  #26cc2c 0%,#1aad48 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#26cc2c', endColorstr='#1aad48',GradientType=0 );
+
+    border-radius: 6px;
+    border: 1px solid #008a25;
+    box-shadow: 0 1px 3px rgba(000,000,000,0.5), inset 0 0 1px rgba(255,255,255,1);
+    text-shadow: 0 1px 0 rgba(000,000,000,0.4);
+    display: none;
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    text-decoration: none;
+}
+
+.wall-image:hover .set-title {
+    display: block;
+}
+
+.wall-image .delete {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+    color: #fff;
+    padding: 4px 10px;
+
+    background: #ff0000;
+    background: -moz-linear-gradient(top,  #ff0000 0%, #ad0000 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ff0000), color-stop(100%,#ad0000));
+    background: -webkit-linear-gradient(top,  #ff0000 0%,#ad0000 100%);
+    background: -o-linear-gradient(top,  #ff0000 0%,#ad0000 100%);
+    background: -ms-linear-gradient(top,  #ff0000 0%,#ad0000 100%);
+    background: linear-gradient(to bottom,  #ff0000 0%,#ad0000 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ff0000', endColorstr='#ad0000',GradientType=0 );
+
+    border-radius: 6px;
+    border: 1px solid #8c0000;
+    box-shadow: 0 1px 3px rgba(000,000,000,0.5), inset 0 0 1px rgba(255,255,255,1);
+    text-shadow: 0 1px 0 rgba(000,000,000,0.4);
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    text-decoration: none;
+}
+
+.wall-image:hover .delete {
+    display: block;
+}
+
+/* jQuery UI tweak */
+.wall-image-resizable-helper {
+    border: 3px solid #8dff5c;
+}
+
+.wall-image .handle-rotate {
+    position: absolute;
+    right: 0;
+    top: 0;
+    background: #fff url(../img/rotate_icon.png) center no-repeat;
+    display: none;
+    width: 24px;
+    height: 24px;
+    overflow: hidden;
+    text-indent: -100px;
+    border-bottom-left-radius: 6px;
+    cursor: move;
+}
+
+.wall-image:hover .handle-rotate {
+    display: block;
+}
+
+.wall-image .last-edit {
+    position: absolute;
+    left: 0;
+    top: -20px;
+    height: 20px;
+    background: #444;
+    border-radius: 5px 5px 0 0;
+    line-height: 20px;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, .7);
+    font-size: 11px;
+    padding: 0 8px;
+    display: none;
+}
+
+.wall-image:hover .last-edit {
+    display: block;
+}
+
+.wall-image .last-edit > .label {
+    color: #aaa;
+}
+
+.wall-image .last-edit .datetime {
+    color: #fff;
+}
+
+.wall-image .last-edit .person {
+    color: #17b2ff;
+}
