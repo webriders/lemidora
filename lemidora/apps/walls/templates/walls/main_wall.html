@@ -1,12 +1,6 @@
 <div class="wall" id="main-wall">
-    {% comment %}<h2>
-        {{ wall.hash }} : {{ wall.created_date }} : ownby: {{ wall.owner }}
-    </h2>{% endcomment %}
-
     <div class="area">
-        {% for image in images %}
-            {% include 'walls/wall_image.html' %}
-        {% endfor %}
+        <!-- Initial wall area is empty. It will be filled dynamically -->
     </div>
 
     <div class="greeting-message">
@@ -23,13 +17,30 @@
     </div>
 
     <script type="text/x-lemidora-template" id="image-item">
-        {% include 'walls/wall_image.html' %}
+        <div class="wall-image">
+            <div class="image-container">
+                <img class="image" src="" />
+            </div>
+
+            <div class="title"></div>
+            <a href="#set-title" class="set-title">set title</a>
+            <a href="#rotate" title="rotate" class="handle-rotate">rotate</a>
+            <a href="#delete" class="delete">delete</a>
+
+            <div class="last-edit">
+                <span class="label">UPD:</span>
+                <span class="datetime">
+                    <!-- Will be filled via JavaScript -->
+                </span>
+                <span class="person">
+                    <!-- Will be filled via JavaScript -->
+                </span>
+            </div>
+        </div>
     </script>
 
     <div class="uploader">
         <div class="overlay"></div>
-
-{#        <a class="close-button" href="#close">hide overlay</a>#}
 
         <div class="content-wrap">
             <div class="content">

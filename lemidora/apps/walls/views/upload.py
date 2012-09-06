@@ -9,6 +9,9 @@ class UploadImageView(TemplateView):
     wall_image_service = WallImageService()
 
     def post(self, request, *args, **kwargs):
+        import time
+        time.sleep(15)
+
         wall_key = kwargs['wall_id']
         user = request.user.is_authenticated() and request.user or None
         x = int(request.POST.get('x'))

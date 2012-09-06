@@ -11,16 +11,24 @@ Lemidora.wallPage = {
     init: function() {
         this.wall = new Lemidora.Wall({
             container: '#main-wall',
+            // hideGreeter: true,
+
             editor: {
                 updateImageUrl: this.updateImageUrl,
                 deleteImageUrl: this.deleteImageUrl,
-                autoUpdateUrl: this.autoUpdateUrl,
                 csrf: this.csrf,
+
                 uploader: {
                     uploadUrl: this.uploadUrl,
                     csrf: this.csrf
                 }
-            }
+            },
+
+            poller: {
+                debug: true,
+                pollUrl: this.autoUpdateUrl
+            },
+            poller: false // TODO
         });
     }
 };

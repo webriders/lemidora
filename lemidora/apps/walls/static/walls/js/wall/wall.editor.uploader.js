@@ -1,54 +1,96 @@
 Lemidora = window.Lemidora || {};
 
-
+/**
+  * Lemidora Photo Wall Image upload manager
+  * It's responsible for files drag-and-drop to the work area and their upload to the server
+  *
+  * Note: this is inner/system tool used inside the Lemidora.Wall instance. Don't use it directly!
+  *
+  * @author WebRiders (http://webriders.com.ua/)
+  * @param {Object} cfg Constructor params
+  * @see Lemidora.WallImageUploader.init for cfg details
+  * @constructor
+  */
 Lemidora.WallImageUploader = function(cfg) {
     if (cfg)
         this.init(cfg);
 };
 
-/**
- * Images upload manager
- *
- * It's responsible for files drag-and-drop to the work area and upload
- */
 Lemidora.WallImageUploader.prototype = {
     editor: null,
     container: '.uploader',
     title: '.title',
     fileList: '.file-list',
-    fileItemTmpl: '#file-item',
+    fileItemTemplate: '#file-item',
     progressBar: '.progress-bar',
-    closeButton: '.close-button',
     maxFilesAmount: 10,
     maxFileSize: 10 * 1024 * 1024,
     allowedMimeType: /^image\/.*$/,
     uploadUrl: '',
     csrf: '',
 
+    /**
+     * Init the uploader
+     *
+     * @param {Lemidora.WallEditor} cfg.editor
+     *     Wall editor instance; you can access the wall instance from it
+     * @param {String} cfg.container
+     *     Uploader layout top element (container) selector;
+     *     it will be searched inside this.editor.wall.container;
+     *     default - '.uploader'
+     * @param {String} cfg.title
+     *     Title element selector - i.e. big header text "Drop files here";
+     *     it will be searched inside this.container;
+     *     default - '.title'
+     * @param {String} cfg.fileList
+     *     Upload files list element selector; 
+     *     it will be searched inside this.container;
+     *     default - '.file-list'
+     * @param {String} cfg.fileItemTemplate
+     *     Upload file list item template (HTML-template) selector; 
+     *     it will be searched inside this.container;
+     *     default - '#file-item'
+     * @param {String} cfg.progressBar
+     *     Upload progress bar element selector (total progress-bar for all files); 
+     *     it will be searched inside this.container;
+     *     default - '.progress-bar'
+     * @param {String} cfg.maxFilesAmount
+     *     Simultanious upload file amount; 
+     *     default - 10
+     * @param {String} cfg.maxFileSize
+     *     Maximum single file size; 
+     *     default - 10 MiB (10 * 1024 * 1024 bytes)
+     * @param {String} cfg.allowedMimeType
+     *     Allowed file's MIME-type regexp; 
+     *     default - /^image\/.*$/ (i.e. image/jpeg, image/png, image/gif, etc.)
+     * @param {String} cfg.uploadUrl
+     *     URL to upload files
+     * @param {String} cfg.csrf
+     *     CSRF token for AJAX POST requests (required by Django)
+     */
     init: function(cfg) {
         $.extend(true, this, cfg);
 
-        this.container = $(this.editor.wall.container.find(this.container));
+        this.container = this.editor.wall.container.find(this.container);
         this.title = this.container.find(this.title);
         this.fileList = this.container.find(this.fileList);
-        this.fileItemTmpl = this.container.find(this.fileItemTmpl).html();
+        this.fileItemTemplate = this.container.find(this.fileItemTemplate).html();
         this.progressBar = this.container.find(this.progressBar);
-        this.closeButton = this.container.find(this.closeButton);
 
-        this.initCloseButton();
         this.initDragAndDrop();
     },
 
-    initCloseButton: function() {
-        this.closeButton.click(function(e) {
-            e.preventDefault();
-            cnt.removeClass('active');
-        });
-    },
-
+    /**
+     * Init ability to drag images from your file-navigator and drop them directly to the wall.
+     *
+     * For now this is the only way to upload your images.
+     * And unfortunately it doesn't work in Internet Explorer < 10
+     * All other modern browsers supports this functionality.
+     */
     initDragAndDrop: function() {
         if (!window.FormData) {
             Lemidora.messages.warning("Unfortunately your browser doesn't support JS File API and you can't drag'n'drop files", { timeout: false });
+            return false;
         }
 
         var wallContainer = this.editor.wall.container,
@@ -104,6 +146,14 @@ Lemidora.WallImageUploader.prototype = {
         });
     },
 
+    /**
+     * Validate files before upload.
+     *
+     * They should fit max amount, max size and MIME-type
+     *
+     * @param {Array of File} files 
+     *     Array of file objects (default browser's File instances)
+     */
     validateFiles: function(files) {
         var maxAmount = this.maxFilesAmount;
         if (files.length > maxAmount) {
@@ -132,9 +182,15 @@ Lemidora.WallImageUploader.prototype = {
         return toUpload;
     },
 
+    /**
+     * Show files to upload
+     *
+     * @param {Array of File} files 
+     *     Array of file objects (default browser's File instances)
+     */
     initFileList: function(files) {
         var fileList = this.fileList,
-            fileItemTmpl = this.fileItemTmpl;
+            fileItemTemplate = this.fileItemTemplate;
 
         fileList.empty();
 
@@ -142,23 +198,38 @@ Lemidora.WallImageUploader.prototype = {
             var fileName = file.name;
             var nBytes = file.size;
 
+            // next piece of code was taken from the MDN File API example
             var sOutput = nBytes + " bytes";
             // optional code for multiples approximation
             for (var aMultiples = ["KiB", "MiB", "GiB", "TiB", "PiB", "EiB", "ZiB", "YiB"], nMultiple = 0, nApprox = nBytes / 1024; nApprox > 1; nApprox /= 1024, nMultiple++) {
                 sOutput = nApprox.toFixed(3) + " " + aMultiples[nMultiple] + " <span>(" + nBytes + " bytes)</span>";
             }
 
-            $(fileItemTmpl).appendTo(fileList)
+            $(fileItemTemplate).appendTo(fileList)
                 .find('.name').text(fileName).end()
                 .find('.size').html(sOutput);
         });
     },
 
+    /**
+     * Init the progress bar layout.
+     *
+     * We use jQuery UI progress-bar. 
+     * We need to reset it each time we upload new files
+     */
     initProgressBar: function() {
         this.progressBar.progressbar({ value: 0 })
             .find('.ui-progressbar-value').text('');
     },
 
+    /**
+     * Upload the files
+     *
+     * @param {Array of File} files
+     *     Array of file objects (default browser's File instances)
+     * @param {Object} coords
+     *     Coordinates of dropped files; e.g.: { x: 200, y: 200 }
+     */
     upload: function(files, coords) {
         var formdata = new FormData();
 
@@ -166,9 +237,12 @@ Lemidora.WallImageUploader.prototype = {
             formdata.append('image_' + i, file);
         });
 
-        formdata.append('x', coords.x);
-        formdata.append('y', coords.y - parseInt(this.editor.wall.area.css('margin-top')));
         formdata.append('csrfmiddlewaretoken', this.csrf);
+
+        if (coords) {
+            formdata.append('x', coords.x);
+            formdata.append('y', coords.y - parseInt(this.editor.wall.area.css('margin-top')));
+        }
 
         var self = this,
             cnt = this.container,
@@ -181,14 +255,15 @@ Lemidora.WallImageUploader.prototype = {
             processData: false,
             contentType: false,
 
-            success: function (res) {
+            success: function(wallInfo) {
                 cnt.removeClass('uploading active');
-                self.trigger('uploaded', [res]);
+                self.trigger('upload-success', [wallInfo]);
             },
 
-            error: function() {
+            error: function(res) {
                 cnt.removeClass('uploading active');
                 Lemidora.messages.error('Error happend during your file(s) uploading');
+                self.trigger('upload-fail', [res]);
             },
 
             xhr: function() {
