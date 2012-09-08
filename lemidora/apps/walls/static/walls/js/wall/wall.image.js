@@ -1,6 +1,19 @@
 Lemidora = window.Lemidora || {};
 
-
+/**
+  * Lemidora Photo Wall Image
+  * Common wall image functionality (without editing, just a view mode)
+  *
+  * Note: this is inner/system tool used inside the Lemidora.Wall instance. Don't use it directly!
+  *
+  * Required sub-modules:
+  *   - wall.image.editor.js
+  *
+  * @author WebRiders (http://webriders.com.ua/)
+  * @param {Object} cfg Constructor params
+  * @see Lemidora.WallImage.init for cfg details
+  * @constructor
+  */
 Lemidora.WallImage = function(cfg) {
     if (cfg)
         this.init(cfg);
@@ -29,7 +42,6 @@ Lemidora.WallImage.prototype = {
     editor: {}, // will be re-inited
 
     /**
-     * 
      * WallImage object attributes. E.g.:
      *
      * {
@@ -48,6 +60,41 @@ Lemidora.WallImage.prototype = {
      */
     attrs: {}, // will be re-inited
 
+    /**
+     * Init the image
+     *
+     * @param {Lemidora.Wall} cfg.wall 
+     *     Wall instance
+     * @param {String} cfg.container 
+     *     Image container (top element) HTML template;
+     *     default - {String}; see the code for it;
+     *     it will be appended to this.wall.area
+     * @param {String} cfg.imageEl
+     *     IMG element selector; 
+     *     it will be searched inside this.container;
+     *     default - 'img.image'
+     * @param {String} cfg.imageContainer
+     *     IMG's parent element selector; 
+     *     it will be searched inside this.container;
+     *     default - '.image-container'
+     * @param {String} cfg.title
+     *     Image title element selector; 
+     *     it will be searched inside this.container;
+     *     default - '> .title'
+     * @param {String} cfg.lastEditDate
+     *     Image last-edit-date element selector; 
+     *     it will be searched inside this.container;
+     *     default - '.last-edit .datetime'
+     * @param {String} cfg.lastEditPerson
+     *     Image last-edit-person (registered user name) element selector; 
+     *     it will be searched inside this.container;
+     *     default - '.last-edit .person'
+     * @param {Object/false} cfg.editor
+     *     Lemidora.WallImageEditor config or false (if want to disable image editing); 
+     *     default - {Object} (i.e. image editing is enabled);
+     *     wall.image.editor.js is required if image editing is enabled
+     * @see Lemidora.WallImageEditor.init for cfg.editor details
+     */
     init: function(cfg) {
         this.editor = {};
         this.attrs = {};

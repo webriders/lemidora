@@ -39,6 +39,7 @@ Lemidora.WallPoller.prototype = {
      * @param {Boolean} cfg.debug
      *     Enable/disable debug mode (logging); default - false
      * @param {Boolean} cfg.autoStart
+     *     Start polling automatically on init or manually (later);
      *     true - start polling on init (by default);
      *     false - start polling manually
      */

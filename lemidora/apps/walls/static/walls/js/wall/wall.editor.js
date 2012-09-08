@@ -6,8 +6,7 @@ Lemidora = window.Lemidora || {};
   * Note: this is inner/system tool used inside the Lemidora.Wall instance. Don't use it directly!
   *
   * Required sub-modules:
-  *   - wall.image.editor.js
-  *   - wall.editor.uploader.js - it may be optional if you don't enable uploading
+  *   - wall.editor.uploader.js
   *
   * @author WebRiders (http://webriders.com.ua/)
   * @param {Object} cfg Constructor params 
@@ -125,7 +124,7 @@ Lemidora.WallEditor.prototype = {
      * @param {String/Number} id Image ID
      * @param {Object} attrs Lemidora.WallImage attributes to update; null-able (in case of deletion)
      * @param {Boolean} [del] Flag that indicates image deletion; 
-     *     default - false (i.e. image update mode by default) 
+     *     default - false (i.e. image update mode by default, not a deletion) 
      */
     updateImageRequest: function(id, attrs, del) {
         var self = this;
@@ -134,15 +133,16 @@ Lemidora.WallEditor.prototype = {
 
         var data = $.extend(
             true,
-            {
-                image_id: id,
-                csrfmiddlewaretoken: this.csrf
-            },
+            { image_id: id, csrfmiddlewaretoken: this.csrf },
             attrs
         );
 
         url = del ? this.deleteImageUrl : this.updateImageUrl;
 
+        /* 
+        we remember last request so only it's response (the latest one) will throw events;
+        we do this because older request could give response later than the later request 
+        */
         this._lastRequestId++;
 
         $.post(url, data)

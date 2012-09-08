@@ -40,6 +40,9 @@ Lemidora.WallImageUploader.prototype = {
     uploadUrl: '',
     csrf: '',
 
+    // private attrs
+    _eventDispatcher: null,
+
     /**
      * Init the uploader
      *
@@ -85,6 +88,8 @@ Lemidora.WallImageUploader.prototype = {
         this.title = this.container.find(this.title);
         this.fileList = this.container.find(this.fileList);
         this.progressBar = this.container.find(this.progressBar);
+
+        this._eventDispatcher = this.container;
 
         this.initDragAndDrop();
     },
@@ -192,7 +197,7 @@ Lemidora.WallImageUploader.prototype = {
     },
 
     /**
-     * Show files to upload
+     * Show files to upload (render uploading files list)
      *
      * @param {Array of File} files 
      *     Array of file objects (default browser's File instances)
@@ -211,7 +216,7 @@ Lemidora.WallImageUploader.prototype = {
             var sOutput = nBytes + " bytes";
             // optional code for multiples approximation
             for (var aMultiples = ["KiB", "MiB", "GiB", "TiB", "PiB", "EiB", "ZiB", "YiB"], nMultiple = 0, nApprox = nBytes / 1024; nApprox > 1; nApprox /= 1024, nMultiple++) {
-                sOutput = nApprox.toFixed(3) + " " + aMultiples[nMultiple] + " <span>(" + nBytes + " bytes)</span>";
+                sOutput = nApprox.toFixed(2) + " " + aMultiples[nMultiple] + " <span>(" + nBytes + " bytes)</span>";
             }
 
             $(fileItemTemplate).appendTo(fileList)
@@ -221,9 +226,9 @@ Lemidora.WallImageUploader.prototype = {
     },
 
     /**
-     * Init the progress bar layout.
+     * Init the progress bar layout
      *
-     * We use jQuery UI progress-bar. 
+     * We use jQuery UI progress-bar
      * We need to reset it each time we upload new files
      */
     initProgressBar: function() {
@@ -299,14 +304,14 @@ Lemidora.WallImageUploader.prototype = {
     },
 
     on: function(event, fn) {
-        return this.container.on(event, fn);
+        return this._eventDispatcher.on(event, fn);
     },
 
     off: function(event, fn) {
-        return this.container.off(event, fn);
+        return this._eventDispatcher.off(event, fn);
     },
 
     trigger: function(event, args) {
-        return this.container.trigger(event, args);
+        return this._eventDispatcher.trigger(event, args);
     }
 };

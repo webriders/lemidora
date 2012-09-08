@@ -1,6 +1,15 @@
 Lemidora = window.Lemidora || {};
 
-
+/**
+  * Lemidora Photo Wall Image Editor - all about single wall image editing
+  *
+  * Note: this is inner/system tool used inside the Lemidora.Wall instance. Don't use it directly!
+  *
+  * @author WebRiders (http://webriders.com.ua/)
+  * @param {Object} cfg Constructor params 
+  * @see Lemidora.WallImageEditor.init for cfg details
+  * @constructor
+  */
 Lemidora.WallImageEditor = function(cfg) {
     if (cfg)
         this.init(cfg);
@@ -15,6 +24,24 @@ Lemidora.WallImageEditor.prototype = {
     // private attrs
     _eventDispatcher: null,
 
+    /**
+     * Init the wall image editor
+     *
+     * @param {Lemidora.WallImage} cfg.image 
+     *     Wall image object instance
+     * @param {String} cfg.editTitleButton 
+     *     "Edit image title" button HTML template;
+     *     default - {String}; see the code for it;
+     *     it will be appended to this.image.container
+     * @param {String} cfg.rotationButton 
+     *     "Rotate image" button HTML template;
+     *     default - {String}; see the code for it;
+     *     it will be appended to this.image.container
+     * @param {String} cfg.deleteButton 
+     *     "Delete image" button HTML template;
+     *     default - {String}; see the code for it;
+     *     it will be appended to this.image.container
+     */
     init: function(cfg) {
         $.extend(true, this, cfg);
 

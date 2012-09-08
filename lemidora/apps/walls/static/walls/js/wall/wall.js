@@ -6,9 +6,10 @@ Lemidora = window.Lemidora || {};
   * Main constructor that initialize and manage the wall
   *
   * Required sub-modules:
-  *   - wall.editor.js - it may be optional if you don't enable editing
-  *   - wall.poller.js - it may be optional if you don't enable polling
+  *   - wall.editor.js
+  *   - wall.poller.js
   *   - wall.image.js
+  *   - wall.image.editor.js
   *   ... (more sub-modules could be required by mentioned above modules)
   *
   * @author WebRiders (http://webriders.com.ua/)
@@ -43,25 +44,28 @@ Lemidora.Wall.prototype = {
     poller: {}, // will be re-inited
 
     // inner attrs
-    images: {}, // will be re-inited
+    images: {}, // images collection; will be re-inited
 
     /**
      * Init the wall
      *
      * @param {String/Element/jQuery} cfg.container 
-     *     Wall container (top element, not the working area)
+     *     Wall container (top element, not the working area);
+     *     the only DOM element that should already exist for the wall
      * @param {String} cfg.area 
-     *     Wall working area (where the Images are placed) HTML template;
-     *     default - {String}; see the code for it
+     *     Wall working area (where images are placed) HTML template;
+     *     default - {String}; see the code for it;
      *     it will be appended to this.container
      * @param {String/false} cfg.greeter 
-     *     Specify either HTML string or false (if you don't want greeting message to be shown); 
-     *     default - {String}; see the code for it
+     *     Greeting message HTML template or false (if you don't want greeting message to be shown); 
+     *     default - {String}; see the code for it;
      *     it will be appended to this.container
      * @param {Object/false} cfg.editor 
      *     Wall editor config or false (if want to disable editing); 
      *     default - {Object} (i.e. editing is enabled);
-     *     wall.editor.js is required if the wall is editable
+     *     wall.editor.js is required if the wall is editable;
+     *     wall.image.editor.js is also required in that case
+     *     wall.image.editor.js is also required in that case
      * @see Lemidora.WallEditor.init for cfg.editor details
      * @param {Object/false} cfg.poller 
      *     Poller config or false (if you want to disable polling); 
@@ -101,13 +105,8 @@ Lemidora.Wall.prototype = {
             return false;
 
         var count = 0;
-
         $.each(this.images, function() { count++; });
-
-        if (count)
-            this.greeter.hide();
-        else
-            this.greeter.show();
+        this.greeter[count ? 'hide' : 'show']();
     },
 
     /**
@@ -130,6 +129,9 @@ Lemidora.Wall.prototype = {
         });
     },
 
+    /**
+     * Init the wall polling mechanism
+     */
     initPolling: function() {
         if (!this.poller)
             return false;
@@ -160,7 +162,7 @@ Lemidora.Wall.prototype = {
     /**
      * Add Lemidora.WallImage object to the wall (create and register it)
      *
-     * @param {Lemidora.WallImage} attrs Lemidora.WallImage attrs
+     * @param {Lemidora.WallImage} attrs Lemidora.WallImage attributes
      * @see Lemidora.WallImage.attrs 
      */
     createImage: function(attrs) {
@@ -180,7 +182,7 @@ Lemidora.Wall.prototype = {
      * Update Lemidora.WallImage object
      *
      * @param {String/Number} wallImageId
-     * @param {Lemidora.WallImage} attrs Lemidora.WallImage attrs
+     * @param {Lemidora.WallImage} attrs Lemidora.WallImage attributes
      * @see Lemidora.WallImage.attrs 
      */
     updateImage: function(id, attrs) {
@@ -202,7 +204,7 @@ Lemidora.Wall.prototype = {
     /**
      * Update the wall using specific config 'wallInfo'
      *
-     * @param {Object} wallInfo - specific config representing new wall state. Example:
+     * @param {Object} wallInfo Specific config representing new wall state. Example:
      *
      * {
      *     "wall": {
@@ -248,6 +250,7 @@ Lemidora.Wall.prototype = {
             incomingImages = wallInfo.images || [],
             incomingIds = {};
 
+        // update or create images
         $.each(incomingImages, function(i, attrs) {
             var id = attrs.id;
 
@@ -259,6 +262,7 @@ Lemidora.Wall.prototype = {
             incomingIds[id] = true;
         });
 
+        // delete 'old' images
         $.each(images, function(i, image) {
             var id = image.attrs.id;
 
@@ -266,15 +270,18 @@ Lemidora.Wall.prototype = {
                 wall.deleteImage(id);
         });
 
+        // show response messages
         if (wallInfo.messages)
             wall.showMessages(wallInfo.messages);
 
+        // update greeting message appearence
         wall.updateGreeter();
     },
 
     /**
      * Show nice popup notifications
      *
+     * This is just a wrapper for Lemidora.messages
      * Requires module "messages.js" (in which Lemidora.messages defined) 
      *
      * @param {Object} messages - example:
