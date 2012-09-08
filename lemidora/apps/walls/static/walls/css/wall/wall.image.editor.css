@@ -60,7 +60,7 @@
 
 /* jQuery UI tweak */
 .wall-image-resizable-helper {
-    border: 3px solid #8dff5c;
+    outline: 3px solid #8dff5c;
 }
 
 .wall-image .handle-rotate {
