@@ -23,24 +23,41 @@ Lemidora.Wall = function(cfg) {
 
 Lemidora.Wall.prototype = {
     container: null,
-    area: '.area',
-    hideGreeter: false,
-    editor: {},
-    poller: {},
+    area: '<div class="area"></div>',
+    greeter: [
+        '<div class="greeting-message">',
+            '<div class="message-content">',
+                '<h2 class="title">',
+                    '<strong>Lemidora\'s idea</strong> is very simple:',
+                '</h2>',
+                '<ol>',
+                    '<li class="mi">drop your photos <span>(right here)</span></li>',
+                    '<li class="ra">invite your friends for collaboration</li>',
+                    '<li class="do">create your photo-wall together!</li>',
+                '</ol>',
+            '</div>',
+        '</div>'
+    ].join(''),
+
+    editor: {}, // will be re-inited
+    poller: {}, // will be re-inited
 
     // inner attrs
-    images: {},
+    images: {}, // will be re-inited
 
     /**
      * Init the wall
      *
      * @param {String/Element/jQuery} cfg.container 
      *     Wall container (top element, not the working area)
-     * @param {String/Element/jQuery} cfg.area 
-     *     Wall working area (where the Images are placed);
-     *     area selector/element will be searched inside the container
-     * @param {Boolean} cfg.hideGreeter 
-     *     Set to true if you want greeting message never to be shown; default - false
+     * @param {String} cfg.area 
+     *     Wall working area (where the Images are placed) HTML template;
+     *     default - {String}; see the code for it
+     *     it will be appended to this.container
+     * @param {String/false} cfg.greeter 
+     *     Specify either HTML string or false (if you don't want greeting message to be shown); 
+     *     default - {String}; see the code for it
+     *     it will be appended to this.container
      * @param {Object/false} cfg.editor 
      *     Wall editor config or false (if want to disable editing); 
      *     default - {Object} (i.e. editing is enabled);
@@ -53,29 +70,44 @@ Lemidora.Wall.prototype = {
      * @see Lemidora.WallPoller.init for cfg.poller details
      */
     init: function(cfg) {
+        this.editor = {};
+        this.poller = {};
+        this.images = {};
+
         $.extend(true, this, cfg);
 
         this.container = $(this.container);
-        this.area = this.container.find(this.area);
+        this.area = $(this.area).appendTo(this.container);
 
         this.initGreeter();
         this.initEditor();
         this.initPolling();
     },
 
+    initGreeter: function() {
+        if (!this.greeter)
+            return false;
+
+        this.greeter = $(this.greeter).appendTo(this.container);
+        this.updateGreeter();
+    },
+
     /**
      * Init greeting message
      * Sometimes it's visible and sometimes - hidden
      */
-    initGreeter: function() {
+    updateGreeter: function() {
+        if (!this.greeter)
+            return false;
+
         var count = 0;
 
         $.each(this.images, function() { count++; });
 
-        if (count || this.hideGreeter)
-            this.container.removeClass('greeting');
+        if (count)
+            this.greeter.hide();
         else
-            this.container.addClass('greeting');
+            this.greeter.show();
     },
 
     /**
@@ -237,7 +269,7 @@ Lemidora.Wall.prototype = {
         if (wallInfo.messages)
             wall.showMessages(wallInfo.messages);
 
-        wall.initGreeter();
+        wall.updateGreeter();
     },
 
     /**

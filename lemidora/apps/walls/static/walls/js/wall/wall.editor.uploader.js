@@ -18,10 +18,21 @@ Lemidora.WallImageUploader = function(cfg) {
 
 Lemidora.WallImageUploader.prototype = {
     editor: null,
-    container: '.uploader',
+    container: [
+        '<div class="uploader">',
+            '<div class="overlay"></div>',
+            '<div class="content-wrap">',
+                '<div class="content">',
+                    '<div class="title">Drop your images <em>(anywhere)</em></div>',
+                    '<ul class="file-list"></ul>',
+                    '<div class="progress-bar"></div>',
+                '</div>',
+            '</div>',
+        '</div>'
+    ].join(''),
     title: '.title',
     fileList: '.file-list',
-    fileItemTemplate: '#file-item',
+    fileItemTemplate: '<li><div class="name"></div><div class="size"></div></li>',
     progressBar: '.progress-bar',
     maxFilesAmount: 10,
     maxFileSize: 10 * 1024 * 1024,
@@ -35,9 +46,9 @@ Lemidora.WallImageUploader.prototype = {
      * @param {Lemidora.WallEditor} cfg.editor
      *     Wall editor instance; you can access the wall instance from it
      * @param {String} cfg.container
-     *     Uploader layout top element (container) selector;
-     *     it will be searched inside this.editor.wall.container;
-     *     default - '.uploader'
+     *     Uploader layout container HTML template;
+     *     it will be appended to this.editor.wall.container;
+     *     default - {String}; see the code for it
      * @param {String} cfg.title
      *     Title element selector - i.e. big header text "Drop files here";
      *     it will be searched inside this.container;
@@ -47,9 +58,8 @@ Lemidora.WallImageUploader.prototype = {
      *     it will be searched inside this.container;
      *     default - '.file-list'
      * @param {String} cfg.fileItemTemplate
-     *     Upload file list item template (HTML-template) selector; 
-     *     it will be searched inside this.container;
-     *     default - '#file-item'
+     *     Upload file list item HTML template; 
+     *     default - {String}; see the code for it
      * @param {String} cfg.progressBar
      *     Upload progress bar element selector (total progress-bar for all files); 
      *     it will be searched inside this.container;
@@ -71,10 +81,9 @@ Lemidora.WallImageUploader.prototype = {
     init: function(cfg) {
         $.extend(true, this, cfg);
 
-        this.container = this.editor.wall.container.find(this.container);
+        this.container = $(this.container).appendTo(this.editor.wall.container);
         this.title = this.container.find(this.title);
         this.fileList = this.container.find(this.fileList);
-        this.fileItemTemplate = this.container.find(this.fileItemTemplate).html();
         this.progressBar = this.container.find(this.progressBar);
 
         this.initDragAndDrop();

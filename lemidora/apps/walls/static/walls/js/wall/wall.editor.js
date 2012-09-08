@@ -21,14 +21,15 @@ Lemidora.WallEditor = function(cfg) {
 
 Lemidora.WallEditor.prototype = {
     wall: null, // to be set from the outside
-    uploader: {},
+    uploader: {}, // will be re-inited
     csrf: '',
     updateImageUrl: '',
     deleteImageUrl: '',
-    imageEditor: {},
+    imageEditor: {}, // will be re-inited
 
     // private attrs
     _eventDispatcher: null,
+    _lastRequestId: 0,
 
     /**
      * Init the editor
@@ -52,8 +53,12 @@ Lemidora.WallEditor.prototype = {
      *     this config is not used directly inside the Lemidora.WallEditor; 
      *     it's used in the Lemidora.Wall
      * @see Lemidora.Wall.createImage for cfg.imageEditor usage  
+     * @see Lemidora.WallImageEditor for cfg.imageEditor details  
      */
     init: function(cfg) {
+        this.uploader = {};
+        this.imageEditor = {};
+
         $.extend(true, this, cfg);
 
         this.imageItemTemplate = this.wall.container.find(this.imageItemTemplate).html();
@@ -138,17 +143,31 @@ Lemidora.WallEditor.prototype = {
 
         url = del ? this.deleteImageUrl : this.updateImageUrl;
 
+        this._lastRequestId++;
+
         $.post(url, data)
-            .success(function(wallInfo) {
-                self.trigger('request-success', [wallInfo]);
-            })
-            .fail(function(res) {
-                Lemidora.messages.error('Your last action was not saved to server. Please, repeat it');
-                self.trigger('request-fail', [res]);
-            })
-            .complete(function() {
-                self.trigger('request-complete');
-            });
+            .success(
+                $.proxy(function(requestId, wallInfo) {
+                    if (requestId != this._lastRequestId)
+                        return;
+                    this.trigger('request-success', [wallInfo]);
+                }, this, this._lastRequestId)
+            )
+            .fail(
+                $.proxy(function(requestId, res) {
+                    if (requestId != this._lastRequestId)
+                        return;
+                    Lemidora.messages.error('Your last action was not saved to server. Please, repeat it');
+                    self.trigger('request-fail', [res]);
+                }, this, this._lastRequestId)
+            )
+            .complete(
+                $.proxy(function(requestId) {
+                    if (requestId != this._lastRequestId)
+                        return;
+                    self.trigger('request-complete');
+                }, this, this._lastRequestId)   
+            );
     },
 
     on: function(event, fn) {

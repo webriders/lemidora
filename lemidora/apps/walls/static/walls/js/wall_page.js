@@ -11,7 +11,7 @@ Lemidora.wallPage = {
     init: function() {
         this.wall = new Lemidora.Wall({
             container: '#main-wall',
-            // hideGreeter: true,
+            // greeter: false,
 
             editor: {
                 updateImageUrl: this.updateImageUrl,
@@ -25,7 +25,7 @@ Lemidora.wallPage = {
             },
 
             poller: {
-                debug: true,
+                // debug: true,
                 pollUrl: this.autoUpdateUrl
             }
         });

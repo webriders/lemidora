@@ -26,7 +26,7 @@ Lemidora.WallImage.prototype = {
     title: '> .title',
     lastEditDate: '.last-edit .datetime',
     lastEditPerson: '.last-edit .person',
-    editor: {},
+    editor: {}, // will be re-inited
 
     /**
      * 
@@ -46,9 +46,12 @@ Lemidora.WallImage.prototype = {
      *     updated_by: "John Smith"
      * }
      */
-    attrs: {},
+    attrs: {}, // will be re-inited
 
     init: function(cfg) {
+        this.editor = {};
+        this.attrs = {};
+
         $.extend(true, this, cfg);
 
         this.container = $(this.container).appendTo(this.wall.area)

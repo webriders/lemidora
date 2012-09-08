@@ -11,11 +11,6 @@
     position: fixed;
     left: 50%;
     top: 50%;
-    display: none;
-}
-
-.wall.greeting .greeting-message {
-    display: block;
 }
 
 .wall .greeting-message .message-content {
@@ -52,7 +47,7 @@
     color: #17b2ff;
 }
 
-.wall .greeting-message .message-content ol li.re {
+.wall .greeting-message .message-content ol li.ra {
     color: #8dff5c;
 }
 
