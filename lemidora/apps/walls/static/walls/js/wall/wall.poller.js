@@ -45,7 +45,8 @@ Lemidora.WallPoller.prototype = {
     init: function(cfg) {
         $.extend(true, this, cfg);
         this._eventDispatcher = $({});
-        this.poll();
+        if (this.autoStart)
+            this.poll();
     },
 
     startPolling: function() {

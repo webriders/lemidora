@@ -14,5 +14,6 @@ wall_js = JsBundle(
     'walls/js/wall/wall.editor.js',
     'walls/js/wall/wall.editor.uploader.js',
     'walls/js/wall/wall.image.js',
+    'walls/js/wall/wall.image.editor.js',
     'walls/js/wall/wall.poller.js',
 )

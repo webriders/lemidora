@@ -27,8 +27,7 @@ Lemidora.wallPage = {
             poller: {
                 debug: true,
                 pollUrl: this.autoUpdateUrl
-            },
-            poller: false // TODO
+            }
         });
     }
 };

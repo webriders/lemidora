@@ -9,7 +9,7 @@ Lemidora = window.Lemidora || {};
   *   - wall.editor.js - it may be optional if you don't enable editing
   *   - wall.poller.js - it may be optional if you don't enable polling
   *   - wall.image.js
-  *     ... (more sub-modules could be required by mentioned above modules)
+  *   ... (more sub-modules could be required by mentioned above modules)
   *
   * @author WebRiders (http://webriders.com.ua/)
   * @param {Object} cfg Constructor params
@@ -86,12 +86,16 @@ Lemidora.Wall.prototype = {
             return false;
 
         if (!Lemidora.WallEditor)
-            throw "Init error: can't detect module \"wall.editor.js\" to enable edit mode";
+            throw "Wall init error: can't detect module \"wall.editor.js\" to enable wall editing";
 
         var editorConfig = $.extend(true, {}, this.editor, { wall: this });
         this.editor = new Lemidora.WallEditor(editorConfig);
 
-        // this.editor.on('incoming-messages', $.proxy(this, 'showMessages'));
+        var self = this;
+
+        this.editor.on('request-success upload-success', function(e, wallInfo) {
+            self.updateWall(wallInfo);
+        });
     },
 
     initPolling: function() {
@@ -99,21 +103,56 @@ Lemidora.Wall.prototype = {
             return false;
 
         if (!Lemidora.WallPoller)
-            throw "Init error: can't detect module \"wall.poller.js\" to enable polling mechanism";
+            throw "Wall init error: can't detect module \"wall.poller.js\" to enable polling mechanism";
 
         var pollerConfig = $.extend(true, {}, this.poller, { wall: this });
         this.poller = new Lemidora.WallPoller(pollerConfig);
 
-        // this.poller.on('incoming-messages', $.proxy(this, 'showMessages'));
+        var self = this;
+
+        this.poller.on('request-success', function(e, wallInfo) {
+            self.updateWall(wallInfo);
+        });
+
+        if (this.editor) {
+            this.editor.on('image-editing request-start', function() {
+                self.poller.stopPolling();
+            });
+
+            this.editor.on('request-complete', function() {
+                self.poller.startPolling();
+            });
+        }
     },
 
     /**
-     * Add Lemidora.WallImage object to the wall (just registers it)
+     * Add Lemidora.WallImage object to the wall (create and register it)
      *
-     * @param {Lemidora.WallImage} wallImage
+     * @param {Lemidora.WallImage} attrs Lemidora.WallImage attrs
+     * @see Lemidora.WallImage.attrs 
      */
-    addImage: function(wallImage) {
-        this.images[wallImage.attrs.id] = wallImage;
+    createImage: function(attrs) {
+        var wallImage = new Lemidora.WallImage({ 
+            wall: this, 
+            attrs: attrs,
+            editor: this.editor ? this.editor.imageEditor : false 
+        });
+        
+        this.images[attrs.id] = wallImage;
+        
+        if (this.editor)
+            this.editor.initImageEditing(wallImage);
+    },
+
+    /**
+     * Update Lemidora.WallImage object
+     *
+     * @param {String/Number} wallImageId
+     * @param {Lemidora.WallImage} attrs Lemidora.WallImage attrs
+     * @see Lemidora.WallImage.attrs 
+     */
+    updateImage: function(id, attrs) {
+        this.images[id] && this.images[id].updateImage(attrs);
     },
 
     /**
@@ -180,11 +219,10 @@ Lemidora.Wall.prototype = {
         $.each(incomingImages, function(i, attrs) {
             var id = attrs.id;
 
-            if (id in images) {
-                images[id].updateImage(attrs);
-            } else {
-                Lemidora.WallImage.createImage(wall, attrs);
-            }
+            if (id in images)
+                wall.updateImage(id, attrs);
+            else
+                wall.createImage(attrs);
 
             incomingIds[id] = true;
         });

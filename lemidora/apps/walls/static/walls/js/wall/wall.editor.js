@@ -6,6 +6,7 @@ Lemidora = window.Lemidora || {};
   * Note: this is inner/system tool used inside the Lemidora.Wall instance. Don't use it directly!
   *
   * Required sub-modules:
+  *   - wall.image.editor.js
   *   - wall.editor.uploader.js - it may be optional if you don't enable uploading
   *
   * @author WebRiders (http://webriders.com.ua/)
@@ -20,11 +21,11 @@ Lemidora.WallEditor = function(cfg) {
 
 Lemidora.WallEditor.prototype = {
     wall: null, // to be set from the outside
-    imageItemTemplate: '#image-item',
     uploader: {},
     csrf: '',
     updateImageUrl: '',
     deleteImageUrl: '',
+    imageEditor: {},
 
     // private attrs
     _eventDispatcher: null,
@@ -34,9 +35,6 @@ Lemidora.WallEditor.prototype = {
      *
      * @param {Lemidora.Wall} cfg.wall 
      *     Wall instance
-     * @param {String/Element/jQuery} cfg.imageItemTemplate
-     *     Lemidora.WallImage template to create DOM element from it;
-     *     imageItemTemplate selector/element will be searched inside this.wall.container
      * @param {Object/false} cfg.uploader
      *     Lemidora.WallImageUploader config or false (if want to disable uploading); 
      *     default - {Object} (i.e. editing is enabled);
@@ -48,6 +46,12 @@ Lemidora.WallEditor.prototype = {
      *     URL to update single image
      * @param {String} cfg.deleteImageUrl 
      *     URL to delete single image
+     * @param {Object/false} cfg.imageEditor
+     *     Image editor config or false (if you don't want to enable image editing); 
+     *     default - {Object} (i.e. image editing is enabled);
+     *     this config is not used directly inside the Lemidora.WallEditor; 
+     *     it's used in the Lemidora.Wall
+     * @see Lemidora.Wall.createImage for cfg.imageEditor usage  
      */
     init: function(cfg) {
         $.extend(true, this, cfg);
@@ -56,7 +60,6 @@ Lemidora.WallEditor.prototype = {
         this._eventDispatcher = $({});
 
         this.initUploader();
-        this.initImagesEvents(this.wall.images);
     },
 
     /**
@@ -67,7 +70,7 @@ Lemidora.WallEditor.prototype = {
             return false;
             
         if (!Lemidora.WallImageUploader)
-            throw "Init error: can't detect module \"wall.editor.uploader.js\" to enable images upload";
+            throw "Wall init error: can't detect module \"wall.editor.uploader.js\" to enable images upload";
 
         var uploaderConfig = $.extend(true, {}, this.uploader, { editor: this });
         this.uploader = new Lemidora.WallImageUploader(uploaderConfig);
@@ -75,49 +78,38 @@ Lemidora.WallEditor.prototype = {
         var self = this;
 
         this.uploader.on('upload-success', function(e, wallInfo) {
-            self.trigger('request-success', [wallInfo]);
+            self.trigger('upload-success', [wallInfo]);
         });
     },
 
     /**
-     * Handle Lemidora.WallImage array
-     *
-     * @see Lemidora.WallEditor.initImageEvents for details
-     * @param {Array of Lemidora.WallImage} wallImages
-     */
-    initImagesEvents: function(wallImages) {
-        var self = this;
-
-        $.each(wallImages, function(i, wallImage) {
-            self.initImageEvents(wallImage);
-        });
-    },
-
-    /**
-     * Handle Lemidora.WallImage events and update the wall state
+     * Handle Lemidora.WallImage editing events
      *
      * @param {Lemidora.WallImage} wallImage
      */
-    initImageEvents: function(wallImage) {
+    initImageEditing: function(wallImage) {
+        if (!wallImage.editor)
+            return false;
+
         var self = this;
 
         function _indicateImageEditing() {
             self.trigger('image-editing');
         }
 
-        wallImage.on('image-move-start', _indicateImageEditing);
+        wallImage.editor.on('image-move-start', _indicateImageEditing);
         
-        wallImage.on('image-move', function(e, id, x, y) {
+        wallImage.editor.on('image-move', function(e, id, x, y) {
             self.updateImageRequest(id, { x: x, y: y });
         });
         
-        wallImage.on('image-resize-start', _indicateImageEditing);
+        wallImage.editor.on('image-resize-start', _indicateImageEditing);
         
-        wallImage.on('image-resize', function(e, id, width, height) {
+        wallImage.editor.on('image-resize', function(e, id, width, height) {
             self.updateImageRequest(id, { width: width, height: height });
         });
         
-        wallImage.on('image-delete', function(e, id) {
+        wallImage.editor.on('image-delete', function(e, id) {
             self.updateImageRequest(id, null, 'delete this image, please');
         });
     },
