@@ -1,0 +1,40 @@
+.wall .editor-state-switch {
+    position: fixed;
+    top: 84px;
+    right: 14px;
+}
+
+.wall .editor-state-switch a {
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 10px;
+    height: 24px;
+    line-height: 24px;
+    font-family: Arial, Liberation Sans, sans-serif;
+    font-size: 14px;
+    color: #fff;
+    padding: 4px 16px;
+    background-color: #3b3b3b;
+    border-radius: 6px;
+    border: 1px solid #454545;
+    box-shadow: 0 1px 3px rgba(000, 000, 000, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
+    text-decoration: none;
+}
+
+.wall .editor-state-switch a.edit-mode {
+    color: #ff2a75;
+    display: none;
+}
+
+.wall .editor-state-switch a.view-mode {
+    color: #17b2ff;
+}
+
+.wall.editing-disabled .editor-state-switch a.edit-mode {
+    display: block;
+}
+
+.wall.editing-disabled .editor-state-switch a.view-mode {
+    display: none;
+}
