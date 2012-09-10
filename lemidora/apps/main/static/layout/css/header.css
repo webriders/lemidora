@@ -84,9 +84,8 @@
     font-size: 14px;
     color: #fff;
     padding: 0 16px;
-    background: #3b3b3b no-repeat 4px center;
     border-radius: 5px;
-    border: 1px solid #454545;
+    border: 1px solid;
     box-shadow: 0 1px 3px rgba(000, 000, 000, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.5);
     text-shadow: 0 1px 0 rgba(000, 000, 000, 0.4);
     text-decoration: none;

@@ -26,6 +26,14 @@ Lemidora.WallEditor.prototype = {
     deleteImageUrl: '',
     imageEditor: {}, // will be re-inited
     enabled: true,
+    stateContainer: [
+        '<div class="editor-state-switch">',
+            '<a href="#edit" class="edit-mode" title="enter the edit mode">Edit wall</a>',
+            '<a href="#view" class="view-mode" title="view the wall as visitors will see it">Preview</a>',
+        '</div>'
+    ].join(''),
+    editModeButton: 'a.edit-mode',
+    viewModeButton: 'a.view-mode',
 
     // private attrs
     _eventDispatcher: null,
@@ -63,7 +71,9 @@ Lemidora.WallEditor.prototype = {
 
         $.extend(true, this, cfg);
 
-        this.imageItemTemplate = this.wall.container.find(this.imageItemTemplate).html();
+        this.stateContainer = $(this.stateContainer).appendTo(this.wall.container);
+        this.editModeButton = this.stateContainer.find(this.editModeButton);
+        this.viewModeButton = this.stateContainer.find(this.viewModeButton);
         this._eventDispatcher = $({});
 
         this.initUploader();
@@ -91,16 +101,30 @@ Lemidora.WallEditor.prototype = {
     },
 
     initState: function() {
+        var self = this;
+
+        this.editModeButton.click(function(e) {
+            e.preventDefault();
+            self.enable();
+        });
+
+        this.viewModeButton.click(function(e) {
+            e.preventDefault();
+            self.disable();
+        });
+
         this[this.enabled ? 'enable' : 'disable']();
     },
 
     enable: function() {
         this.enabled = true;
+        this.wall.container.removeClass('editing-disabled');
         this.trigger('editing-enabled');
     },
 
     disable: function() {
         this.enabled = false;
+        this.wall.container.addClass('editing-disabled');
         this.trigger('editing-disabled');
     },
 
