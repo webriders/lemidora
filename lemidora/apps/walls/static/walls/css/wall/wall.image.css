@@ -18,10 +18,6 @@
     color: #333;
 }
 
-.wall-image:hover {
-    cursor: move;
-}
-
 .wall-image .last-edit {
     position: absolute;
     left: 0;

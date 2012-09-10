@@ -28,6 +28,10 @@
     display: block;
 }
 
+.wall-image.editing-disabled .set-title {
+    display: none;
+}
+
 .wall-image .delete {
     font-family: Arial, Helvetica, sans-serif;
     font-size: 14px;
@@ -58,9 +62,8 @@
     display: block;
 }
 
-/* jQuery UI tweak */
-.wall-image-resizable-helper {
-    outline: 3px solid #8dff5c;
+.wall-image.editing-disabled .delete {
+    display: none;
 }
 
 .wall-image .handle-rotate {
@@ -79,4 +82,23 @@
 
 .wall-image:hover .handle-rotate {
     display: block;
+}
+
+.wall-image.editing-disabled .handle-rotate {
+    display: none;
+}
+
+/* jQuery UI tweaks */
+.wall-image-resizable-helper {
+    outline: 3px solid #8dff5c;
+}
+
+.wall .area .ui-draggable {
+    cursor: move;
+}
+
+.wall .area .ui-state-disabled {
+    cursor: default;
+    opacity: 1;
+    filter:Alpha(Opacity=100);
 }

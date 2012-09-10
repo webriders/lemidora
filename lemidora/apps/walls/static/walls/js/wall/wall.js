@@ -127,6 +127,18 @@ Lemidora.Wall.prototype = {
         this.editor.on('request-success upload-success', function(e, wallInfo) {
             self.updateWall(wallInfo);
         });
+
+        this.editor.on('editing-enabled', function() {
+            $.each(self.images, function(i, wallImage) {
+                wallImage.editor && wallImage.editor.enable();
+            });
+        });
+
+        this.editor.on('editing-disabled', function() {
+            $.each(self.images, function(i, wallImage) {
+                wallImage.editor && wallImage.editor.disable();
+            });
+        });
     },
 
     /**
@@ -175,7 +187,7 @@ Lemidora.Wall.prototype = {
         this.images[attrs.id] = wallImage;
         
         if (this.editor)
-            this.editor.initImageEditing(wallImage);
+            this.editor.registerImage(wallImage);
     },
 
     /**

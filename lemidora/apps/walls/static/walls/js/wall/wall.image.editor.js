@@ -20,6 +20,7 @@ Lemidora.WallImageEditor.prototype = {
     editTitleButton: '<a href="#set-title" class="set-title">set title</a>',
     rotationButton: '<a href="#rotate" title="rotate" class="handle-rotate">rotate</a>',
     deleteButton: '<a href="#delete" class="delete">delete</a>',
+    enabled: true,
 
     // private attrs
     _eventDispatcher: null,
@@ -41,6 +42,8 @@ Lemidora.WallImageEditor.prototype = {
      *     "Delete image" button HTML template;
      *     default - {String}; see the code for it;
      *     it will be appended to this.image.container
+     * @param {Boolean} enabled - initial editor state; default - true;
+     *     use .enable() and .disable() instead of manual setting
      */
     init: function(cfg) {
         $.extend(true, this, cfg);
@@ -56,6 +59,7 @@ Lemidora.WallImageEditor.prototype = {
         this.initDeletion();
         this.initDraggable();
         this.initResizable();
+        this.initState();
     },
 
     initTitleEdit: function() {
@@ -144,6 +148,38 @@ Lemidora.WallImageEditor.prototype = {
                 }
             })
             .find('.ui-resizable-handle').css('z-index', 1);
+    },
+
+    initState: function() {
+        this[this.enabled ? 'enable' : 'disable']();
+    },
+
+    enable: function() {
+        this.enabled = true;
+        
+        var wallImage = this.image,
+            cnt = wallImage.container,
+            icnt = wallImage.imageContainer;
+
+        cnt.removeClass('editing-disabled');
+        cnt.draggable('enable');
+        icnt.resizable('enable');
+
+        this.trigger('editing-enabled');
+    },
+
+    disable: function() {
+        this.enabled = false;
+
+        var wallImage = this.image,
+            cnt = wallImage.container,
+            icnt = wallImage.imageContainer;
+
+        cnt.addClass('editing-disabled');
+        cnt.draggable('disable');
+        icnt.resizable('disable');
+        
+        this.trigger('editing-disabled');
     },
 
     on: function(event, fn) {

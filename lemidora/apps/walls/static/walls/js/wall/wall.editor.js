@@ -25,6 +25,7 @@ Lemidora.WallEditor.prototype = {
     updateImageUrl: '',
     deleteImageUrl: '',
     imageEditor: {}, // will be re-inited
+    enabled: true,
 
     // private attrs
     _eventDispatcher: null,
@@ -52,7 +53,9 @@ Lemidora.WallEditor.prototype = {
      *     this config is not used directly inside the Lemidora.WallEditor; 
      *     it's used in the Lemidora.Wall
      * @see Lemidora.Wall.createImage for cfg.imageEditor usage  
-     * @see Lemidora.WallImageEditor for cfg.imageEditor details  
+     * @see Lemidora.WallImageEditor for cfg.imageEditor details
+     * @param {Boolean} enabled - initial editor state; default - true;
+     *     use .enable() and .disable() instead of manual setting
      */
     init: function(cfg) {
         this.uploader = {};
@@ -64,6 +67,7 @@ Lemidora.WallEditor.prototype = {
         this._eventDispatcher = $({});
 
         this.initUploader();
+        this.initState();
     },
 
     /**
@@ -86,12 +90,26 @@ Lemidora.WallEditor.prototype = {
         });
     },
 
+    initState: function() {
+        this[this.enabled ? 'enable' : 'disable']();
+    },
+
+    enable: function() {
+        this.enabled = true;
+        this.trigger('editing-enabled');
+    },
+
+    disable: function() {
+        this.enabled = false;
+        this.trigger('editing-disabled');
+    },
+
     /**
-     * Handle Lemidora.WallImage editing events
+     * Handle image editing events (move, resize, etc.)
      *
      * @param {Lemidora.WallImage} wallImage
      */
-    initImageEditing: function(wallImage) {
+    registerImage: function(wallImage) {
         if (!wallImage.editor)
             return false;
 
