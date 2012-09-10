@@ -186,8 +186,10 @@ Lemidora.Wall.prototype = {
         
         this.images[attrs.id] = wallImage;
         
-        if (this.editor)
+        if (this.editor) {
             this.editor.registerImage(wallImage);
+            wallImage.editor && wallImage.editor[this.editor.enabled ? 'enable' : 'disable']();
+        }
     },
 
     /**

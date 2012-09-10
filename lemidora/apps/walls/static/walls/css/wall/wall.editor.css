@@ -1,5 +1,6 @@
 .wall .editor-state-switch {
     position: fixed;
+    z-index: 1000;
     top: 84px;
     right: 14px;
 }
@@ -17,7 +18,7 @@
     background-color: #3b3b3b;
     border-radius: 6px;
     border: 1px solid #454545;
-    box-shadow: 0 1px 3px rgba(000, 000, 000, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    box-shadow: 0 1px 4px rgba(000, 000, 000, 0.5);
     text-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
     text-decoration: none;
 }

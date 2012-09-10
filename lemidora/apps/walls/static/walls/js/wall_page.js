@@ -17,6 +17,7 @@ Lemidora.wallPage = {
                 updateImageUrl: this.updateImageUrl,
                 deleteImageUrl: this.deleteImageUrl,
                 csrf: this.csrf,
+                enabled: false,
 
                 uploader: {
                     uploadUrl: this.uploadUrl,
@@ -26,8 +27,8 @@ Lemidora.wallPage = {
 
             poller: {
                 // debug: true,
-                pollUrl: this.autoUpdateUrl,
-                pollDelay: 10 * 60 * 1000
+                // pollDelay: 10 * 60 * 1000, // 10 minutes delay
+                pollUrl: this.autoUpdateUrl
             }
         });
     }
