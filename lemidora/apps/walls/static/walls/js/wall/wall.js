@@ -42,6 +42,7 @@ Lemidora.Wall.prototype = {
 
     editor: {}, // will be re-inited
     poller: {}, // will be re-inited
+    zoomer: {}, // will be re-inited
 
     // inner attrs
     images: {}, // images collection; will be re-inited
@@ -76,6 +77,7 @@ Lemidora.Wall.prototype = {
     init: function(cfg) {
         this.editor = {};
         this.poller = {};
+        this.zoomer = {};
         this.images = {};
 
         $.extend(true, this, cfg);
@@ -85,6 +87,7 @@ Lemidora.Wall.prototype = {
 
         this.initGreeter();
         this.initEditor();
+        this.initZooming();
         this.initPolling();
     },
 
@@ -139,6 +142,17 @@ Lemidora.Wall.prototype = {
                 wallImage.editor && wallImage.editor.disable();
             });
         });
+    },
+
+    initZooming: function() {
+        if (!this.zoomer)
+            return false;
+
+        if (!Lemidora.WallZoomer)
+            throw "Wall init error: can't detect module \"wall.zoomer.js\" to enable wall zooming";
+
+        var zoomerConfig = $.extend(true, {}, this.zoomer, { wall: this });
+        this.zoomer = new Lemidora.WallZoomer(zoomerConfig);
     },
 
     /**

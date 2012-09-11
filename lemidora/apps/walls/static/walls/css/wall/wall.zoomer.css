@@ -1,0 +1,26 @@
+.wall .wall-zoom {
+    position: fixed;
+    z-index: 1000;
+    right: 14px;
+    top: 132px;
+    padding-bottom: 20px;
+    background-color: #111;
+    border: 1px solid #444;
+    border-radius: 6px;
+}
+
+.wall .zoom-slider {
+    width: 20px;
+    height: 130px;
+    background: transparent;
+    border: none;
+}
+
+/* jQuery UI tweaks */
+.zoom-slider.ui-slider-vertical .ui-slider-handle {
+    width: 18px;
+    height: 18px;
+    left: 0;
+    margin-bottom: -20px;
+    border-radius: 5px;
+}

@@ -8,6 +8,7 @@ wall_css = CssBundle(
     'walls/css/wall/wall.editor.uploader.css',
     'walls/css/wall/wall.image.css',
     'walls/css/wall/wall.image.editor.css',
+    'walls/css/wall/wall.zoomer.css',
 )
 
 
@@ -17,5 +18,6 @@ wall_js = JsBundle(
     'walls/js/wall/wall.editor.uploader.js',
     'walls/js/wall/wall.image.js',
     'walls/js/wall/wall.image.editor.js',
+    'walls/js/wall/wall.zoomer.js',
     'walls/js/wall/wall.poller.js',
 )
