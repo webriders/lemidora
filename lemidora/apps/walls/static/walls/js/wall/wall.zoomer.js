@@ -9,6 +9,14 @@ Lemidora.WallZoomer.prototype = {
     wall: null,
     container: [
         '<div class="wall-zoom">',
+            '<div class="title">zoom</div>',
+            '<ul class="legend">',
+                '<li class="point-1">100%</li>',
+                '<li class="point-2">80%</li>',
+                '<li class="point-3">60%</li>',
+                '<li class="point-4">40%</li>',
+                '<li class="point-5">20%</li>',
+            '</ul>',
             '<div class="zoom-slider"></div>',
         '</div>'
     ].join(''),
@@ -29,10 +37,10 @@ Lemidora.WallZoomer.prototype = {
         this.slider.slider({
             orientation: 'vertical',
             value: 100,
-            minValue: 10,
+            min: 10,
+            step: 5,
 
             stop: function(e, ui) { 
-                // console.log(ui.value);
                 var area = wall.area,
                     zoom = ui.value / 100,
                     translateCoef = (1 - 1 / zoom) / 2;

@@ -1,12 +1,74 @@
 .wall .wall-zoom {
     position: fixed;
     z-index: 1000;
-    right: 14px;
-    top: 132px;
+    left: 14px;
+    top: 90px;
     padding-bottom: 20px;
     background-color: #111;
     border: 1px solid #444;
     border-radius: 6px;
+}
+
+.wall .wall-zoom > .title {
+    position: absolute;
+    width: 80px;
+    line-height: 20px;
+    bottom: 100%;
+    left: -30px;
+    text-align: center;
+    color: #ddd;
+    text-shadow: 0 1px 0 #222;
+    font-size: 12px;
+    font-style: italic;
+    -moz-transform: rotate(-90deg) translate(-85px, 0);
+}
+
+.wall .wall-zoom .legend {
+    position: absolute;
+    left: 24px;
+    top: 0;
+    opacity: 0;
+    margin-left: -100px;
+    -moz-transition: opacity 0.5s;
+}
+
+.wall .wall-zoom:hover .legend {
+    left: 24px;
+    margin-left: 0;
+    opacity: 1;
+    -mos-transition: opacity 0.5s;
+}
+
+.wall .wall-zoom .legend li {
+    position: absolute;
+    left: 0;
+    border-top: 1px solid #fff;
+    text-shadow: 0 1px 0 #222;
+    color: #fff;
+    line-height: 16px;
+    font-size: 11px;
+    font-style: italic;
+    padding-left: 16px;
+}
+
+.wall .wall-zoom .legend .point-1 {
+    top: 0;
+}
+
+.wall .wall-zoom .legend .point-2 {
+    top: 29px;
+}
+
+.wall .wall-zoom .legend .point-3 {
+    top: 58px;
+}
+
+.wall .wall-zoom .legend .point-4 {
+    top: 87px;
+}
+
+.wall .wall-zoom .legend .point-5 {
+    top: 116px;
 }
 
 .wall .zoom-slider {
