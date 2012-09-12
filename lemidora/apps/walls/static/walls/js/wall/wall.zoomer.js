@@ -21,6 +21,7 @@ Lemidora.WallZoomer.prototype = {
         '</div>'
     ].join(''),
     slider: '.zoom-slider',
+    enabled: true,
 
     init: function(cfg) {
         $.extend(true, this, cfg);
@@ -29,10 +30,11 @@ Lemidora.WallZoomer.prototype = {
         this.slider = this.container.find(this.slider);
 
         this.initSlider();
+        this.initState();
     },
 
     initSlider: function() {
-        var wall = this.wall;
+        var self = this;
 
         this.slider.slider({
             orientation: 'vertical',
@@ -41,16 +43,44 @@ Lemidora.WallZoomer.prototype = {
             step: 5,
 
             stop: function(e, ui) { 
-                var area = wall.area,
-                    zoom = ui.value / 100,
-                    translateCoef = (1 - 1 / zoom) / 2;
-
-                var translate = [
-                    parseInt(translateCoef * area.width()) + 'px', 
-                    parseInt(translateCoef * area.height()) + 'px'
-                ];
-                wall.area.css('-moz-transform', 'scale(' + zoom + ') translate(' + translate.join() + ')');
+                self._scaleWall(ui.value);
             }
         });
+    },
+
+    _scaleWall: function(zoom) {
+        var area = this.wall.area,
+            zoom = zoom / 100,
+            translateCoef = (1 - 1 / zoom) / 2;
+
+        var translate = [
+            parseInt(translateCoef * area.width()) + 'px', 
+            parseInt(translateCoef * area.height()) + 'px'
+        ];
+
+        area.css('-moz-transform', 'scale(' + zoom + ') translate(' + translate.join() + ')');
+    },
+
+    initState: function() {
+        this[this.enabled ? 'enable' : 'disable']();
+    },
+
+    enable: function() {
+        this.enabled = true;
+        this.container.show();
+    },
+
+    disable: function() {
+        this.enabled = false;
+        this.container.hide();
+    },
+
+    setValue: function(zoom) {
+        this.slider.slider('value', zoom);
+        this._scaleWall(zoom);
+    },
+
+    reset: function() {
+        this.setValue(100);
     }
 };

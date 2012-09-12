@@ -28,7 +28,7 @@
     left: 24px;
     top: 0;
     opacity: 0;
-    margin-left: -100px;
+    margin-left: -1000px;
     -moz-transition: opacity 0.5s;
 }
 

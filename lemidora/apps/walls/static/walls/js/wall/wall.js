@@ -135,12 +135,21 @@ Lemidora.Wall.prototype = {
             $.each(self.images, function(i, wallImage) {
                 wallImage.editor && wallImage.editor.enable();
             });
+
+            // turn off zooming while editing
+            if (self.zoomer) {
+                self.zoomer.reset(); // for now there are problems with scaled draggable and resizable - so we reset zooming (to 100%)
+                self.zoomer.disable(); // ... and disable it
+            }
         });
 
         this.editor.on('editing-disabled', function() {
             $.each(self.images, function(i, wallImage) {
                 wallImage.editor && wallImage.editor.disable();
             });
+
+            // turn on zooming in preview mode
+            self.zoomer && self.zoomer.enable();
         });
     },
 
@@ -153,6 +162,9 @@ Lemidora.Wall.prototype = {
 
         var zoomerConfig = $.extend(true, {}, this.zoomer, { wall: this });
         this.zoomer = new Lemidora.WallZoomer(zoomerConfig);
+
+        if (this.editor && this.editor.enabled)
+            this.zoomer.disable();
     },
 
     /**
