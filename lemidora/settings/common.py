@@ -150,7 +150,7 @@ LOGGING = {
 }
 
 ASSETS_CSS_FILTERS = 'cssrewrite, cssmin'
-ASSETS_JS_FILTERS = 'jsmin'
+ASSETS_JS_FILTERS = 'rjsmin'
 ASSETS_DEBUG = False
 ASSETS_ROOT = os.path.join(PROJECT_ROOT, 'webassets')
 
